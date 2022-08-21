@@ -1,7 +1,5 @@
 import styles from "styles/CategoryNew.module.css";
-import { useRef, useState } from "react";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useState } from "react";
 import {
     Grid, Paper, TextField, Button,
     Typography, Select, InputLabel,
@@ -10,7 +8,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { showNotification } from "utils/helper";
-import { MenuProps, useStyles, options } from "components/FilterOptions/FilterOptions";
+import { MenuProps, options } from "components/FilterOptions/FilterOptions";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -21,7 +19,7 @@ export default function NewCategory({ categories }) {
     const [filename, setFilename] = useState("Choose Image");
     const [selectedFile, setSelectedFile] = useState("");
 
-    const classes = useStyles();
+    // const classes = useStyles();
     const [selected, setSelected] = useState([]);
     const isAllSelected =
         options.length > 0 && selected.length === options.length;
@@ -76,45 +74,49 @@ export default function NewCategory({ categories }) {
                 }).catch(err => showNotification(err));
         } catch (error) {
             let message = error.response ? error.response.data.message : "Only image files are allowed!";
-            toast.error(message);
+            showNotification("", message, "error");
         }
     };
 
     return (
-        <div className={styles.main}>
+        <div className="flex p-10">
             <Grid>
-                <Paper elevation={0} style={{ padding: '20px', width: '400px' }}>
+                <Paper elevation={1} style={{ padding: '20px', width: '450px' }}>
                     <Grid align='left'>
                         <h2>New Category</h2>
                     </Grid>
                     <br />
                     <form>
                         <TextField
-                            className={styles.addProductItem}
+                            fullWidth
                             label='Category Title'
                             placeholder='Enter Category Title'
-                            fullWidth
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                         />
-                        <br />
+                        <br /><br />
                         <InputLabel>Parent Category</InputLabel>
-                        <Select fullWidth displayEmpty
+                        <Select fullWidth
                             label="Parent Category"
                             value={parentId}
                             onChange={(e) => setParentId(e.target.value)}>
-                            <MenuItem style={{ display: 'flex', justifyContent: 'left' }} value=""><em>None</em></MenuItem>
                             {categories.map((category) => (
-                                <MenuItem style={{ display: 'flex', justifyContent: 'left' }} value={category._id} key={category._id}>
-                                    <div className={styles.productListItem}>
-                                        <div style={{ marginRight: '10px' }}>
-                                            <Image height={32} width={32}
-                                                className={styles.productListImg}
-                                                src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${category.image}`} />
-                                        </div>
-                                        {category.title}
+                                <div className="flex flex-col">
+                                    <div key={category.id} value={category._id} className="flex ml-5 font-bold">
+                                        <Image height={32} width={32}
+                                            src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${category.image}`} />
+                                        <p className="ml-5">{category.title}</p>
                                     </div>
-                                </MenuItem>
+                                    {category.children?.length > 0 && category.children.map((child) => (
+                                        <div className="flex">
+                                            <MenuItem key={child.id} value={child.id} className="flex ml-15">
+                                                <Image height={32} width={32}
+                                                    src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${child.image}`} />
+                                                <p className="ml-5">{child.title}</p>
+                                            </MenuItem>
+                                        </div>
+                                    ))}
+                                </div>
                             ))}
                         </Select>
                         <br /><br />
@@ -132,16 +134,17 @@ export default function NewCategory({ categories }) {
                         >
                             <MenuItem style={{ display: 'flex', justifyContent: 'left' }}
                                 value="all"
-                                classes={{ root: isAllSelected ? classes.selectedAll : "" }}>
+                            // classes={{ root: isAllSelected ? classes.selectedAll : "" }}
+                            >
                                 <ListItemIcon>
                                     <Checkbox
-                                        classes={{ indeterminate: classes.indeterminateColor }}
+                                        // classes={{ indeterminate: classes.indeterminateColor }}
                                         checked={isAllSelected}
                                         indeterminate={selected.length > 0 && selected.length < options.length}
                                     />
                                 </ListItemIcon>
                                 <ListItemText
-                                    classes={{ primary: classes.selectAllText }}
+                                    // classes={{ primary: classes.selectAllText }}
                                     primary="Select All" />
                             </MenuItem>
                             {options.map((option) => (
@@ -155,7 +158,12 @@ export default function NewCategory({ categories }) {
                         </Select>
                         <br /><br />
 
-                        <Button onClick={handleSubmit} type='submit' color='primary' variant="contained" style={{ margin: '8px 0' }} fullWidth>Add Category</Button>
+                        <Button
+                            onClick={handleSubmit}
+                            type='submit'
+                            color='primary'
+                            variant="outlined"
+                            style={{ margin: '8px 0' }} fullWidth>Add Category</Button>
                     </form>
                     <br />
                     <Typography >
@@ -170,7 +178,11 @@ export default function NewCategory({ categories }) {
                 </div>
                 <div className={styles.imageButtonContainer}>
                     <div><small>Only jpg, png, gif, svg, webp images are allowed</small></div>
-                    <Button className={styles.imageButton} variant="contained" component="label" >Choose Image
+                    <Button
+                        className={styles.imageButton}
+                        variant="outlined"
+                        color="secondary"
+                        component="label" >Choose Image
                         <input type="file" name="image" hidden onChange={fileSelectedHandler} accept="image/webp, image/*" />
                     </Button>
                 </div>
@@ -180,7 +192,7 @@ export default function NewCategory({ categories }) {
 }
 
 export const getServerSideProps = async () => {
-    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/categories`);
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/categories/fetch/categories`);
     return {
         props: {
             categories: data.categories

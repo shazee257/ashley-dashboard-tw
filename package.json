@@ -1,5 +1,5 @@
 {
-  "name": "project-tw",
+  "name": "ashley-dashboard-tw",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,16 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "12.2.5",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.10.0",
+    "@mui/styles": "^5.9.3",
     "@mui/x-data-grid": "^5.15.2",
     "axios": "^0.27.2",
     "moment": "^2.29.4",
+    "next": "12.2.5",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.3.0",
     "react-toastify": "^9.0.5"

@@ -2,20 +2,19 @@ import styles from 'styles/Product.module.css';
 import axios from 'axios';
 import { DeleteOutline } from "@material-ui/icons";
 import { Button } from '@material-ui/core';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 const { formatDate } = require("utils/utils");
 import MuiGrid from "components/MuiGrid/MuiGrid";
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { showNotification } from 'utils/helper';
 
 export default function Products({ products }) {
     const [data, setData] = useState(products);
 
     const handleDelete = async (id) => {
         await axios.delete(`${process.env.NEXT_PUBLIC_baseURL}/products/${id}`)
-            .then(({ data }) => toast.success(data.message));
+            .then(({ data }) => showNotification("", data.message, 'success'));
         setData(products.filter((item) => item._id !== id));
     }
 

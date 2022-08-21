@@ -1,7 +1,5 @@
 import styles from "styles/BrandNew.module.css";
 import { useState, useRef } from "react";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { Grid, Paper, TextField, Button, Typography } from '@mui/material'
 import axios from 'axios';
 import { showNotification } from "utils/helper";
@@ -49,7 +47,7 @@ export default function NewBrand() {
             await axios
                 .post(`${process.env.NEXT_PUBLIC_baseURL}/brands`, fd, config)
                 .then(({ data }) => {
-                    data.success && toast.success(data.message);
+                    data.success && showNotification("", data.message, "success");
                     clearForm();
                 }).catch(err => showNotification(err));
         } catch (error) {
@@ -59,46 +57,49 @@ export default function NewBrand() {
     };
 
     return (
-        <div className={styles.main}>
-            <Grid>
-                <Paper elevation={0} style={{ padding: '20px', width: '500px' }}>
-                    <Grid align='left'>
-                        <h2>New Brand</h2>
-                    </Grid>
+        <div className="flex px-5">
+            <Paper elevation={1} className="p-10">
+                <h2>New Brand</h2>
+                <br />
+                <form encType='multipart/form-data'>
+                    <TextField
+                        className={styles.addProductItem}
+                        label='Brand Title'
+                        placeholder='Enter Brand Title'
+                        fullWidth
+                        inputRef={titleRef} />
                     <br />
-                    <form encType='multipart/form-data'>
-                        <TextField
-                            className={styles.addProductItem}
-                            label='Brand Title'
-                            placeholder='Enter Brand Title'
-                            fullWidth
-                            inputRef={titleRef} />
-                        <br />
-                        <TextField
-                            className={styles.addProductItem}
-                            label='Description'
-                            placeholder="Brand Description"
-                            fullWidth multiline maxRows={5}
-                            inputRef={descriptionRef} />
-                        <br />
-                        <div>
-                            <Button variant="contained" component="label" >Choose Image
-                                <input type="file" name="image" hidden onChange={fileSelectedHandler} accept="image/*" />
-                            </Button>
-                            <div><small>Only jpg, png, gif, svg, webp images are allowed</small></div>
-                        </div>
-                        <br />
-                        <Button onClick={handleSubmit} type='submit' color='primary' variant="contained" style={{ margin: '8px 0' }} fullWidth>Add Brand</Button>
-                    </form>
+                    <TextField
+                        className={styles.addProductItem}
+                        label='Description'
+                        placeholder="Brand Description"
+                        fullWidth multiline maxRows={5}
+                        inputRef={descriptionRef} />
                     <br />
-                    <Typography >
-                        <Link href="/brands">Back to Brands</Link>
-                    </Typography>
-                </Paper>
-            </Grid>
-            <div className={styles.productImage}>
-                {(image) && (<Image height={400} width={400} src={image} className={styles.imgObject} />)}
+                    <div className="flex flex-col">
+                        <Button variant="outlined" component="label" >Choose Image
+                            <input type="file" name="image" hidden onChange={fileSelectedHandler} accept="image/*" />
+                        </Button>
+                        <div><small>Only jpg, png, gif, svg, webp images are allowed</small></div>
+                    </div>
+                    <br />
+                    <Button
+                        onClick={handleSubmit}
+                        type='submit'
+                        color='primary'
+                        variant="outlined" fullWidth>Add Brand</Button>
+                </form>
+                <br />
+                <Typography >
+                    <Link href="/brands">Back to Brands</Link>
+                </Typography>
+            </Paper>
+            <div>
+                <div className={styles.productImage}>
+                    {(image) && (<Image height={400} width={400} src={image} className={styles.imgObject} />)}
+                </div>
             </div>
+
         </div>
     );
 }

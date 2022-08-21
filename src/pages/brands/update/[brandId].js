@@ -9,6 +9,16 @@ import { showNotification } from "utils/helper";
 import Image from 'next/image';
 import Link from 'next/link';
 
+export async function getServerSideProps(context) {
+    const { brandId } = context.query;
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/brands/${brandId}`);
+    return {
+        props: {
+            brand: data.brand
+        }
+    };
+}
+
 export default function UpdateBrand({ brand }) {
     const router = useRouter();
     const titleRef = useRef(null);
@@ -40,7 +50,7 @@ export default function UpdateBrand({ brand }) {
             const config = { headers: { 'Content-Type': 'multipart/form-data' } }
 
             await axios
-                .post(`${process.env.NEXT_PUBLIC_baseURL}/brands/upload-image/${brand.slug}`, fd, config)
+                .post(`${process.env.NEXT_PUBLIC_baseURL}/brands/upload-image/${brand._id}`, fd, config)
                 .then(({ data }) => toast.success(data.message))
                 .catch((err) => {
                     let message = err.response ? err.response.data.message : "Only image files are allowed!";
@@ -59,7 +69,7 @@ export default function UpdateBrand({ brand }) {
 
         try {
             await axios
-                .put(`${process.env.NEXT_PUBLIC_baseURL}/brands/${brand.slug}`, updateBrand)
+                .put(`${process.env.NEXT_PUBLIC_baseURL}/brands/${brand._id}`, updateBrand)
                 .then(({ data }) => {
                     console.log(data);
                     data.success && toast.success(data.message);
@@ -71,12 +81,10 @@ export default function UpdateBrand({ brand }) {
     };
 
     return (
-        <div className={styles.main}>
+        <div className="flex px-5">
             <Grid>
-                <Paper elevation={0} style={{ width: '400px', padding: '20px' }} >
-                    <Grid align='left'>
-                        <h2>Update Brand</h2>
-                    </Grid>
+                <Paper elevation={1} className="p-10">
+                    <h2>Update Brand</h2>
                     <br />
                     <TextField
                         className={styles.addProductItem}
@@ -94,8 +102,8 @@ export default function UpdateBrand({ brand }) {
                         inputRef={descriptionRef}
                     />
                     <br />
-                    <div>
-                        <Button variant="contained" component="label">Choose Image
+                    <div className="flex flex-col">
+                        <Button variant="outlined" color="secondary" component="label">Choose Image
                             <input type="file" name="image" hidden onChange={fileSelectedHandler} accept="image/*" />
                         </Button>
                         <div><small>Only jpg, png, gif, svg images are allowed</small></div>
@@ -106,7 +114,7 @@ export default function UpdateBrand({ brand }) {
                         onClick={handleSubmit}
                         type='submit'
                         color='primary'
-                        variant="contained"
+                        variant="outlined"
                         className={styles.btnstyle}>Update Brand</Button>
                     <br /><br />
                     <Typography >
@@ -125,12 +133,3 @@ export default function UpdateBrand({ brand }) {
 
 }
 
-export async function getServerSideProps(context) {
-    const { slug } = context.query;
-    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/brands/${slug}`);
-    return {
-        props: {
-            brand: data.brand
-        }
-    };
-}

@@ -10,6 +10,15 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
+export async function getServerSideProps(context) {
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/categories`);
+    return {
+        props: {
+            categories: data.categories
+        }
+    };
+}
+
 export default function Categories({ categories }) {
     const [data, setData] = useState(categories);
 
@@ -90,12 +99,3 @@ export default function Categories({ categories }) {
     );
 }
 
-export async function getServerSideProps(context) {
-    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/categories`);
-
-    return {
-        props: {
-            categories: data.categories
-        }
-    };
-}

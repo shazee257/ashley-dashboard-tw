@@ -1,25 +1,25 @@
 // for multi select
 
-import { makeStyles } from "@material-ui/core/styles";
+// import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
-    formControl: {
-        margin: theme.spacing(1),
-        width: 300
-    },
-    indeterminateColor: {
-        color: "#f50057"
-    },
-    selectAllText: {
-        fontWeight: 500
-    },
-    selectedAll: {
-        backgroundColor: "rgba(0, 0, 0, 0.08)",
-        "&:hover": {
-            backgroundColor: "rgba(0, 0, 0, 0.08)"
-        }
-    }
-}));
+// const useStyles = makeStyles((theme) => ({
+//     formControl: {
+//         margin: theme.spacing(1),
+//         width: 300
+//     },
+//     indeterminateColor: {
+//         color: "#f50057"
+//     },
+//     selectAllText: {
+//         fontWeight: 500
+//     },
+//     selectedAll: {
+//         backgroundColor: "rgba(0, 0, 0, 0.08)",
+//         "&:hover": {
+//             backgroundColor: "rgba(0, 0, 0, 0.08)"
+//         }
+//     }
+// }));
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -50,4 +50,4 @@ const options = [
     "Price",
 ];
 
-export { useStyles, MenuProps, options };
+export { MenuProps, options };
