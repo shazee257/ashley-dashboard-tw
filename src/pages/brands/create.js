@@ -1,10 +1,11 @@
 import styles from "styles/BrandNew.module.css";
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Grid, Paper, TextField, Button, Typography } from '@mui/material'
 import axios from 'axios';
 import { showNotification } from "utils/helper";
 import Link from "next/link";
 import Image from "next/image";
+// import { useDispatch } from "react-redux";
 
 export default function NewBrand() {
     const titleRef = useRef(null);
@@ -12,6 +13,14 @@ export default function NewBrand() {
     const [image, setImage] = useState("");
     const [filename, setFilename] = useState("Choose Image");
     const [selectedFile, setSelectedFile] = useState("");
+
+    // const dispatch = useDispatch();
+
+    // useEffect(() => {
+    //     dispatch();
+
+    // }, [dispatch]);
+
 
     const fileSelectedHandler = (e) => {
         const reader = new FileReader();

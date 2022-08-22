@@ -4,6 +4,8 @@ import Layout from 'components/Layout/Layout';
 import LoadingPanel from "components/Loader/Loader";
 import Router, { useRouter } from "next/router";
 // import Login from "components/Login/Login";
+import store from 'store'
+import { Provider } from 'react-redux'
 
 function MyApp({ Component, pageProps }) {
   // const router = useRouter();
@@ -44,10 +46,12 @@ function MyApp({ Component, pageProps }) {
   // }
 
   return (
-    <Layout>
-      {loading && <LoadingPanel />}
-      <Component {...pageProps} />
-    </Layout>
+    <Provider store={store}>
+      <Layout>
+        {loading && <LoadingPanel />}
+        <Component {...pageProps} />
+      </Layout>
+    </Provider>
   )
 }
 

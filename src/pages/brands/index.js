@@ -4,10 +4,12 @@ import { DeleteOutline } from "@mui/icons-material";
 import { Button } from '@mui/material';
 import MuiGrid from 'components/MuiGrid/MuiGrid';
 const { formatDate } = require("utils/utils");
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { showNotification } from 'utils/helper';
+import { useDispatch, useSelector } from "react-redux";
+import { getBrands } from 'actions/brands';
 
 export async function getServerSideProps() {
     const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/brands`);
@@ -20,6 +22,16 @@ export async function getServerSideProps() {
 
 export default function Brands({ brands }) {
     const [data, setData] = useState([...brands]);
+
+    const dispatch = useDispatch();
+
+    // const brandsData = useSelector(state => state.brands);
+    // console.log("brandData", brandsData);
+
+    useEffect(() => {
+        dispatch(getBrands());
+    }, [dispatch]);
+
 
     const handleDelete = async (id) => {
         await axios.delete(`${process.env.NEXT_PUBLIC_baseURL}/brands/${id}`)
