@@ -10,10 +10,11 @@ export const getBrands = () => async (dispatch) => {
     }
 }
 
-export const addBrand = (brand) => async (dispatch) => {
+export const addBrand = (newBrand) => async (dispatch) => {
     try {
-        const { data } = await axios.post(`${process.env.NEXT_PUBLIC_baseURL}/brands`, brand);
+        const { data } = await axios.post(`${process.env.NEXT_PUBLIC_baseURL}/brands`, newBrand);
         dispatch({ type: 'ADD_BRAND', payload: data.brand });
+        console.log("data.brand: ", data.brand);
     } catch (error) {
         console.log(error.message);
     }

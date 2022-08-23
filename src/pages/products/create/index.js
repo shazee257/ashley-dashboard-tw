@@ -6,7 +6,7 @@ import {
     Grid, Paper, TextField, Button,
     Typography, Select, InputLabel,
     MenuItem, Checkbox, FormGroup, FormControlLabel,
-} from '@material-ui/core'
+} from '@mui/material'
 import axios from 'axios';
 import { showNotification } from "utils/helper";
 import Link from "next/link";
@@ -17,6 +17,8 @@ export default function NewProduct({ stores, categories, brands }) {
     const [storeId, setStoreId] = useState("");
     const [categoryId, setCategoryId] = useState("");
     const [brandId, setBrandId] = useState("");
+    const [isFeature, setIsFeature] = useState(false);
+    const [isSale, setIsSale] = useState(false);
     const [attributes, setAttributes] = useState([]);
 
     // clear form fields
@@ -25,6 +27,8 @@ export default function NewProduct({ stores, categories, brands }) {
         setStoreId("");
         setCategoryId("");
         setBrandId("");
+        setIsFeature(false);
+        setIsSale(false);
         setAttributes([]);
     }
 
@@ -65,7 +69,8 @@ export default function NewProduct({ stores, categories, brands }) {
     return (
         <div className={styles.main}>
             <Grid>
-                <Paper elevation={0} style={{ padding: '20px', width: '400px' }}>
+                <Paper elevation={1} className="p-10">
+                    {/* </Grid> style={{ padding: '20px', width: '400px' }}> */}
                     <Grid align='left'>
                         <h2>New Product</h2>
                     </Grid>
@@ -162,7 +167,7 @@ export default function NewProduct({ stores, categories, brands }) {
                         <Link href="/products">Back to Products</Link>
                     </Typography>
                 </Paper>
-            </Grid>
+            </Grid >
         </div >
     );
 }

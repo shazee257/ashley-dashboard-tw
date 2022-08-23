@@ -1,7 +1,7 @@
 import styles from 'styles/Product.module.css';
 import axios from 'axios';
-import { DeleteOutline } from "@material-ui/icons";
-import { Button } from '@material-ui/core';
+import { DeleteOutline } from "@mui/icons-material";
+import { Button } from '@mui/material';
 const { formatDate } = require("utils/utils");
 import MuiGrid from "components/MuiGrid/MuiGrid";
 import { useState } from 'react';
@@ -76,7 +76,32 @@ export default function Products({ products }) {
             },
         },
         {
-            field: "createdAt", headerName: "Created on", width: 150, type: 'dateTime',
+            field: "discount", headerName: "Discount %", width: 90, type: "numericColumn",
+            renderCell: (params) => {
+                return (
+                    <>
+                        {params.value > 0 ? <div className="font-bold rounded px-5 w-30">
+                            <div className="text-brown">{params.value}%</div>
+                        </div> : null}
+                    </>
+                );
+            }
+
+
+        },
+        {
+            field: "is_feature", headerName: "Sale Product", width: 120,
+            renderCell: (params) => {
+                return (
+                    <div className="bg-cyan-500 rounded px-5 w-30">
+                        {params.value ? <span className="text-white">Featured</span> : null}
+                    </div>
+                );
+            }
+
+        },
+        {
+            field: "createdAt", headerName: "Created on", width: 100, type: 'dateTime',
             valueFormatter: (params) => formatDate(params.value),
         },
         {

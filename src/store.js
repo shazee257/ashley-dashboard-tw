@@ -8,3 +8,5 @@ export default configureStore({
         // categories: categoryReducer
     }
 })
+
+// not need now because we use redux-thunk
