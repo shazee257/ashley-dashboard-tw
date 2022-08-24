@@ -9,7 +9,7 @@ export default function Document() {
                 <style>
                     {`  
                         * { font-family: Source Sans Pro, sans-serif !important; }
-                        `}
+                    `}
                 </style>
             </Head>
             <body>

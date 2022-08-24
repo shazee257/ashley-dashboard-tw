@@ -81,7 +81,7 @@ export default function Products({ products }) {
                 return (
                     <>
                         {params.value > 0 ? <div className="font-bold rounded px-5 w-30">
-                            <div className="text-brown">{params.value}%</div>
+                            <div className="text-blue-700">{params.value}%</div>
                         </div> : null}
                     </>
                 );
@@ -90,7 +90,7 @@ export default function Products({ products }) {
 
         },
         {
-            field: "is_feature", headerName: "Sale Product", width: 120,
+            field: "is_featured", headerName: "Featured Product", width: 120,
             renderCell: (params) => {
                 return (
                     <div className="bg-cyan-500 rounded px-5 w-30">

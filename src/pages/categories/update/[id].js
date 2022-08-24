@@ -1,5 +1,5 @@
 import styles from "styles/CategoryUpdate.module.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
@@ -7,7 +7,7 @@ import {
     Typography, Select, InputLabel,
     MenuItem, Checkbox,
     ListItemIcon, ListItemText,
-} from '@material-ui/core'
+} from '@mui/material'
 import axios from 'axios';
 import { MenuProps, useStyles, options } from "components/FilterOptions/FilterOptions";
 import { showNotification } from "utils/helper";
@@ -21,7 +21,7 @@ export default function UpdateCategory({ category, categories }) {
     const [img_address, setImg_address] = useState("");
     const [filename, setFilename] = useState("Choose Image");
 
-    const classes = useStyles();
+    // const classes = useStyles();
     const [selected, setSelected] = useState(category.attributes);
     const isAllSelected =
         options.length > 0 && selected.length === options.length;
@@ -134,13 +134,11 @@ export default function UpdateCategory({ category, categories }) {
                         >
                             <MenuItem
                                 value="all"
-                                classes={{
-                                    root: isAllSelected ? classes.selectedAll : ""
-                                }}
+                            // classes={{ root: isAllSelected ? classes.selectedAll : "" }}
                             >
                                 <ListItemIcon>
                                     <Checkbox
-                                        classes={{ indeterminate: classes.indeterminateColor }}
+                                        // classes={{ indeterminate: classes.indeterminateColor }}
                                         checked={isAllSelected}
                                         indeterminate={
                                             selected.length > 0 && selected.length < options.length
@@ -148,7 +146,7 @@ export default function UpdateCategory({ category, categories }) {
                                     />
                                 </ListItemIcon>
                                 <ListItemText
-                                    classes={{ primary: classes.selectAllText }}
+                                    // classes={{ primary: classes.selectAllText }}
                                     primary="Select All"
                                 />
                             </MenuItem>

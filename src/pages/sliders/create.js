@@ -63,7 +63,7 @@ export default function NewSlider() {
     return (
         <div className="flex px-5">
             <Grid>
-                <Paper elevation={1} className="p-10" >
+                <Paper elevation={1} className="p-10">
                     <h2>New Slider Content</h2>
                     <br />
                     <form onSubmit={handleSubmit} autoComplete="off">

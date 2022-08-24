@@ -2,13 +2,14 @@ import styles from "styles/VariantCreate.module.css";
 import { useState, useRef, useEffect } from "react";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Grid, Paper, TextField, Button, Typography, InputLabel } from '@material-ui/core'
+import { Grid, Paper, TextField, Button, Typography, InputLabel } from '@mui/material';
 import axios from 'axios';
 import { showNotification } from "utils/helper";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
+import { useRouter } from 'next/router';
 
 
 export default function NewVariant({ product, variant }) {
@@ -17,6 +18,7 @@ export default function NewVariant({ product, variant }) {
     const [purchasePrice, setPurchasePrice] = useState(variant.purchase_price);
     const [description, setDescription] = useState(variant.description);
     const [dimensions, setDimensions] = useState(variant.dimensions);
+    const router = useRouter();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -34,6 +36,7 @@ export default function NewVariant({ product, variant }) {
                 .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${product._id}/${variant._id}`, variantData)
                 .then(({ data }) => {
                     data.success && showNotification("", data.message, 'success');
+                    router.push(`/products/${product._id}`);
                 }).catch(err => showNotification("", err.response.data.message, "error"));
         } catch (error) {
             showNotification(err)
@@ -41,18 +44,17 @@ export default function NewVariant({ product, variant }) {
     }
 
     return (
-        <div className={styles.main}>
+        <div className="flex px-5">
             <Grid>
-                <Paper elevation={0} style={{ padding: '20px', width: '1400px' }}>
-                    <Grid align='left'>
-                        <h2>Update Product Variant</h2>
-                    </Grid>
+                <Paper elevation={1} className="p-10">
+                    <h2>Update Product Variant</h2>
+                    <br />
                     <div className={styles.main}>
                         <h4 className={styles.productTitle}>Product Title: <i>{product.title}</i> </h4>
                     </div>
                     <br />
-                    <form className={styles.MainForm}>
-                        <div className={styles.FormTopFields}>
+                    <form onSubmit={handleSubmit} autoComplete="off">
+                        <div className="flex">
                             <TextField
                                 className={styles.addProductItem}
                                 label='Product Size'
@@ -61,36 +63,37 @@ export default function NewVariant({ product, variant }) {
                                 value={size} onChange={(e) => setSize(e.target.value)} />
                             <br /><br />
                             <TextField
-                                inputProps={{ step: '0.01', min: '0', max: '100', type: 'number' }}
+                                inputProps={{ step: '0.01', min: '1', max: '10000', type: 'number' }}
                                 className={styles.addProductItem} variant='outlined'
                                 label='Sale Price' placeholder='Enter Sale Price'
                                 value={salePrice} onChange={(e) => setSalePrice(e.target.value)} />
                             <br /><br />
                             <TextField
-                                inputProps={{ step: '0.01', min: '0', max: '100', type: 'number' }}
-                                className={styles.addProductItem} variant='outlined' type='number'
+                                inputProps={{ step: '0.01', min: '1', max: '10000', type: 'number' }}
+                                className={styles.addProductItem} variant='outlined'
                                 label='Purchase Price' placeholder='Enter Purchase Price'
                                 value={purchasePrice} onChange={(e) => setPurchasePrice(e.target.value)} />
                         </div>
-                        <div className={styles.Editors}>
-                            <div className={styles.Editor}>
+                        <div className="flex w-auto">
+                            <div className="w-96 mr-10">
                                 <InputLabel htmlFor="detail1">Description</InputLabel>
                                 <ReactQuill value={description} onChange={setDescription} />
                             </div>
-                            <div className={styles.DimensionsEditor}>
+                            <div className="w-96">
                                 <InputLabel htmlFor="detail1">Dimensions</InputLabel>
                                 <ReactQuill value={dimensions} onChange={setDimensions} />
                             </div>
                         </div>
+                        <Button
+                            fullWidth
+                            type='submit'
+                            color='primary'
+                            variant="outlined"
+                            className="mt-10">
+                            Update
+                        </Button>
+
                     </form>
-                    <Button
-                        onClick={handleSubmit}
-                        type='submit'
-                        color='primary'
-                        variant="contained"
-                        style={{ marginTop: '20px', width: '300px' }}>
-                        Update
-                    </Button>
                     <br /><br />
                     <Typography >
                         <Link href={`/products/${product._id}`}>Back to Product Variants</Link>

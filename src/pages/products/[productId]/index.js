@@ -1,7 +1,7 @@
 import styles from 'styles/ProductIndex.module.css';
 import axios from 'axios';
-import { DeleteOutline } from "@material-ui/icons";
-import { Button, Typography } from '@material-ui/core';
+import { DeleteOutline } from "@mui/icons-material";
+import { Button, Typography } from '@mui/material';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const { formatDate } = require("utils/utils");
@@ -15,7 +15,7 @@ export default function Variations({ product }) {
     const handleDelete = async (id) => {
         await axios.delete(`${process.env.NEXT_PUBLIC_baseURL}/products/${product._id}/${id}`)
             .then(({ data }) => toast.success(data.message));
-        setData(variants.filter((item) => item._id !== id));
+        setData(data.filter((item) => item._id !== id));
     }
 
     const columns = [
@@ -64,21 +64,27 @@ export default function Variations({ product }) {
 
     return (
         <div className={styles.productList}>
-            <div className={styles.main}>
-                <h2 className={styles.productTitle}>Product Variations</h2>
-                <Link href={`/products/${product._id}/create`}>
-                    <Button variant="contained"
-                        color="primary" component="label"
-                        className={styles.createNewLink}>Create New</Button>
-                </Link>
-            </div>
-            <div className={styles.main}>
-                <h4 className={styles.productTitle}>{product.title}</h4>
+            <div className="ml-8">
+                <h2 className="">Add Variant Feature</h2>
+                <br />
+                <div className="flex mr-5 mb-5 items-center justify-between hover:underline">
+                    <div>
+                        Product {`: `}<b>
+                            <Link href={`/products/${product._id}`}>{product.title}</Link>
+                        </b>
+                    </div>
+                    <Link href={`/products/${product._id}/create`}>
+                        <Button variant="contained"
+                            color="primary" component="label"
+                            className={styles.createNewLink}>Create New</Button>
+                    </Link>
+
+                </div>
             </div>
 
             <MuiGrid columns={columns} data={data} />
             <br /><br />
-            <Typography>
+            <Typography className="ml-8 font-bold hover:underline ">
                 <Link href={`/products`}>Back to Products</Link>
             </Typography>
 

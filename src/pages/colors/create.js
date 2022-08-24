@@ -1,4 +1,3 @@
-import styles from "styles/BrandNew.module.css";
 import { useState, useRef } from "react";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -36,7 +35,7 @@ export default function NewColor() {
 
         const fd = new FormData();
         fd.append('title', titleRef.current.value);
-        fd.append('image', image);
+        fd.append('image', selectedFile);
 
         const config = {
             headers: { 'Content-Type': 'multipart/form-data' }
@@ -46,7 +45,7 @@ export default function NewColor() {
             await axios
                 .post(`${process.env.NEXT_PUBLIC_baseURL}/colors`, fd, config)
                 .then(({ data }) => {
-                    data.success && toast.success(data.message);
+                    data.success && showNotification("", data.message, "success");
                     // clearForm();
                 }).catch(err => showNotification(err));
         } catch (error) {
@@ -56,26 +55,30 @@ export default function NewColor() {
     };
 
     return (
-        <div className={styles.main}>
+        <div className="flex px-5">
             <Grid>
-                <Paper elevation={0} style={{ padding: '20px', width: '600px', display: 'flex' }}>
-                    <Grid align='left' style={{ width: '300px' }}>
+                <Paper elevation={1} className="flex p-10 items-center">
+                    <div className="mr-10">
                         <h2>New Color for Product</h2>
-
                         <br />
                         <form encType='multipart/form-data'>
                             <TextField
-                                className={styles.addProductItem}
+                                fullWidth
                                 label='Color Title'
                                 placeholder='Enter Color Title'
                                 inputRef={titleRef} />
-                            <br /><br />
-                            <div>
+                            <div className="flex flex-col place-items-center">
+                                <br />
                                 <Button
-                                    variant="outlined" component="label" >
-                                    <input type="file" name="image" onChange={fileSelectedHandler} accept="image/*" />
+                                    fullWidth
+                                    variant="outlined"
+                                    color="secondary"
+                                    component="label" >
+                                    Choose Color Image
+                                    <input type="file" name="image" hidden
+                                        onChange={fileSelectedHandler} accept="image/*" />
                                 </Button>
-                                <div><small>Only jpg, png, gif, svg, webp images are allowed</small></div>
+                                <div><small>Only jpg, png, gif, svg images are allowed</small></div>
                             </div>
                             <br />
                             <Button
@@ -91,10 +94,10 @@ export default function NewColor() {
                         <Typography >
                             <Link href="/colors">Back to Product Colors</Link>
                         </Typography>
-                    </Grid>
-                    <Grid align='right' style={{ width: '300px', marginTop: '120px', }}>
-                        {(image) && <Image height={200} width={200} src={image} style={{ borderRadius: '50%', }} />}
-                    </Grid>
+                    </div>
+                    {/* <Grid align='right' style={{ width: '300px', marginTop: '120px', }}> */}
+                    {(image) && <Image height={200} width={200} src={image} style={{ borderRadius: '50%', }} />}
+                    {/* </Grid> */}
                 </Paper>
             </Grid>
 

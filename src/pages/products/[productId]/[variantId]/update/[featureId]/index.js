@@ -5,8 +5,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import {
     Grid, Paper, TextField, Button,
     Typography, Select, InputLabel,
-    MenuItem, Checkbox, FormGroup, FormControlLabel,
-} from '@material-ui/core'
+    MenuItem,
+} from '@mui/material'
 import axios from 'axios';
 import { showNotification } from "utils/helper";
 import Link from "next/link";
@@ -44,82 +44,69 @@ export default function ProductFeatureNew({ productId, variantId, productTitle, 
     };
 
     return (
-        <div className={styles.productList}>
-            <div className={styles.main}>
-                <div style={{ marginLeft: '20px' }}>
-                    <Grid align='left'>
-                        <h2>Update Variant Feature</h2>
-                    </Grid>
-                    <div className={styles.TitleProductAndSize}>
-                        <div>Product {`: `}<strong className={styles.productTitle}>
-                            <Link href={`/products/${productId}`}>
-                                {productTitle}
-                            </Link>
-                        </strong>
-                        </div>
-                        <br />
-                        <div>Size<strong>{`: ${size}`}</strong></div>
-                    </div>
-
-                </div>
+        <div className="p-5 {styles.productList}">
+            <div className="ml-8 mb-5">
+                <h2 className="">Update Variant Feature</h2>
                 <br />
-                <hr />
-
-                <Grid className={styles.mainGrid}>
-                    <Paper elevation={0} style={{ padding: '20px', width: '400px' }}>
-                        <form>
-                            <InputLabel>Select Color</InputLabel>
-                            <Select
-                                fullWidth
-                                label="Color"
-                                value={colorId}
-                                onChange={(e) => setColorId(e.target.value)}>
-                                {colors.map((c) => (
-                                    <MenuItem value={c._id} key={c._id}>
-                                        <div className={styles.productListItem}>
-                                            <div className={styles.ImageDiv}>
-                                                <Image height={32} width={32}
-                                                    className={styles.productListImg}
-                                                    src={`${process.env.NEXT_PUBLIC_uploadURL}/colors/${c.image}`} />
-                                            </div>
-                                            {c.title}
-                                        </div>
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                            <br /><br />
-                            <TextField
-                                fullWidth
-                                inputProps={{ step: '1', min: '1', max: '1000', type: 'number' }}
-                                className={styles.addProductItem}
-                                label='Quantity' placeholder='Enter Quantity' variant='outlined'
-                                value={quantity} onChange={(e) => setQuantity(e.target.value)}
-                            />
-                            <br /><br />
-                            <TextField
-                                fullWidth
-                                required
-                                className={styles.addProductItem} variant='outlined'
-                                label='sku' placeholder='Enter SKU'
-                                value={sku} onChange={(e) => setSku(e.target.value)}
-                            />
-                            <br /><br />
-                            <Button
-                                fullWidth
-                                onClick={handleSubmit}
-                                type='submit'
-                                color='primary'
-                                variant="contained">
-                                Update Variant Feature
-                            </Button>
-                        </form>
-                        <br /><br />
-                        <Typography >
-                            <Link href={`/products/${productId}/${variantId}?size=${size}`}>Back to Variant Features</Link>
-                        </Typography>
-                    </Paper>
-                </Grid>
+                <div className="mb-5">
+                    Product {`: `}<b>
+                        <Link href={`/products/${productId}`}>{productTitle}</Link>
+                    </b>
+                    <br />
+                    <div>Size<strong>{`: ${size}`}</strong></div>
+                </div>
             </div>
+
+            <Paper elevation={1} className="p-10 w-96 ml-8">
+                <form onSubmit={handleSubmit} autoComplete="off">
+                    <InputLabel>Select Color</InputLabel>
+                    <Select
+                        fullWidth
+                        label="Color"
+                        value={colorId}
+                        onChange={(e) => setColorId(e.target.value)}>
+                        {colors.map((c) => (
+                            <MenuItem value={c._id} key={c._id}>
+                                <div className={styles.productListItem}>
+                                    <div className={styles.ImageDiv}>
+                                        <Image height={32} width={32}
+                                            className={styles.productListImg}
+                                            src={`${process.env.NEXT_PUBLIC_uploadURL}/colors/${c.image}`} />
+                                    </div>
+                                    {c.title}
+                                </div>
+                            </MenuItem>
+                        ))}
+                    </Select>
+                    <br /><br />
+                    <TextField
+                        fullWidth
+                        inputProps={{ step: '1', min: '1', max: '1000', type: 'number' }}
+                        label='Quantity' placeholder='Enter Quantity' variant='outlined'
+                        value={quantity} onChange={(e) => setQuantity(e.target.value)}
+                    />
+                    <br /><br />
+                    <TextField
+                        fullWidth
+                        required
+                        variant='outlined'
+                        label='sku' placeholder='Enter SKU'
+                        value={sku} onChange={(e) => setSku(e.target.value)}
+                    />
+                    <br /><br />
+                    <Button
+                        fullWidth
+                        type='submit'
+                        color='primary'
+                        variant="outlined">
+                        Update Variant Feature
+                    </Button>
+                </form>
+                <br /><br />
+                <Typography >
+                    <Link href={`/products/${productId}/${variantId}?size=${size}`}>Back to Variant Features</Link>
+                </Typography>
+            </Paper>
         </div>
     );
 }

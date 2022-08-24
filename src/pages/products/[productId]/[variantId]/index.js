@@ -3,8 +3,8 @@ import axios from 'axios';
 import {
     DeleteOutline,
     CloudUploadOutlined,
-} from "@material-ui/icons";
-import { Button } from '@material-ui/core';
+} from "@mui/icons-material";
+import { Button } from '@mui/material';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const { formatDate } = require("utils/utils");
@@ -22,7 +22,7 @@ export default function Features({ productId, variantId, productTitle, features,
     const handleDelete = async (id) => {
         await axios.delete(`${process.env.NEXT_PUBLIC_baseURL}/products/${productId}/${variantId}/${id}`)
             .then(({ data }) => toast.success(data.message));
-        setData(features.filter((item) => item._id !== id));
+        setData(data.filter((item) => item._id !== id));
     }
 
     const imageSelectHandler = (image) => {
@@ -161,13 +161,10 @@ export default function Features({ productId, variantId, productTitle, features,
                         className={styles.createNewLink}>Create New</Button>
                 </Link>
             </div>
-            <div className={styles.TitleProductAndSize}>
-                <div>Product {`: `}<strong className={styles.productTitle}>
-                    <Link href={`/products/${productId}`}>
-                        {productTitle}
-                    </Link>
-                </strong>
-                </div>
+            <div className="ml-8 mb-5">
+                Product {`: `}<b>
+                    <Link href={`/products/${productId}`}>{productTitle}</Link>
+                </b>
                 <br />
                 <div>Size<strong>{`: ${size}`}</strong></div>
             </div>

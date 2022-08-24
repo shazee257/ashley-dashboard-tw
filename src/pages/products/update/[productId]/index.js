@@ -6,7 +6,7 @@ import {
     Grid, Paper, TextField, Button,
     Typography, Select, InputLabel,
     MenuItem
-} from '@material-ui/core'
+} from '@mui/material'
 import axios from 'axios';
 import { showNotification } from "utils/helper";
 import Link from "next/link";
