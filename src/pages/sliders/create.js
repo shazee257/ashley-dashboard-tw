@@ -2,7 +2,7 @@ import styles from "styles/SliderNew.module.css";
 import { useState, useRef } from "react";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Grid, Paper, TextField, Button, Typography } from '@material-ui/core'
+import { Grid, Paper, TextField, Button, Typography } from '@mui/material'
 import axios from 'axios';
 import { showNotification } from "utils/helper";
 import Link from "next/link";
@@ -11,7 +11,6 @@ export default function NewSlider() {
     const titleRef = useRef(null);
     const subTitleRef = useRef(null);
     const descriptionRef = useRef(null);
-
     const [image, setImage] = useState("");
     const [filename, setFilename] = useState("Choose Image");
     const [selectedFile, setSelectedFile] = useState("");
@@ -62,9 +61,58 @@ export default function NewSlider() {
     };
 
     return (
-        <div className={styles.main}>
+        <div className="flex px-5">
             <Grid>
-                <Paper elevation={0} style={{ padding: '20px', width: '400px' }}>
+                <Paper elevation={1} className="p-10" >
+                    <h2>New Slider Content</h2>
+                    <br />
+                    <form onSubmit={handleSubmit} autoComplete="off">
+                        <TextField
+                            className={styles.addProductItem}
+                            label='Title'
+                            placeholder='Enter Title'
+                            fullWidth
+                            inputRef={titleRef} />
+                        <TextField
+                            className={styles.addProductItem}
+                            label='Sub-Title'
+                            placeholder='Enter Sub-Title'
+                            fullWidth
+                            inputRef={subTitleRef} />
+                        <TextField
+                            className={styles.addProductItem}
+                            label='Description'
+                            placeholder="Slider Description"
+                            fullWidth multiline maxRows={5}
+                            inputRef={descriptionRef} />
+                        <br />
+                        <div className="flex flex-col place-items-center">
+                            <Button
+                                fullWidth
+                                variant="outlined"
+                                color="secondary"
+                                component="label" >
+                                Choose Image
+                                <input type="file" name="image" hidden
+                                    onChange={fileSelectedHandler} accept="image/*" />
+                            </Button>
+                            <div><small>Only jpg, png, gif, svg images are allowed</small></div>
+                        </div>
+                        <br />
+                        <Button
+                            type='submit'
+                            color='primary'
+                            variant="outlined"
+                            className={styles.btnstyle}
+                            fullWidth>Add Slider Content</Button>
+                    </form>
+                    <br /><br />
+                    <Typography >
+                        <Link href="/sliders">Back to Slider Contents</Link>
+                    </Typography>
+                </Paper>
+
+                {/* <Paper elevation={0} style={{ padding: '20px', width: '400px' }}>
                     <Grid align='left'>
                         <h2>New Slider Content</h2>
                     </Grid>
@@ -103,7 +151,7 @@ export default function NewSlider() {
                     <Typography >
                         <Link href="/sliders">Back to Slider</Link>
                     </Typography>
-                </Paper>
+                </Paper> */}
             </Grid>
             <div className={styles.productImage}>
                 {(selectedFile) && (<img src={image} className={styles.imgObject}></img>)}

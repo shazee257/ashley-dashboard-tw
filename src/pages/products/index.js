@@ -76,7 +76,7 @@ export default function Products({ products }) {
             },
         },
         {
-            field: "discount", headerName: "Discount %", width: 90, type: "numericColumn",
+            field: "discount", headerName: "Discount %", width: 90, type: "number",
             renderCell: (params) => {
                 return (
                     <>

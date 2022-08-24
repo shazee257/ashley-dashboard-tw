@@ -2,7 +2,7 @@ import styles from "styles/BrandUpdate.module.css";
 import { useEffect, useState, useRef } from "react";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Grid, Paper, TextField, Button, Typography } from '@material-ui/core'
+import { Grid, Paper, TextField, Button, Typography } from '@mui/material'
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { showNotification } from "utils/helper";
@@ -73,56 +73,61 @@ export default function UpdateBrand({ slider }) {
     };
 
     return (
-        <div className={styles.main}>
+        <div className="flex px-5">
             <Grid>
-                <Paper elevation={0} style={{ width: '400px', padding: '20px' }} >
-                    <Grid align='left'>
-                        <h2>Update Slider Content</h2>
-                    </Grid>
+                <Paper elevation={1} className="p-10" >
+                    <h2>Update Slider Content</h2>
                     <br />
-                    <TextField
-                        className={styles.addProductItem}
-                        label='Title'
-                        placeholder='Enter Title'
-                        fullWidth
-                        inputRef={titleRef} />
-                    <br />
-                    <TextField
-                        className={styles.addProductItem}
-                        label='Sub-Title'
-                        placeholder='Enter Sub-Title'
-                        fullWidth
-                        inputRef={subTitleRef} />
-                    <br />
-                    <TextField
-                        className={styles.addProductItem}
-                        label='Description'
-                        placeholder="Slider Description"
-                        fullWidth multiline maxRows={5}
-                        inputRef={descriptionRef} />
-                    <br /><br />
-
-                    <div className={styles.addProductItem}>
-                        <Button variant="contained" component="label" >Choose Image
-                            <input type="file" name="image" hidden onChange={fileSelectedHandler} accept="image/*" />
-                        </Button>
-                        <div><small>Only jpg, png, gif, svg images are allowed</small></div>
-                    </div>
-                    <br />
-                    <Button onClick={handleSubmit} type='submit' color='primary' variant="contained" className={styles.btnstyle} fullWidth>Update Slider Content</Button>
+                    <form onSubmit={handleSubmit} autoComplete="off">
+                        <TextField
+                            className={styles.addProductItem}
+                            label='Title'
+                            placeholder='Enter Title'
+                            fullWidth
+                            inputRef={titleRef} />
+                        <TextField
+                            className={styles.addProductItem}
+                            label='Sub-Title'
+                            placeholder='Enter Sub-Title'
+                            fullWidth
+                            inputRef={subTitleRef} />
+                        <TextField
+                            className={styles.addProductItem}
+                            label='Description'
+                            placeholder="Slider Description"
+                            fullWidth multiline maxRows={5}
+                            inputRef={descriptionRef} />
+                        <div className="flex flex-col place-items-center">
+                            <Button
+                                fullWidth
+                                variant="outlined" color="secondary" component="label" >Choose Image
+                                <input type="file" name="image" hidden onChange={fileSelectedHandler} accept="image/*" />
+                            </Button>
+                            <div>
+                                <small>Only jpg, png, gif, svg images are allowed</small>
+                            </div>
+                        </div>
+                        <br />
+                        <Button
+                            type='submit'
+                            color='primary'
+                            variant="outlined"
+                            className={styles.btnstyle}
+                            fullWidth>Update Slider Content</Button>
+                    </form>
                     <br /><br />
                     <Typography >
                         <Link href="/sliders">Back to Slider Contents</Link>
                     </Typography>
                 </Paper>
             </Grid>
-            <div className={styles.productImage}>
-                <Image height={400} width={400} className={styles.imgObject}
+            <div className="flex items-center px-10 mt-30">
+                <Image height={400} width={900} className="rounded shadow-lg"
                     src={img_address ? img_address : `${process.env.NEXT_PUBLIC_uploadURL}/slider/${image}`}
                 />
             </div>
             <br />
-        </div>
+        </div >
     );
 }
 
