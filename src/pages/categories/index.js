@@ -25,7 +25,7 @@ export default function Categories({ categories }) {
     const handleDelete = async (id) => {
         await axios.delete(`${process.env.NEXT_PUBLIC_baseURL}/categories/${id}`)
             .then(({ data }) => toast.success(data.message));
-        setData(categories.filter((item) => item._id !== id));
+        setData(data.filter((item) => item._id !== id));
     }
 
     const columns = [

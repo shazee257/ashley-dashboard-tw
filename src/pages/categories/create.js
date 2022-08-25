@@ -8,18 +8,19 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { showNotification } from "utils/helper";
-import { MenuProps, options } from "components/FilterOptions/FilterOptions";
+import { MenuProps, useStyles, options } from "components/FilterOptions/FilterOptions";
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowForwardOutlined } from "@mui/icons-material";
 
 export default function NewCategory({ categories }) {
     const [title, setTitle] = useState("");
-    const [parentId, setParentId] = useState("");
+    const [categoryId, setCategoryId] = useState("");
     const [image, setImage] = useState("");
     const [filename, setFilename] = useState("Choose Image");
     const [selectedFile, setSelectedFile] = useState("");
 
-    // const classes = useStyles();
+    const classes = useStyles();
     const [selected, setSelected] = useState([]);
     const isAllSelected =
         options.length > 0 && selected.length === options.length;
@@ -45,7 +46,7 @@ export default function NewCategory({ categories }) {
 
     const clearForm = () => {
         setTitle("");
-        setParentId("");
+        setCategoryId("");
         setImage("");
         setSelected([]);
         setFilename("Choose Image");
@@ -57,7 +58,7 @@ export default function NewCategory({ categories }) {
 
         const fd = new FormData();
         fd.append('title', title);
-        fd.append('parent_id', parentId);
+        fd.append('parent_id', categoryId);
         fd.append('attributes', selected);
         fd.append('image', selectedFile);
 
@@ -95,28 +96,25 @@ export default function NewCategory({ categories }) {
                             onChange={(e) => setTitle(e.target.value)}
                         />
                         <br /><br />
-                        <InputLabel>Parent Category</InputLabel>
+                        <InputLabel>Select Category</InputLabel>
                         <Select fullWidth
                             label="Parent Category"
-                            value={parentId}
-                            onChange={(e) => setParentId(e.target.value)}>
+                            value={categoryId}
+                            onChange={(e) => setCategoryId(e.target.value)}
+                        >
                             {categories.map((category) => (
-                                <div className="flex flex-col">
-                                    <div key={category.id} value={category._id} className="flex ml-5 font-bold">
-                                        <Image height={32} width={32}
-                                            src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${category.image}`} />
-                                        <p className="ml-5">{category.title}</p>
-                                    </div>
-                                    {category.children?.length > 0 && category.children.map((child) => (
+                                category.children &&
+                                category.children.map((child) => (
+                                    <MenuItem key={child._id} value={child._id} className="flex ml-15">
                                         <div className="flex">
-                                            <MenuItem key={child.id} value={child.id} className="flex ml-15">
-                                                <Image height={32} width={32}
-                                                    src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${child.image}`} />
-                                                <p className="ml-5">{child.title}</p>
-                                            </MenuItem>
+                                            <Image height={32} width={32}
+                                                src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${child.image}`} />
+                                            <p className="ml-5">{category.title}</p>
+                                            <ArrowForwardOutlined className="ml-2 mr-2" />
+                                            <p>{child.title}</p>
                                         </div>
-                                    ))}
-                                </div>
+                                    </MenuItem>
+                                ))
                             ))}
                         </Select>
                         <br /><br />
@@ -134,17 +132,17 @@ export default function NewCategory({ categories }) {
                         >
                             <MenuItem style={{ display: 'flex', justifyContent: 'left' }}
                                 value="all"
-                            // classes={{ root: isAllSelected ? classes.selectedAll : "" }}
+                                classes={{ root: isAllSelected ? classes.selectedAll : "" }}
                             >
                                 <ListItemIcon>
                                     <Checkbox
-                                        // classes={{ indeterminate: classes.indeterminateColor }}
+                                        classes={{ indeterminate: classes.indeterminateColor }}
                                         checked={isAllSelected}
                                         indeterminate={selected.length > 0 && selected.length < options.length}
                                     />
                                 </ListItemIcon>
                                 <ListItemText
-                                    // classes={{ primary: classes.selectAllText }}
+                                    classes={{ primary: classes.selectAllText }}
                                     primary="Select All" />
                             </MenuItem>
                             {options.map((option) => (
@@ -157,20 +155,21 @@ export default function NewCategory({ categories }) {
                             ))}
                         </Select>
                         <br /><br />
-
                         <Button
+                            className="flex justify-center mt-5"
                             onClick={handleSubmit}
                             type='submit'
                             color='primary'
                             variant="outlined"
-                            style={{ margin: '8px 0' }} fullWidth>Add Category</Button>
+                            fullWidth
+                        >Add Category</Button>
                     </form>
                     <br />
                     <Typography >
                         <Link href="/categories">Back to Categories</Link>
                     </Typography>
-                </Paper>
-            </Grid>
+                </Paper >
+            </Grid >
             <div className="imageWithButton">
                 <div className={styles.productImage}>
                     {image &&
