@@ -4,12 +4,14 @@ import React, { useState, useEffect } from "react";
 import { Typography, Button, Menu, MenuItem } from "@mui/material";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import Cookies from "js-cookie";
 
 export default function Topbar() {
   const [user, setUser] = useState("");
   const router = useRouter();
 
   const handleLogout = () => {
+    Cookies.remove("loggedin");
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     router.push("/login");

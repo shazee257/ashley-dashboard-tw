@@ -1,12 +1,11 @@
 import { useRef, useEffect } from "react";
 import axios from "axios";
-import 'react-toastify/dist/ReactToastify.css';
-import { Button, Grid, Paper, Avatar, TextField, Typography, Link } from '@material-ui/core';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import { Button, Grid, Paper, Avatar, TextField, Typography, Link } from '@mui/material';
+// import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { LockOpenOutlined } from '@mui/icons-material';
 import { useRouter } from 'next/router'
 import { showNotification } from "utils/helper";
+import Cookies from 'js-cookie';
 
 
 const Login = () => {
@@ -33,7 +32,10 @@ const Login = () => {
                         role: data.user.role,
                     }));
                     localStorage.setItem("token", data.session.token);
-                    router.push("/categories");
+                    Cookies.set('loggedin', true);
+                    // set javascript cookie
+                    // document.cookie = `token=${data.session.token}; expires=Thu, 18 Dec 2021 12:00:00 UTC; path=/`;
+                    router.push("/brands");
                 }
             }).catch(err => showNotification(err));
     };
@@ -45,27 +47,32 @@ const Login = () => {
     return (
         <>
             <Grid>
-                <Paper elevation={10} style={paperStyle}>
-                    <Grid align='center'>
-                        <Avatar style={avatarStyle}><LockOutlinedIcon /></Avatar>
-                        <h2>Sign In</h2>
-                    </Grid>
-                    <TextField
-                        label='Email'
-                        placeholder='Enter Email'
-                        fullWidth
-                        inputRef={emailRef}
-                    />
-                    <TextField
-                        label='Password'
-                        placeholder='Enter password'
-                        type='password'
-                        fullWidth
-                        inputRef={passwordRef}
-                    />
-                    {/* <FormControlLabel control={<Checkbox name="checkedB" color="primary" />} label="Remember me" /> */}
-                    <Button onClick={handleSubmit} color='primary' variant="contained" style={btnstyle} fullWidth >Sign in</Button>
 
+                <Paper elevation={10} style={paperStyle}>
+                    <form onSubmit={handleSubmit}>
+                        <Grid align='center' className="mb-10">
+                            <Avatar style={avatarStyle}><LockOpenOutlined /></Avatar>
+                            <h2>Sign In</h2>
+                        </Grid>
+
+                        <TextField
+                            label='Email'
+                            placeholder='Enter Email'
+                            fullWidth
+                            inputRef={emailRef}
+                        />
+                        <br /><br />
+                        <TextField
+                            label='Password'
+                            placeholder='Enter password'
+                            type='password'
+                            fullWidth
+                            inputRef={passwordRef}
+                        />
+                        <br /><br />
+                        {/* <FormControlLabel control={<Checkbox name="checkedB" color="primary" />} label="Remember me" /> */}
+                        <Button type="submit" color='primary' variant="outlined" style={btnstyle} fullWidth >Sign in</Button>
+                    </form>
                     <Typography >
                         <Link href="/forgotpassword" >
                             Forgot password ?
