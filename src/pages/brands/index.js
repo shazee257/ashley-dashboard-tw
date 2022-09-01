@@ -8,8 +8,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { showNotification } from 'utils/helper';
-import { useDispatch, useSelector } from "react-redux";
-import { getBrands } from 'actions/brands';
+import { useRouter } from "next/router";
 
 export async function getServerSideProps() {
     const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/brands`);
@@ -23,20 +22,19 @@ export async function getServerSideProps() {
 export default function Brands({ brands }) {
     const [data, setData] = useState([...brands]);
 
-    const dispatch = useDispatch();
+    // const router = useRouter();
+    // useEffect(() => {
+    //     const userData = JSON.parse(localStorage.getItem("user"));
+    //     console.log("userData Topbar: ", userData);
+    //     !userData && router.push("/login");
+    // }, [])
 
-    // const brandsData = useSelector(state => state.brands);
-    // console.log("brandData", brandsData);
-
-    useEffect(() => {
-        dispatch(getBrands());
-    }, [dispatch]);
 
 
     const handleDelete = async (id) => {
         await axios.delete(`${process.env.NEXT_PUBLIC_baseURL}/brands/${id}`)
             .then(({ data }) => showNotification("", data.message, 'success'));
-        setData(brands.filter((brand) => brand._id !== id));
+        setData(data.filter((brand) => brand._id !== id));
     }
 
     const columns = [

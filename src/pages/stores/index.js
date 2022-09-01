@@ -1,9 +1,9 @@
 import styles from 'styles/Stores.module.css';
 import axios from 'axios';
-import { DeleteOutline } from "@material-ui/icons";
-import { Button } from '@material-ui/core';
+import { DeleteOutline } from "@mui/icons-material";
+import { Button } from '@mui/material';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { showNotification } from 'utils/helper';
 const { formatDate } = require("utils/utils");
 import MuiGrid from "components/MuiGrid/MuiGrid";
 import { useState, useEffect } from 'react';
@@ -11,14 +11,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Stores({ stores }) {
-    const [data, setData] = useState([]);
-
-    useEffect(() => setData(stores), []);
+    const [data, setData] = useState([...stores]);
 
     const handleDelete = async (slug) => {
         await axios.delete(`${process.env.NEXT_PUBLIC_baseURL}/stores/${slug}`)
-            .then(({ data }) => toast.success(data.message));
-        setData(stores.filter((item) => item.slug !== slug));
+            .then(({ data }) => showNotification("", data.message, 'success'));
+        setData(data.filter((item) => item.slug !== slug));
     }
 
     const columns = [

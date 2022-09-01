@@ -1,26 +1,16 @@
 import styles from "./Topbar.module.css"
-import React, { useState, useEffect } from "react";
-// import { NotificationsNone, Language, Settings } from "@material-ui/icons";
+import { useState, useEffect } from "react";
 import { Typography, Button, Menu, MenuItem } from "@mui/material";
-import { useRouter } from "next/router";
 import Image from "next/image";
-import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
-export default function Topbar() {
-  const [user, setUser] = useState("");
+export default function Topbar({ user }) {
   const router = useRouter();
-
   const handleLogout = () => {
-    Cookies.remove("loggedin");
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     router.push("/login");
   }
-
-  useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("user"));
-    if (userData) setUser(userData);
-  }, [])
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);

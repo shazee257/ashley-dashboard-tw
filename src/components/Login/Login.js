@@ -1,15 +1,13 @@
 import { useRef, useEffect } from "react";
 import axios from "axios";
 import { Button, Grid, Paper, Avatar, TextField, Typography, Link } from '@mui/material';
-// import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { LockOpenOutlined } from '@mui/icons-material';
-import { useRouter } from 'next/router'
 import { showNotification } from "utils/helper";
-import Cookies from 'js-cookie';
-
+import { useRouter } from "next/router";
 
 const Login = () => {
-    const router = useRouter();
+    const { push } = useRouter();
+
     const emailRef = useRef();
     const passwordRef = useRef();
 
@@ -23,19 +21,18 @@ const Login = () => {
 
         await axios.post(`${process.env.NEXT_PUBLIC_baseURL}/users/login`, user)
             .then(({ data }) => {
+                console.log("data: ", data);
                 if (data.success) {
                     localStorage.setItem("user", JSON.stringify({
-                        first_name: data.user.first_name,
-                        last_name: data.user.last_name,
+                        first_name: data.user.first_name ? data.user.first_name : "",
+                        last_name: data.user.last_name ? data.user.last_name : "",
                         email: data.user.email,
-                        image: data.user.image,
+                        image: data.user.image ? data.user.image : null,
                         role: data.user.role,
                     }));
                     localStorage.setItem("token", data.session.token);
-                    Cookies.set('loggedin', true);
-                    // set javascript cookie
-                    // document.cookie = `token=${data.session.token}; expires=Thu, 18 Dec 2021 12:00:00 UTC; path=/`;
-                    router.push("/brands");
+                    showNotification("success", data.message);
+                    push("/brands");
                 }
             }).catch(err => showNotification(err));
     };
@@ -47,7 +44,6 @@ const Login = () => {
     return (
         <>
             <Grid>
-
                 <Paper elevation={10} style={paperStyle}>
                     <form onSubmit={handleSubmit}>
                         <Grid align='center' className="mb-10">
@@ -78,11 +74,6 @@ const Login = () => {
                             Forgot password ?
                         </Link>
                     </Typography>
-                    {/* <Typography > Do you have an account ?
-                        <Link href="/signup" >
-                            Sign Up
-                        </Link>
-                    </Typography> */}
                 </Paper>
             </Grid>
         </>

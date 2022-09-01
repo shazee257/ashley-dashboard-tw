@@ -5,8 +5,6 @@ import axios from 'axios';
 import { showNotification } from "utils/helper";
 import Link from "next/link";
 import Image from "next/image";
-import { useDispatch } from "react-redux";
-import { addBrand } from "actions/brands";
 
 export default function NewBrand() {
     const titleRef = useRef(null);
@@ -14,14 +12,6 @@ export default function NewBrand() {
     const [image, setImage] = useState("");
     const [filename, setFilename] = useState("Choose Image");
     const [selectedFile, setSelectedFile] = useState("");
-
-    const dispatch = useDispatch();
-
-    // useEffect(() => {
-    //     dispatch();
-
-    // }, [dispatch]);
-
 
     const fileSelectedHandler = (e) => {
         const reader = new FileReader();
@@ -53,22 +43,17 @@ export default function NewBrand() {
             headers: { 'Content-Type': 'multipart/form-data' }
         }
 
-        dispatch(addBrand(fd, config));
-
-
-
-
-        // try {
-        //     await axios
-        //         .post(`${process.env.NEXT_PUBLIC_baseURL}/brands`, fd, config)
-        //         .then(({ data }) => {
-        //             data.success && showNotification("", data.message, "success");
-        //             clearForm();
-        //         }).catch(err => showNotification(err));
-        // } catch (error) {
-        //     let message = error.response ? error.response.data.message : "Only image files are allowed!";
-        //     toast.error(message);
-        // }
+        try {
+            await axios
+                .post(`${process.env.NEXT_PUBLIC_baseURL}/brands`, fd, config)
+                .then(({ data }) => {
+                    data.success && showNotification("success", data.message);
+                    clearForm();
+                }).catch(err => showNotification(err));
+        } catch (error) {
+            let message = error.response ? error.response.data.message : "Only image files are allowed!";
+            toast.error(message);
+        }
     };
 
     return (
@@ -92,7 +77,7 @@ export default function NewBrand() {
                         inputRef={descriptionRef} />
                     <br />
                     <div className="flex flex-col">
-                        <Button variant="outlined" component="label" >Choose Image
+                        <Button variant="outlined" color='secondary' component="label" >Choose Image
                             <input type="file" name="image" hidden onChange={fileSelectedHandler} accept="image/*" />
                         </Button>
                         <div><small>Only jpg, png, gif, svg, webp images are allowed</small></div>
