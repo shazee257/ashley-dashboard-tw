@@ -1,6 +1,8 @@
 import styles from 'styles/Home.module.css';
+import cookie from 'js-cookie';
 
-const Home = () => {
+
+export default function Home() {
     return (
         <div className={styles.main}>
             <h2 className={styles.productTitle}>Dashboard Section</h2>
@@ -12,5 +14,3 @@ const Home = () => {
         </div>
     )
 }
-
-export default Home;

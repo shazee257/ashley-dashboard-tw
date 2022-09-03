@@ -4,8 +4,9 @@ import { Button, Grid, Paper, Avatar, TextField, Typography, Link } from '@mui/m
 import { LockOpenOutlined } from '@mui/icons-material';
 import { showNotification } from "utils/helper";
 import { useRouter } from "next/router";
+import cookie from 'js-cookie';
 
-const Login = () => {
+export default function Login() {
     const { push } = useRouter();
 
     const emailRef = useRef();
@@ -31,6 +32,7 @@ const Login = () => {
                         role: data.user.role,
                     }));
                     localStorage.setItem("token", data.session.token);
+                    cookie.set('token', data.session.token, { expires: 1 });
                     showNotification("success", data.message);
                     push("/brands");
                 }
@@ -79,5 +81,3 @@ const Login = () => {
         </>
     )
 }
-
-export default Login
