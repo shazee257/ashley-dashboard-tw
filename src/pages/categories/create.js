@@ -96,12 +96,13 @@ export default function NewCategory({ categories }) {
                             onChange={(e) => setTitle(e.target.value)}
                         />
                         <br /><br />
-                        <InputLabel>Select Category</InputLabel>
+                        <InputLabel>Parent Category</InputLabel>
                         <Select fullWidth
                             label="Parent Category"
                             value={categoryId}
                             onChange={(e) => setCategoryId(e.target.value)}
                         >
+                            <MenuItem key='none' value='none' className="flex ml-15">None</MenuItem>
                             {categories.map((category) => (
                                 category.children &&
                                 category.children.map((child) => (

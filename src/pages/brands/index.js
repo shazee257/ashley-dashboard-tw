@@ -10,7 +10,9 @@ import Link from 'next/link';
 import { showNotification } from 'utils/helper';
 import { useRouter } from "next/router";
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ req, res }) {
+    // console.log(JSON.parse(req.cookies.user));
+
     const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/brands`);
     return {
         props: {
@@ -21,15 +23,6 @@ export async function getServerSideProps() {
 
 export default function Brands({ brands }) {
     const [data, setData] = useState([...brands]);
-
-    // const router = useRouter();
-    // useEffect(() => {
-    //     const userData = JSON.parse(localStorage.getItem("user"));
-    //     console.log("userData Topbar: ", userData);
-    //     !userData && router.push("/login");
-    // }, [])
-
-
 
     const handleDelete = async (id) => {
         await axios.delete(`${process.env.NEXT_PUBLIC_baseURL}/brands/${id}`)

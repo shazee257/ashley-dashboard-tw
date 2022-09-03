@@ -24,14 +24,22 @@ export default function Login() {
             .then(({ data }) => {
                 console.log("data: ", data);
                 if (data.success) {
-                    localStorage.setItem("user", JSON.stringify({
+                    // localStorage.setItem("user", JSON.stringify({
+                    //     first_name: data.user.first_name ? data.user.first_name : "",
+                    //     last_name: data.user.last_name ? data.user.last_name : "",
+                    //     email: data.user.email,
+                    //     image: data.user.image ? data.user.image : null,
+                    //     role: data.user.role,
+                    // }));
+                    // localStorage.setItem("token", data.session.token);
+                    cookie.set('user', JSON.stringify({
                         first_name: data.user.first_name ? data.user.first_name : "",
                         last_name: data.user.last_name ? data.user.last_name : "",
                         email: data.user.email,
                         image: data.user.image ? data.user.image : null,
                         role: data.user.role,
-                    }));
-                    localStorage.setItem("token", data.session.token);
+                    }), { expires: 1 });
+
                     cookie.set('token', data.session.token, { expires: 1 });
                     showNotification("success", data.message);
                     push("/brands");

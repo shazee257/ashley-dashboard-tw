@@ -1,5 +1,5 @@
 import styles from "styles/CategoryUpdate.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
@@ -13,15 +13,25 @@ import { MenuProps, useStyles, options } from "components/FilterOptions/FilterOp
 import { showNotification } from "utils/helper";
 import Image from 'next/image';
 import Link from 'next/link';
+import { ArrowForwardOutlined } from "@mui/icons-material";
 
 export default function UpdateCategory({ category, categories }) {
-    const [title, setTitle] = useState(category.title);
-    const [parentId, setParentId] = useState(category.parent_id);
-    const [image, setImage] = useState(category.image);
+    const [title, setTitle] = useState("");
+    const [parentId, setParentId] = useState("");
+    const [image, setImage] = useState("");
     const [img_address, setImg_address] = useState("");
     const [filename, setFilename] = useState("Choose Image");
 
-    // const classes = useStyles();
+
+    useEffect(() => {
+        setTitle(category.title);
+        setParentId(category.parent_id);
+        console.log(category.parent_id);
+        setImage(category.image);
+        setSelected(category.attributes);
+    }, [category]);
+
+    const classes = useStyles();
     const [selected, setSelected] = useState(category.attributes);
     const isAllSelected =
         options.length > 0 && selected.length === options.length;
@@ -64,15 +74,18 @@ export default function UpdateCategory({ category, categories }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const updateCategory = {
+        const categoryObj = {
             title,
             parent_id: parentId,
             attributes: selected
         };
 
+        // return console.log('categoryObj', categoryObj);
+
+
         try {
             await axios
-                .put(`${process.env.NEXT_PUBLIC_baseURL}/categories/${category._id}`, updateCategory)
+                .put(`${process.env.NEXT_PUBLIC_baseURL}/categories/${category._id}`, categoryObj)
                 .then(({ data }) => {
                     console.log(data);
                     data.success && toast.success(data.message);
@@ -84,37 +97,34 @@ export default function UpdateCategory({ category, categories }) {
     };
 
     return (
-        <div className={styles.main}>
-            <Grid>
-                <Paper elevation={0} style={{ padding: '20px', width: '400px' }}>
+        <div className="flex p-10">
+            <Paper elevation={1} style={{ padding: '20px', width: '450px' }}>
+                <div>
                     <Grid align='left'>
                         <h2>Update Category</h2>
                     </Grid>
                     <br />
                     <form>
                         <TextField
-                            className={styles.addProductItem}
+                            fullWidth
                             label='Category Title'
                             placeholder='Enter Category Title'
-                            fullWidth
-                            value={title} onChange={(e) => setTitle(e.target.value)}
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
                         />
                         <br /><br />
                         <InputLabel>Parent Category</InputLabel>
-                        <Select fullWidth displayEmpty
+                        <Select fullWidth
                             label="Parent Category"
                             value={parentId} onChange={(e) => setParentId(e.target.value)}
                         >
-                            <MenuItem value=""><em>None</em></MenuItem>
+                            <MenuItem key='none' value='none' className="flex ml-15">None</MenuItem>
                             {categories.map((category) => (
-                                <MenuItem value={category.id} key={category.id}>
-                                    <div className={styles.productListItem}>
-                                        <div className={styles.productListItem}>
-                                            <Image height={32} width={32}
-                                                className={styles.productListImg}
-                                                src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${category.image}`} />
-                                        </div>
-                                        {category.title}
+                                <MenuItem key={category._id} value={category._id} className="flex ml-15">
+                                    <div className="flex">
+                                        <Image height={32} width={32}
+                                            src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${category.image}`} />
+                                        <p className="ml-5">{category.title}</p>
                                     </div>
                                 </MenuItem>
                             ))}
@@ -132,26 +142,23 @@ export default function UpdateCategory({ category, categories }) {
                             renderValue={(selected) => selected.join(", ")}
                             MenuProps={MenuProps}
                         >
-                            <MenuItem
+                            <MenuItem style={{ display: 'flex', justifyContent: 'left' }}
                                 value="all"
-                            // classes={{ root: isAllSelected ? classes.selectedAll : "" }}
+                                classes={{ root: isAllSelected ? classes.selectedAll : "" }}
                             >
                                 <ListItemIcon>
                                     <Checkbox
-                                        // classes={{ indeterminate: classes.indeterminateColor }}
+                                        classes={{ indeterminate: classes.indeterminateColor }}
                                         checked={isAllSelected}
-                                        indeterminate={
-                                            selected.length > 0 && selected.length < options.length
-                                        }
+                                        indeterminate={selected.length > 0 && selected.length < options.length}
                                     />
                                 </ListItemIcon>
                                 <ListItemText
-                                    // classes={{ primary: classes.selectAllText }}
-                                    primary="Select All"
-                                />
+                                    classes={{ primary: classes.selectAllText }}
+                                    primary="Select All" />
                             </MenuItem>
                             {options.map((option) => (
-                                <MenuItem key={option} value={option}>
+                                <MenuItem style={{ display: 'flex', justifyContent: 'left' }} key={option} value={option}>
                                     <ListItemIcon>
                                         <Checkbox checked={selected.indexOf(option) > -1} />
                                     </ListItemIcon>
@@ -160,16 +167,22 @@ export default function UpdateCategory({ category, categories }) {
                             ))}
                         </Select>
                         <br /><br />
-                        <Button onClick={handleSubmit} type='submit'
-                            color='primary' variant="contained"
-                            style={{ margin: '8px 0' }} fullWidth>Update Category</Button>
+                        <Button
+                            className="flex justify-center mt-5"
+                            onClick={handleSubmit}
+                            type='submit'
+                            color='primary'
+                            variant="outlined"
+                            fullWidth
+                        >Update Category</Button>
                     </form>
+
                     <br />
                     <Typography >
                         <Link href="/categories">Back to Categories</Link>
                     </Typography>
-                </Paper>
-            </Grid>
+                </div>
+            </Paper>
             <div className="imageWithButton">
                 <div className={styles.productImage}>
                     <Image height={400} width={400}
@@ -178,7 +191,7 @@ export default function UpdateCategory({ category, categories }) {
                 </div>
                 <div className={styles.imageButtonContainer}>
                     <div><small>Only jpg, png, gif, svg, webp images are allowed</small></div>
-                    <Button className={styles.imageButton} variant="contained" component="label" >Choose Image
+                    <Button className={styles.imageButton} variant="outlined" color='secondary' component="label" >Choose Image
                         <input type="file" name="image" hidden onChange={fileSelectedHandler} accept="image/*" />
                     </Button>
                 </div>
@@ -188,10 +201,9 @@ export default function UpdateCategory({ category, categories }) {
 }
 
 export async function getServerSideProps(context) {
-    const { id } = context.query;
-    const categoryData = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/categories/${id}`);
-    const categoriesData = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/categories`);
-
+    const { categoryId } = context.query;
+    const categoryData = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/categories/${categoryId}`);
+    const categoriesData = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/categories/fetch/categories`);
     return {
         props: {
             category: categoryData.data.category,

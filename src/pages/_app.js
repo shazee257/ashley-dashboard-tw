@@ -36,7 +36,6 @@ function MyApp({ Component, pageProps }) {
 
   }, []);
 
-
   if (!token) {
     return (
       <>
