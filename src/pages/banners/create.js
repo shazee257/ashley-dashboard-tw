@@ -6,9 +6,17 @@ import { showNotification } from "utils/helper";
 import Link from "next/link";
 import Image from "next/image";
 
-export default function NewBrand() {
-    const titleRef = useRef(null);
-    const descriptionRef = useRef(null);
+export default function NewBanner({ }) {
+    const newBanner = {
+        title: "",
+        description: "",
+        url: "",
+        type: "",
+        category_id: "",
+        is_active: true,
+    }
+
+    const [banner, setBanner] = useState(newBanner);
     const [image, setImage] = useState("");
     const [filename, setFilename] = useState("Choose Image");
     const [selectedFile, setSelectedFile] = useState("");
@@ -24,8 +32,7 @@ export default function NewBrand() {
     }
 
     const clearForm = () => {
-        titleRef.current.value = "";
-        descriptionRef.current.value = "";
+        setBanner(newBanner);
         setImage("");
         setFilename("Choose Image");
         setSelectedFile("");
@@ -35,8 +42,12 @@ export default function NewBrand() {
         e.preventDefault();
 
         const fd = new FormData();
-        fd.append('title', titleRef.current.value);
-        fd.append('description', descriptionRef.current.value);
+        fd.append('title', banner.title);
+        fd.append('description', banner.description);
+        fd.append('url', banner.url);
+        fd.append('type', banner.type);
+        fd.append('category_id', banner.category_id);
+        fd.append('is_active', banner.is_active);
         fd.append('image', image);
 
         const config = {
@@ -45,14 +56,14 @@ export default function NewBrand() {
 
         try {
             await axios
-                .post(`${process.env.NEXT_PUBLIC_baseURL}/brands`, fd, config)
+                .post(`${process.env.NEXT_PUBLIC_baseURL}/banners`, fd, config)
                 .then(({ data }) => {
                     data.success && showNotification("success", data.message);
                     clearForm();
                 }).catch(err => showNotification(err));
         } catch (error) {
             let message = error.response ? error.response.data.message : "Only image files are allowed!";
-            toast.error(message);
+            showNotification(message);
         }
     };
 
@@ -104,4 +115,14 @@ export default function NewBrand() {
             </div>
         </div>
     );
+}
+
+export function getServerSideProps(context) {
+
+
+    return {
+        props: {
+            // props for your component
+        }
+    }
 }

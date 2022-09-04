@@ -5,8 +5,15 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import cookie from 'js-cookie';
 
-export default function Topbar({ user }) {
+export default function Topbar() {
+  const [user, setUser] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    userData && setUser(userData);
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -25,7 +32,7 @@ export default function Topbar({ user }) {
   };
 
   return (
-    <div className={styles.topbar}>
+    <div className={`z-10 mb-5 w-full h-16 text-white sticky top-0 bg-blue-800`}>
       <div className={styles.topbarWrapper}>
         <div className={styles.topLeft}>
           <Typography component="h1" variant="h4" align="center" gutterBottom style={{ marginBottom: '0' }}>

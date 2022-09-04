@@ -1,7 +1,5 @@
 import styles from "styles/CategoryUpdate.module.css";
-import { useEffect, useState } from "react";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useState } from "react";
 import {
     Grid, Paper, TextField, Button,
     Typography, Select, InputLabel,
@@ -13,23 +11,14 @@ import { MenuProps, useStyles, options } from "components/FilterOptions/FilterOp
 import { showNotification } from "utils/helper";
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowForwardOutlined } from "@mui/icons-material";
 
 export default function UpdateCategory({ category, categories }) {
-    const [title, setTitle] = useState("");
-    const [parentId, setParentId] = useState("");
-    const [image, setImage] = useState("");
+    const [title, setTitle] = useState(category.title);
+    const [parentId, setParentId] = useState(category.parent_id);
     const [img_address, setImg_address] = useState("");
     const [filename, setFilename] = useState("Choose Image");
-
-
-    useEffect(() => {
-        setTitle(category.title);
-        setParentId(category.parent_id);
-        console.log(category.parent_id);
-        setImage(category.image);
-        setSelected(category.attributes);
-    }, [category]);
+    const [discountImageAddress, setDiscountImageAddress] = useState("");
+    const [discountImageFilename, setDiscountImageFilename] = useState("Choose Image");
 
     const classes = useStyles();
     const [selected, setSelected] = useState(category.attributes);
@@ -63,10 +52,36 @@ export default function UpdateCategory({ category, categories }) {
 
             await axios
                 .post(`${process.env.NEXT_PUBLIC_baseURL}/categories/upload-image/${category._id}`, fd, config)
-                .then(({ data }) => toast.success(data.message))
+                .then(({ data }) => showNotification(data.message, "success"))
                 .catch((err) => {
                     let message = err.response ? err.response.data.message : "Only image files are allowed!";
-                    toast.error(message)
+                    showNotification(message, "error");
+                });
+        }
+    }
+
+    const discountImageHandler = async (e) => {
+        if (e.target.value) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                if (reader.readyState === 2) {
+                    setDiscountImageAddress(reader.result);
+                };
+            }
+            reader.readAsDataURL(e.target.files[0]);
+            setDiscountImageFilename(e.target.files[0].name);
+
+            const fd = new FormData();
+            fd.append('image', e.target.files[0]);
+
+            const config = { headers: { 'Content-Type': 'multipart/form-data' } }
+
+            await axios
+                .post(`${process.env.NEXT_PUBLIC_baseURL}/categories/discount-image/${category._id}`, fd, config)
+                .then(({ data }) => showNotification("success", data.message))
+                .catch((err) => {
+                    let message = err.response ? err.response.data.message : "Only image files are allowed!";
+                    showNotification
                 });
         }
     }
@@ -80,19 +95,16 @@ export default function UpdateCategory({ category, categories }) {
             attributes: selected
         };
 
-        // return console.log('categoryObj', categoryObj);
-
-
         try {
             await axios
                 .put(`${process.env.NEXT_PUBLIC_baseURL}/categories/${category._id}`, categoryObj)
                 .then(({ data }) => {
                     console.log(data);
-                    data.success && toast.success(data.message);
+                    data.success && showNotification(data.message, "success");
                 }).catch(err => showNotification(err));
         } catch (error) {
             let message = err.response ? err.response.data.message : "Something went wrong!";
-            toast.error(message);
+            showNotification(message, "error");
         }
     };
 
@@ -183,6 +195,7 @@ export default function UpdateCategory({ category, categories }) {
                     </Typography>
                 </div>
             </Paper>
+            {/* Category Image */}
             <div className="imageWithButton">
                 <div className={styles.productImage}>
                     <Image height={400} width={400}
@@ -193,6 +206,19 @@ export default function UpdateCategory({ category, categories }) {
                     <div><small>Only jpg, png, gif, svg, webp images are allowed</small></div>
                     <Button className={styles.imageButton} variant="outlined" color='secondary' component="label" >Choose Image
                         <input type="file" name="image" hidden onChange={fileSelectedHandler} accept="image/*" />
+                    </Button>
+                </div>
+            </div>
+            {/* Discount Image */}
+            <div className="flex flex-col ml-5 mt-10 rounded items-center border h-96">
+                <Image height={300} width={700} layout="fixed"
+                    src={discountImageAddress ? discountImageAddress : `${process.env.NEXT_PUBLIC_uploadURL}/categories/${category.discount_image}`}
+                />
+                <h1 className="text-center">Discounted Banner Image</h1>
+                <div className={styles.imageButtonContainer}>
+                    <div><small>Only jpg, png, gif, svg, webp images are allowed</small></div>
+                    <Button className={styles.imageButton} variant="outlined" color='secondary' component="label" >Choose Image
+                        <input type="file" name="image" hidden onChange={discountImageHandler} accept="image/*" />
                     </Button>
                 </div>
             </div>

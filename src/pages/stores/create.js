@@ -1,11 +1,10 @@
 import styles from "styles/StoreNew.module.css";
 import { useState } from "react";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { Grid, Paper, TextField, Button, Typography } from '@material-ui/core'
+import { Grid, Paper, TextField, Button, Typography } from '@mui/material'
 import axios from 'axios';
 import { showNotification } from "utils/helper";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function NewStore() {
     const storeObj = {
@@ -66,75 +65,82 @@ export default function NewStore() {
             await axios
                 .post(`${process.env.NEXT_PUBLIC_baseURL}/stores`, fd, config)
                 .then(({ data }) => {
-                    data.success && toast.success(data.message);
+                    data.success && showNotification('success', data.message);
                     clearForm();
                 }).catch(err => showNotification(err));
         } catch (error) {
             let message = error.response ? error.response.data.message : "Only image files are allowed!";
-            toast.error(message);
+            showNotification('error', message);
         }
     };
 
     return (
-        <div className={styles.main}>
+        <div className="flex pl-10 pb-10">
             <Grid>
-                <Paper elevation={0} style={{ padding: '20px', width: '400px' }}>
+                <Paper elevation={1} style={{ padding: '20px', width: '450px' }}>
                     <Grid align='left'>
-                        <h2>New Store / Franchise</h2>
+                        <h2>New Store / Warehouse</h2>
                     </Grid>
                     <br />
-                    <form encType='multipart/form-data'>
-                        <TextField className={styles.addProductItem}
+                    <form encType='multipart/form-data' onSubmit={handleSubmit}>
+                        <TextField
+                            fullWidth
                             label='Store Name'
                             placeholder='Enter Store Name'
                             value={store.title}
                             onChange={(e) => setStore({ ...store, title: e.target.value })} />
-                        <br />
-                        <TextField className={styles.addProductItem}
+                        <br /><br />
+                        <TextField
+                            fullWidth
                             label='Email'
                             placeholder='Enter Email'
                             value={store.email}
                             onChange={(e) => setStore({ ...store, email: e.target.value })} />
-                        <br />
-                        <TextField className={styles.addProductItem}
+                        <br /><br />
+                        <TextField
+                            fullWidth
                             label='Phone No'
                             placeholder='Enter Phone #'
                             value={store.phone_no}
                             onChange={(e) => setStore({ ...store, phone_no: e.target.value })} />
-                        <br />
+                        <br /><br />
                         <TextField
-                            className={styles.addProductItem}
+                            fullWidth
                             label='Address'
                             placeholder="Store Address"
                             fullWidth multiline maxRows={5}
                             value={store.address}
                             onChange={(e) => setStore({ ...store, address: e.target.value })} />
-                        <br />
-                        <TextField className={styles.addProductItem}
+                        <br /><br />
+                        <TextField
+                            fullWidth
                             label='City'
                             placeholder='Enter City'
                             value={store.city}
                             onChange={(e) => setStore({ ...store, city: e.target.value })} />
-                        <br />
-                        <TextField className={styles.addProductItem}
+                        <br /><br />
+                        <TextField
+                            fullWidth
                             label='State'
                             placeholder='Enter State'
                             value={store.state}
                             onChange={(e) => setStore({ ...store, state: e.target.value })} />
-                        <br />
-                        <TextField className={styles.addProductItem}
+                        <br /><br />
+                        <TextField
+                            fullWidth
                             label='Zip Code'
                             placeholder='Enter Zip Code'
                             value={store.zip}
                             onChange={(e) => setStore({ ...store, zip: e.target.value })} />
-                        <br />
-                        <TextField className={styles.addProductItem}
+                        <br /><br />
+                        <TextField
+                            fullWidth
                             label='Country'
                             placeholder='Enter Country'
                             value={store.country}
                             onChange={(e) => setStore({ ...store, country: e.target.value })} />
                         <br /><br />
-                        <Button onClick={handleSubmit} type='submit' color='primary' variant="contained" style={{ margin: '8px 0' }} fullWidth>Add New Store</Button>
+                        <Button type='submit' color='primary' variant="outlined" style={{ margin: '8px 0' }} fullWidth>Add New Store</Button>
                     </form>
                     <br />
                     <Typography >
@@ -144,11 +150,11 @@ export default function NewStore() {
             </Grid>
             <div className="imageWithButton">
                 <div className={styles.productImage}>
-                    {(selectedFile) && (<img src={image} className={styles.imgObject}></img>)}
+                    {(selectedFile) && (<Image height={400} width={400} src={image} className={styles.imgObject} />)}
                 </div>
                 <div className={styles.imageButtonContainer}>
                     <div><small>Only jpg, png, gif, svg, webp images are allowed</small></div>
-                    <Button className={styles.imageButton} variant="contained" component="label" >Choose Image
+                    <Button className={styles.imageButton} color='secondary' variant="outlined" component="label" >Choose Image
                         <input type="file" name="image" hidden onChange={fileSelectedHandler} accept="image/*" />
                     </Button>
                 </div>

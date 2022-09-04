@@ -1,8 +1,6 @@
 import styles from "styles/StoreUpdate.module.css";
 import { useState } from "react";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { Grid, Paper, TextField, Button, Typography } from '@material-ui/core'
+import { Grid, Paper, TextField, Button, Typography } from '@mui/material'
 import axios from 'axios';
 import { useRouter } from "next/router";
 import { showNotification } from "utils/helper";
@@ -42,8 +40,8 @@ export default function UpdateStore({ store }) {
             const config = { headers: { 'Content-Type': 'multipart/form-data' } }
 
             await axios
-                .post(`${process.env.NEXT_PUBLIC_baseURL}/stores/upload-image/${store.slug}`, fd, config)
-                .then(({ data }) => toast.success(data.message))
+                .post(`${process.env.NEXT_PUBLIC_baseURL}/stores/upload-image/${store._id}`, fd, config)
+                .then(({ data }) => showNotification('success', data.message))
                 .catch(err => showNotification(err));
         }
     }
@@ -55,80 +53,80 @@ export default function UpdateStore({ store }) {
 
         try {
             await axios
-                .put(`${process.env.NEXT_PUBLIC_baseURL}/stores/${store.slug}`, storeData)
+                .put(`${process.env.NEXT_PUBLIC_baseURL}/stores/${store._id}`, storeData)
                 .then(({ data }) => {
                     console.log(data);
-                    data.success && toast.success(data.message);
+                    data.success && showNotification('success', data.message);
                     router.push("/stores");
                 }).catch((err) => {
                     let message = err.response ? err.response.data.message : "Something went wrong!";
-                    toast.error(message)
+                    showNotification(message);
                 });
         } catch (error) {
-            toast.error("brand is not updated, please try again", error);
+            showNotification(error);
         }
     };
 
     return (
-        <div className={styles.main}>
+        <div className="flex pl-10 pb-10">
             <Grid>
-                <Paper elevation={0} style={{ padding: '20px', width: '400px' }}>
+                <Paper elevation={1} style={{ padding: '20px', width: '450px' }}>
                     <Grid align='left'>
-                        <h2>New Store / Franchise</h2>
+                        <h2>Update Store / Warehouse</h2>
                     </Grid>
                     <br />
-                    <form encType='multipart/form-data'>
-                        <TextField className={styles.addProductItem}
+                    <form encType='multipart/form-data' onSubmit={handleSubmit}>
+                        <TextField fullWidth
                             label='Store Name'
                             placeholder='Enter Store Name'
                             value={title}
                             onChange={(e) => setTitle(e.target.value)} />
-                        <br />
-                        <TextField className={styles.addProductItem}
+                        <br /><br />
+                        <TextField fullWidth
                             label='Email'
                             placeholder='Enter Email'
                             value={email}
                             onChange={(e) => setEmail(e.target.value)} />
-                        <br />
-                        <TextField className={styles.addProductItem}
+                        <br /><br />
+                        <TextField fullWidth
                             label='Phone No'
                             placeholder='Enter Phone #'
                             value={phone_no}
                             onChange={(e) => setPhone_no(e.target.value)} />
-                        <br />
+                        <br /><br />
                         <TextField
-                            className={styles.addProductItem}
+                            fullWidth
                             label='Address'
                             placeholder="Store Address"
-                            fullWidth multiline maxRows={5}
+                            multiline maxRows={5}
                             value={address}
                             onChange={(e) => setAddress(e.target.value)} />
-                        <br />
-                        <TextField className={styles.addProductItem}
+                        <br /><br />
+                        <TextField fullWidth
                             label='City'
                             placeholder='Enter City'
                             value={city}
                             onChange={(e) => setCity(e.target.value)} />
-                        <br />
-                        <TextField className={styles.addProductItem}
+                        <br /><br />
+                        <TextField fullWidth
                             label='State'
                             placeholder='Enter State'
                             value={state}
                             onChange={(e) => setState(e.target.value)} />
-                        <br />
-                        <TextField className={styles.addProductItem}
+                        <br /><br />
+                        <TextField fullWidth
                             label='Zip Code'
                             placeholder='Enter Zip Code'
                             value={zip}
                             onChange={(e) => setZip(e.target.value)} />
-                        <br />
-                        <TextField className={styles.addProductItem}
+                        <br /><br />
+                        <TextField fullWidth
                             label='Country'
                             placeholder='Enter Country'
                             value={country}
                             onChange={(e) => setCountry(e.target.value)} />
                         <br /><br />
-                        <Button onClick={handleSubmit} type='submit' color='primary' variant="contained" style={{ margin: '8px 0' }} fullWidth>Update Store</Button>
+                        <Button type='submit' color='primary' variant="outlined" style={{ margin: '8px 0' }} fullWidth>Update Store</Button>
                     </form>
                     <br />
                     <Typography >
@@ -136,6 +134,17 @@ export default function UpdateStore({ store }) {
                     </Typography>
                 </Paper>
             </Grid>
+            {/* <div className="imageWithButton">
+                <div className={styles.productImage}>
+                    {(selectedFile) && (<Image height={400} width={400} src={image} className={styles.imgObject}></Image>)}
+                </div>
+                <div className={styles.imageButtonContainer}>
+                    <div><small>Only jpg, png, gif, svg, webp images are allowed</small></div>
+                    <Button className={styles.imageButton} color='secondary' variant="outlined" component="label" >Choose Image
+                        <input type="file" name="image" hidden onChange={fileSelectedHandler} accept="image/*" />
+                    </Button>
+                </div>
+            </div> */}
             <div className={styles.imageWithButton}>
                 <div className={styles.productImage}>
                     {(!image && !img_address) ?
@@ -148,7 +157,7 @@ export default function UpdateStore({ store }) {
                 </div>
                 <div className={styles.imageButtonContainer}>
                     <div><small>Only jpg, png, gif, svg, webp images are allowed</small></div>
-                    <Button className={styles.imageButton} variant="contained" component="label" >Choose Image
+                    <Button className={styles.imageButton} color='secondary' variant="outlined" component="label" >Choose Image
                         <input type="file" name="image" hidden onChange={fileSelectedHandler} accept="image/*" />
                     </Button>
                 </div>
@@ -159,8 +168,8 @@ export default function UpdateStore({ store }) {
 }
 
 export async function getServerSideProps(context) {
-    const { slug } = context.query;
-    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/stores/${slug}`);
+    const { storeId } = context.query;
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/stores/${storeId}`);
     return {
         props: {
             store: data.store

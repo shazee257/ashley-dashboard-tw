@@ -81,52 +81,59 @@ export default function UpdateBrand({ brand }) {
     };
 
     return (
-        <div className="flex px-5">
+        <div className="flex pl-10 pb-10">
             <Grid>
-                <Paper elevation={1} className="p-10">
+                <Paper elevation={1} style={{ padding: '20px', width: '450px' }}>
                     <h2>Update Brand</h2>
                     <br />
-                    <TextField
-                        className={styles.addProductItem}
-                        label='Brand Title'
-                        placeholder='Enter Brand Title'
-                        fullWidth
-                        inputRef={titleRef}
-                    />
+                    <form onSubmit={handleSubmit} autoComplete="off">
+                        <TextField
+                            fullWidth
+                            label='Brand Title'
+                            placeholder='Enter Brand Title'
+                            inputRef={titleRef}
+                        />
+                        <br /><br />
+                        <TextField
+                            fullWidth
+                            label='Description'
+                            placeholder="Description"
+                            multiline maxRows={5}
+                            inputRef={descriptionRef}
+                        />
+                        <br /><br />
+                        <Button
+                            fullWidth
+                            type='submit'
+                            color='primary'
+                            variant="outlined"
+                            className={styles.btnstyle}>Update Brand</Button>
+                    </form>
                     <br />
-                    <TextField
-                        className={styles.addProductItem}
-                        label='Description'
-                        placeholder="Description"
-                        fullWidth multiline maxRows={5}
-                        inputRef={descriptionRef}
-                    />
-                    <br />
-                    <div className="flex flex-col">
-                        <Button variant="outlined" color="secondary" component="label">Choose Image
-                            <input type="file" name="image" hidden onChange={fileSelectedHandler} accept="image/*" />
-                        </Button>
-                        <div><small>Only jpg, png, gif, svg images are allowed</small></div>
-                    </div>
-                    <br />
-                    <Button
-                        fullWidth
-                        onClick={handleSubmit}
-                        type='submit'
-                        color='primary'
-                        variant="outlined"
-                        className={styles.btnstyle}>Update Brand</Button>
-                    <br /><br />
                     <Typography >
                         <Link href="/brands">Back to Brands</Link>
                     </Typography>
                 </Paper>
             </Grid>
-            <div className={styles.productImage}>
-                <Image height={400} width={400}
-                    src={img_address ? img_address : `${process.env.NEXT_PUBLIC_uploadURL}/brands/${image}`}
-                />
+            <div className="w-full rounded border-gray-900 items-center ">
+                <div className={styles.productImage}>
+                    <Image height={400} width={400}
+                        src={img_address ? img_address : `${process.env.NEXT_PUBLIC_uploadURL}/brands/${image}`}
+                    />
+                </div>
+                <div className="flex flex-col items-center">
+                    <div><small>Only jpg, png, gif, svg, webp images are allowed</small></div>
+                    <Button
+                        className="w-4/5"
+                        variant="outlined"
+                        color="secondary"
+                        component="label" >Choose Image
+                        <input type="file" name="image" hidden onChange={fileSelectedHandler} accept="image/webp, image/*" />
+                    </Button>
+
+                </div>
             </div>
+
             <br />
         </div>
     );

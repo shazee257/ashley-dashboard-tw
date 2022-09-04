@@ -2,14 +2,13 @@ import { useState, useEffect } from "react";
 import "styles/globals.css";
 import Layout from 'components/Layout/Layout';
 import LoadingPanel from "components/Loader";
-import Router from "next/router";
-import Login from "components/Login/Login";
-import cookie from 'js-cookie';
+import Router, { useRouter } from "next/router";
+
 import { ToastContainer } from 'react-toastify';
 
 function MyApp({ Component, pageProps }) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const token = cookie.get('token');
 
   useEffect(() => {
     console.log("_app mounted");
@@ -36,15 +35,16 @@ function MyApp({ Component, pageProps }) {
 
   }, []);
 
-  if (!token) {
+  if (router.pathname === "/login") {
     return (
       <>
         {loading && <LoadingPanel />}
-        <Login />
+        <Component {...pageProps} />
         <ToastContainer />
       </>
     );
   }
+
 
   return (
     <Layout>

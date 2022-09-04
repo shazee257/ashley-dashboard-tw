@@ -121,9 +121,9 @@ export default function Sidebar() {
           </div>
           <ul className={styles.sidebarList} hidden={isClicked3}>
 
-            <li className={`${styles.li} ${RegExp(/sliders/).test(router.pathname) ? styles.active : ""}`}>
-              <Link href='/sliders' className={`${styles.sidebarListItem} ${styles.link}`}>
-                <a className={styles.anchor}>Slider Contents</a>
+            <li className={`${styles.li} ${RegExp(/banners/).test(router.pathname) ? styles.active : ""}`}>
+              <Link href='/banners' className={`${styles.sidebarListItem} ${styles.link}`}>
+                <a className={styles.anchor}>Banners</a>
               </Link>
             </li>
 

@@ -11,11 +11,10 @@ import { showNotification } from "utils/helper";
 import { MenuProps, useStyles, options } from "components/FilterOptions/FilterOptions";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowForwardOutlined } from "@mui/icons-material";
 
 export default function NewCategory({ categories }) {
     const [title, setTitle] = useState("");
-    const [categoryId, setCategoryId] = useState("");
+    const [parentId, setParentId] = useState("");
     const [image, setImage] = useState("");
     const [filename, setFilename] = useState("Choose Image");
     const [selectedFile, setSelectedFile] = useState("");
@@ -70,12 +69,12 @@ export default function NewCategory({ categories }) {
             await axios
                 .post(`${process.env.NEXT_PUBLIC_baseURL}/categories`, fd, config)
                 .then(({ data }) => {
-                    data.success && showNotification("", data.message, "success");
+                    data.success && showNotification("success", data.message);
                     clearForm();
                 }).catch(err => showNotification(err));
         } catch (error) {
             let message = error.response ? error.response.data.message : "Only image files are allowed!";
-            showNotification("", message, "error");
+            showNotification(message);
         }
     };
 
@@ -99,23 +98,17 @@ export default function NewCategory({ categories }) {
                         <InputLabel>Parent Category</InputLabel>
                         <Select fullWidth
                             label="Parent Category"
-                            value={categoryId}
-                            onChange={(e) => setCategoryId(e.target.value)}
+                            value={parentId} onChange={(e) => setParentId(e.target.value)}
                         >
                             <MenuItem key='none' value='none' className="flex ml-15">None</MenuItem>
                             {categories.map((category) => (
-                                category.children &&
-                                category.children.map((child) => (
-                                    <MenuItem key={child._id} value={child._id} className="flex ml-15">
-                                        <div className="flex">
-                                            <Image height={32} width={32}
-                                                src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${child.image}`} />
-                                            <p className="ml-5">{category.title}</p>
-                                            <ArrowForwardOutlined className="ml-2 mr-2" />
-                                            <p>{child.title}</p>
-                                        </div>
-                                    </MenuItem>
-                                ))
+                                <MenuItem key={category._id} value={category._id} className="flex ml-15">
+                                    <div className="flex">
+                                        <Image height={32} width={32}
+                                            src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${category.image}`} />
+                                        <p className="ml-5">{category.title}</p>
+                                    </div>
+                                </MenuItem>
                             ))}
                         </Select>
                         <br /><br />
@@ -158,7 +151,6 @@ export default function NewCategory({ categories }) {
                         <br /><br />
                         <Button
                             className="flex justify-center mt-5"
-                            onClick={handleSubmit}
                             type='submit'
                             color='primary'
                             variant="outlined"

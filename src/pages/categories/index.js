@@ -2,13 +2,12 @@ import styles from "styles/Categories.module.css";
 import axios from 'axios';
 import { DeleteOutline } from "@mui/icons-material";
 import { Button } from '@mui/material';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 const { formatDate } = require("utils/utils");
 import MuiGrid from 'components/MuiGrid/MuiGrid';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { showNotification } from "utils/helper";
 
 export async function getServerSideProps(context) {
     const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/categories`);
@@ -24,7 +23,7 @@ export default function Categories({ categories }) {
 
     const handleDelete = async (id) => {
         await axios.delete(`${process.env.NEXT_PUBLIC_baseURL}/categories/${id}`)
-            .then(({ data }) => toast.success(data.message));
+            .then(({ data }) => showNotification('sucess', data.message));
         setData(data.filter((item) => item._id !== id));
     }
 
@@ -72,12 +71,12 @@ export default function Categories({ categories }) {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link href={"/categories/update/" + params.row.id}>
+                        <Link href={"/categories/update/" + params.row._id}>
                             <button className={styles.productListEdit}>Edit</button>
                         </Link>
                         <DeleteOutline
                             className={styles.productListDelete}
-                            onClick={() => handleDelete(params.row.id)}
+                            onClick={() => handleDelete(params.row._id)}
                         />
                     </>
                 );
@@ -88,7 +87,7 @@ export default function Categories({ categories }) {
     return (
         <div className={styles.productList}>
             <div className={styles.main}>
-                <h2 className={styles.productTitle}>Product Categories</h2>
+                <h2 className={styles.productTitle}>Categories</h2>
                 <Link href="/categories/create">
                     <Button variant="contained" color="primary" component="label"
                         className={styles.createNewLink}>Create New</Button>

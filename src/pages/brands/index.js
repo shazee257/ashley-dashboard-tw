@@ -10,9 +10,7 @@ import Link from 'next/link';
 import { showNotification } from 'utils/helper';
 import { useRouter } from "next/router";
 
-export async function getServerSideProps({ req, res }) {
-    // console.log(JSON.parse(req.cookies.user));
-
+export async function getServerSideProps() {
     const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/brands`);
     return {
         props: {
@@ -26,7 +24,7 @@ export default function Brands({ brands }) {
 
     const handleDelete = async (id) => {
         await axios.delete(`${process.env.NEXT_PUBLIC_baseURL}/brands/${id}`)
-            .then(({ data }) => showNotification("", data.message, 'success'));
+            .then(({ data }) => showNotification('success', data.message));
         setData(data.filter((brand) => brand._id !== id));
     }
 

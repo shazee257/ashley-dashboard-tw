@@ -32,6 +32,7 @@ export default function Login() {
                     //     role: data.user.role,
                     // }));
                     // localStorage.setItem("token", data.session.token);
+                    showNotification("success", data.message);
                     cookie.set('user', JSON.stringify({
                         first_name: data.user.first_name ? data.user.first_name : "",
                         last_name: data.user.last_name ? data.user.last_name : "",
@@ -41,7 +42,7 @@ export default function Login() {
                     }), { expires: 1 });
 
                     cookie.set('token', data.session.token, { expires: 1 });
-                    showNotification("success", data.message);
+
                     push("/brands");
                 }
             }).catch(err => showNotification(err));
