@@ -1,8 +1,6 @@
 import styles from "styles/VariantCreate.module.css";
 import { useState, useRef, useEffect } from "react";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { Grid, Paper, TextField, Button, Typography, InputLabel } from '@material-ui/core'
+import { Grid, Paper, TextField, Button, Typography, InputLabel } from '@mui/material';
 import axios from 'axios';
 import { showNotification } from "utils/helper";
 import Link from "next/link";
@@ -10,41 +8,44 @@ import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
 
+// convert useRef into useState
 
 export default function NewVariant({ product }) {
-    const sizeRef = useRef(null);
-    const salePriceRef = useRef(null);
-    const purchasePriceRef = useRef(null);
-    const [description, setDescription] = useState('');
-    const [dimensions, setDimensions] = useState('');
+    const newVariant = {
+        size: "",
+        salePrice: 0,
+        purchasePrice: 0,
+        description: "",
+        dimensions: "",
+    }
 
+    const [variant, setVariant] = useState(newVariant);
 
     // clear form fields
     const clearForm = () => {
-        sizeRef.current.value = '';
-        salePriceRef.current.value = '';
-        purchasePriceRef.current.value = '';
-        setDescription('');
-        setDimensions('');
+        setVariant(newVariant);
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const variant = {
-            size: sizeRef.current.value,
-            sale_price: salePriceRef.current.value,
-            purchase_price: purchasePriceRef.current.value,
-            description,
-            dimensions,
+        const variantObj = {
+            size: variant.size,
+            sale_price: variant.salePrice,
+            purchase_price: variant.purchasePrice,
+            description: variant.description,
+            dimensions: variant.dimensions,
         }
+
+
+        return console.log(variantObj);
 
         try {
             await axios
-                .post(`${process.env.NEXT_PUBLIC_baseURL}/products/${product._id}`, variant)
+                .post(`${process.env.NEXT_PUBLIC_baseURL}/products/${product._id}`, variantObj)
                 .then(({ data }) => {
                     console.log(data);
-                    data.success && showNotification("", data.message, 'success');
+                    data.success && showNotification('success', data.message);
                     clearForm();
                 }).catch(err => showNotification(err));
         } catch (error) {
@@ -53,64 +54,76 @@ export default function NewVariant({ product }) {
     }
 
     return (
-        <div className={styles.main}>
-            <Grid>
-                <Paper elevation={0} style={{ padding: '20px', width: '1400px' }}>
-                    <Grid align='left'>
-                        <h2>Add New Product Variant</h2>
-                    </Grid>
-                    <div className={styles.main}>
-                        <h4 className={styles.productTitle}>Product Title: <i>{product.title}</i> </h4>
-                    </div>
-                    <br />
-                    <form className={styles.MainForm}>
-                        <div className={styles.FormTopFields}>
+        <div className="flex p-5 w-full">
+            <Paper elevation={1} className="p-10 w-12/12">
+                <Grid align='left'>
+                    <h2>Add New Product Variant</h2>
+                </Grid>
+                <div className={styles.main}>
+                    <h4 className={styles.productTitle}>Product Title: <i>{product.title}</i></h4>
+                </div>
+                <br />
+                <form autoComplete="off" >
+                    <div className="flex justify-between">
+                        <TextField
+                            required
+                            className="w-1/2 pr-5"
+                            size="small"
+                            label='Product Size' placeholder='Enter Product Size' variant='outlined'
+                            value={variant.size} onChange={(e) => setVariant({ ...variant, size: e.target.value })}
+                        />
+                        <br /><br />
+                        <div className="flex">
                             <TextField
-                                className={styles.addProductItem}
-                                label='Product Size' placeholder='Enter Product Size' variant='outlined'
-                                inputRef={sizeRef}
-                            />
-                            <br /><br />
-                            <TextField
+                                size="small" required
                                 inputProps={{ step: '0.01', min: '0', max: '100', type: 'number' }}
-                                className={styles.addProductItem} variant='outlined'
+                                variant='outlined'
                                 label='Sale Price' placeholder='Enter Sale Price'
-                                inputRef={salePriceRef}
+                                value={variant.salePrice} onChange={(e) => setVariant({ ...variant, salePrice: e.target.value })}
                             />
                             <br /><br />
                             <TextField
+                                size="small"
                                 inputProps={{ step: '0.01', min: '0', max: '100', type: 'number' }}
-                                className={styles.addProductItem} variant='outlined' type='number'
+                                variant='outlined' type='number'
                                 label='Purchase Price' placeholder='Enter Purchase Price'
-                                inputRef={purchasePriceRef}
+                                value={variant.purchasePrice} onChange={(e) => setVariant({ ...variant, purchasePrice: e.target.value })}
                             />
                         </div>
-                        <div className={styles.Editors}>
-                            <div className={styles.Editor}>
-                                <InputLabel htmlFor="description">Product Description</InputLabel>
-                                <ReactQuill value={description} onChange={setDescription} />
-                            </div>
-                            <div className={styles.DimensionsEditor}>
-                                <InputLabel htmlFor="dimensions">Product Dimensions</InputLabel>
-                                <ReactQuill value={dimensions} onChange={setDimensions} />
-                            </div>
+                    </div>
+                    <div className="flex mt-5">
+                        <div className="w-96">
+                            <InputLabel htmlFor="description">Description</InputLabel>
+                            <ReactQuill value={variant.description} onChange={(e) => setVariant({ ...variant, description: e })} />
                         </div>
-                    </form>
-                    <Button
-                        onClick={handleSubmit}
-                        type='submit'
-                        color='primary'
-                        variant="contained"
-                        style={{ marginTop: '20px', width: '300px' }}
-                    >
-                        Add Variant
-                    </Button>
-                    <br /><br />
-                    <Typography >
-                        <Link href={`/products/${product._id}`}>Back to Product Variants</Link>
-                    </Typography>
-                </Paper>
-            </Grid>
+                        <div className="w-88">
+                            <InputLabel htmlFor="dimensions">Dimensions</InputLabel>
+                            <ReactQuill value={variant.dimensions} onChange={(e) => setVariant({ ...variant, dimensions: e })} />
+                        </div>
+                    </div>
+                </form>
+                <br /><br />
+                <Button
+                    fullWidth
+                    onClick={handleSubmit}
+                    type='submit'
+                    color='primary'
+                    variant="outlined">
+                    Add Variant
+                </Button>
+                <br /><br />
+                <Button
+                    fullWidth
+                    onClick={clearForm}
+                    color='secondary'
+                    variant="outlined">
+                    Reset Form
+                </Button>
+                <br /><br />
+                <Typography >
+                    <Link href={`/products/${product._id}`}>Back to Product Variants</Link>
+                </Typography>
+            </Paper>
         </div>
     );
 }

@@ -71,7 +71,7 @@ export default function Stores({ stores }) {
     return (
         <div className={styles.productList}>
             <div className={styles.main}>
-                <h2 className={styles.productTitle}>Stores</h2>
+                <h2 className={styles.productTitle}>Warehouses / Stores</h2>
                 <Link href="/stores/create">
                     <Button variant="contained"
                         color="primary" component="label"

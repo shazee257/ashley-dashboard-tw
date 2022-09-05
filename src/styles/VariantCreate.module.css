@@ -152,30 +152,3 @@ input:checked+.slider:before {
   flex-direction: column;
 }
 
-.MainForm {
-  width: 100%;
-  /* display: flex; */
-  /* justify-content: space-evenly; */
-}
-
-.FormTopFields {
-  width: 100%;
-  display: flex;
-  /* justify-content: space-between; */
-}
-
-.Editors {
-  width: 60%;
-  display: flex;
-  margin-top: 20px;
-}
-
-.Editor {
-  width: 50%;
-  margin-right: 20px;
-}
-
-.DimensionsEditor {
-  width: 40%;
-}
-

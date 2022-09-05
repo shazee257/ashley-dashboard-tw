@@ -1,10 +1,10 @@
 import styles from "styles/CategoryNew.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     Grid, Paper, TextField, Button,
     Typography, Select, InputLabel,
     MenuItem, Checkbox,
-    ListItemIcon, ListItemText,
+    ListItemIcon, ListItemText, FormControl,
 } from '@mui/material';
 import axios from 'axios';
 import { showNotification } from "utils/helper";
@@ -12,12 +12,14 @@ import { MenuProps, useStyles, options } from "components/FilterOptions/FilterOp
 import Link from "next/link";
 import Image from "next/image";
 
-export default function NewCategory({ categories }) {
+export default function NewCategory() {
     const [title, setTitle] = useState("");
     const [parentId, setParentId] = useState("");
     const [image, setImage] = useState("");
     const [filename, setFilename] = useState("Choose Image");
     const [selectedFile, setSelectedFile] = useState("");
+
+    const [categories, setCategories] = useState([]);
 
     const classes = useStyles();
     const [selected, setSelected] = useState([]);
@@ -78,40 +80,52 @@ export default function NewCategory({ categories }) {
         }
     };
 
+    const getCategories = async (e) => {
+        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/categories/fetch/categories`);
+        setCategories(data.categories);
+    }
+
+    useEffect(() => {
+        getCategories();
+    }, []);
+
     return (
-        <div className="flex p-10">
-            <Grid>
-                <Paper elevation={1} style={{ padding: '20px', width: '450px' }}>
-                    <Grid align='left'>
-                        <h2>New Category</h2>
-                    </Grid>
-                    <br />
-                    <form>
-                        <TextField
-                            fullWidth
-                            label='Category Title'
-                            placeholder='Enter Category Title'
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                        />
-                        <br /><br />
-                        <InputLabel>Parent Category</InputLabel>
-                        <Select fullWidth
-                            label="Parent Category"
-                            value={parentId} onChange={(e) => setParentId(e.target.value)}
-                        >
-                            <MenuItem key='none' value='none' className="flex ml-15">None</MenuItem>
-                            {categories.map((category) => (
-                                <MenuItem key={category._id} value={category._id} className="flex ml-15">
-                                    <div className="flex">
-                                        <Image height={32} width={32}
-                                            src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${category.image}`} />
-                                        <p className="ml-5">{category.title}</p>
-                                    </div>
-                                </MenuItem>
-                            ))}
-                        </Select>
-                        <br /><br />
+        <div className="flex p-10 h-auto ">
+            <Paper elevation={1} style={{ padding: '20px', width: '350px', height: '400px' }}>
+                <Grid align='left'>
+                    <h2>New Category</h2>
+                </Grid>
+                <br />
+                <form onSubmit={handleSubmit} autoComplete="off">
+                    <TextField
+                        size="small"
+                        fullWidth
+                        label='Category Title'
+                        placeholder='Enter Category Title'
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
+                    <br /><br />
+                    <TextField
+                        fullWidth
+                        size="small"
+                        label="Parent Category"
+                        select
+                        value={parentId} onChange={(e) => setParentId(e.target.value)}
+                    >
+                        <MenuItem key='none' value='none' className="flex ml-15">None</MenuItem>
+                        {categories.map((category) => (
+                            <MenuItem key={category._id} value={category._id} className="flex ml-15">
+                                <div className="flex">
+                                    <Image className="rounded-full"
+                                        height={32} width={32}
+                                        src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${category.image}`} />
+                                    <p className="ml-5">{category.title}</p>
+                                </div>
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                    {/* <br /><br />
                         <InputLabel id="mutiple-select-label">Filter Attributes for Category's Products</InputLabel>
                         <Select
                             fullWidth
@@ -147,23 +161,22 @@ export default function NewCategory({ categories }) {
                                     <ListItemText primary={option} />
                                 </MenuItem>
                             ))}
-                        </Select>
-                        <br /><br />
-                        <Button
-                            className="flex justify-center mt-5"
-                            type='submit'
-                            color='primary'
-                            variant="outlined"
-                            fullWidth
-                        >Add Category</Button>
-                    </form>
-                    <br />
-                    <Typography >
-                        <Link href="/categories">Back to Categories</Link>
-                    </Typography>
-                </Paper >
-            </Grid >
-            <div className="imageWithButton">
+                        </Select> */}
+                    <br /><br />
+                    <Button
+                        className="flex justify-center mt-5"
+                        type='submit'
+                        color='primary'
+                        variant="outlined"
+                        fullWidth
+                    >Add Category</Button>
+                </form>
+                <br />
+                <Typography >
+                    <Link href="/categories">Back to Categories</Link>
+                </Typography>
+            </Paper >
+            <div className="flex flex-col h-auto">
                 <div className={styles.productImage}>
                     {image &&
                         <Image src={image} height={400} width={400} className={styles.imgObject} />}
@@ -183,11 +196,3 @@ export default function NewCategory({ categories }) {
     );
 }
 
-export const getServerSideProps = async () => {
-    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/categories/fetch/categories`);
-    return {
-        props: {
-            categories: data.categories
-        }
-    };
-}

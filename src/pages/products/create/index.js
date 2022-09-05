@@ -1,140 +1,163 @@
 import styles from "styles/ProductNew.module.css";
-import { useState } from "react";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useState, useEffect } from "react";
 import {
     Grid, Paper, TextField, Button,
-    Typography, Select, InputLabel,
-    MenuItem, Checkbox, FormGroup, FormControlLabel,
+    Typography, MenuItem, Checkbox, FormControlLabel
 } from '@mui/material'
+import DoubleArrowOutlinedIcon from '@mui/icons-material/DoubleArrowOutlined';
 import axios from 'axios';
 import { showNotification } from "utils/helper";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
-export default function NewProduct({ stores, categories, brands }) {
-    const [title, setTitle] = useState("");
-    const [storeId, setStoreId] = useState("");
-    const [categoryId, setCategoryId] = useState("");
-    const [brandId, setBrandId] = useState("");
-    const [isFeature, setIsFeature] = useState(false);
-    const [isSale, setIsSale] = useState(false);
-    const [attributes, setAttributes] = useState([]);
+export default function NewProduct() {
+    const { push } = useRouter();
+
+    useEffect(() => {
+        getStores();
+        getCategories();
+        getBrands();
+    }, []);
+
+
+    const getStores = async (e) => {
+        const storesData = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/stores`);
+        setStores(storesData.data.stores);
+    }
+
+    const getCategories = async (e) => {
+        const categoriesData = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/categories/fetch/categories`);
+        setCategories(categoriesData.data.categories);
+    }
+
+    const getBrands = async (e) => {
+        const brandsData = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/brands`);
+        setBrands(brandsData.data.brands);
+    }
+
+    const newProduct = {
+        title: "",
+        storeId: "",
+        categoryId: "",
+        brandId: "",
+        isFeatured: false,
+        discount: 0
+    }
+
+    const [stores, setStores] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [brands, setBrands] = useState([]);
+    const [product, setProduct] = useState(newProduct);
 
     // clear form fields
     const clearForm = () => {
-        setTitle("");
-        setStoreId("");
-        setCategoryId("");
-        setBrandId("");
-        setIsFeature(false);
-        setIsSale(false);
-        setAttributes([]);
+        setProduct(newProduct);
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!title || !storeId || !categoryId || !brandId) {
-            showNotification("", "Please fill all fields", "warn");
+        if (!product.title || !product.storeId || !product.categoryId || !product.brandId) {
+            showNotification("warn", "Please fill all fields");
             return;
         }
 
         const productData = {
-            title,
-            store_id: storeId,
-            category_id: categoryId,
-            brand_id: brandId,
+            title: product.title,
+            store_id: product.storeId,
+            category_id: product.categoryId,
+            brand_id: product.brandId,
+            is_featured: product.isFeatured,
+            discount: product.discount
         }
 
         try {
-            await axios
-                .post(`${process.env.NEXT_PUBLIC_baseURL}/products`, productData)
+            await axios.post(`${process.env.NEXT_PUBLIC_baseURL}/products`, productData)
                 .then(({ data }) => {
-                    data.success && showNotification("", data.message, "success");
-                    clearForm();
-                }).catch(err => showNotification("", err.response.data.message, "warn"));
+                    if (data.success) {
+                        data.success && showNotification("success", data.message);
+                        push(`/products/${data.product._id}`);
+                        // clearForm();
+                    }
+                })
+                .catch(err => showNotification(err));
         } catch (error) {
             let message = error.response ? error.response.data.message : "Only image files are allowed!";
-            toast.error(message);
+            showNotification(message);
         }
     };
 
     const categorySelectHandler = async (e) => {
-        setCategoryId(e.target.value);
-        const attr = categories.filter(item => item._id === e.target.value)[0].attributes;
-        setAttributes(attr);
+        setProduct({ ...product, categoryId: e.target.value });
+        // const attr = categories.filter(item => item._id === e.target.value)[0].attributes;
+        // setAttributes(attr);
     }
 
     return (
-        <div className={styles.main}>
-            <Grid>
-                <Paper elevation={1} className="p-10">
-                    {/* </Grid> style={{ padding: '20px', width: '400px' }}> */}
-                    <Grid align='left'>
-                        <h2>New Product</h2>
-                    </Grid>
-                    <br />
-                    <form>
-                        <TextField
+        <div className="flex p-5 w-full">
+            <Paper elevation={1} className="p-10 w-6/12 h-6/6">
+                <Grid align='left'>
+                    <h2>New Product</h2>
+                </Grid>
+                <br />
+                <form autoComplete="off">
+                    <div className="flex justify-between">
+                        <TextField className="w-5/12"
+                            multiline
+                            maxRows={4}
+                            size="small"
                             fullWidth
-                            className={styles.addProductItem}
                             label='Product Title' placeholder='Enter Product Name'
-                            value={title} onChange={(e) => setTitle(e.target.value)}
-                        />
-                        <br /><br />
-                        <InputLabel>Select Store</InputLabel>
-                        <Select fullWidth
-                            value={storeId} onChange={(e) => setStoreId(e.target.value)}>
-                            {stores.map((store) => (
-                                <MenuItem value={store._id} key={store._id}>
-                                    <div className={styles.ImageWithTitle}>
-                                        <div className={styles.productListItem}>
-                                            <Image height={32} width={32}
-                                                className={styles.productListImg}
-                                                src={`${process.env.NEXT_PUBLIC_thumbURL}/stores/${store.banner}`} />
-                                        </div>
-                                        <div className={styles.productListItem}>
-                                            {store.title}
-                                        </div>
-                                    </div>
-                                </MenuItem>
-                            ))}
-                        </Select>
-                        <br /><br />
-                        <InputLabel>Select Category</InputLabel>
-                        <Select fullWidth
-                            value={categoryId} onChange={categorySelectHandler}>
+                            value={product.title}
+                            onChange={(e) => setProduct({ ...product, title: e.target.value })} />
+                        <TextField
+                            className="w-6/12"
+                            fullWidth
+                            size="small"
+                            label="Select Category"
+                            select
+                            value={product.categoryId} onChange={categorySelectHandler}>
+
                             {categories.map((category) => (
-                                <MenuItem value={category._id} key={category._id}>
-                                    <div className={styles.ImageWithTitle}>
-                                        <div className={styles.productListItem}>
-                                            {category.image &&
-                                                <Image height={32} width={32}
-                                                    className={styles.productListImg}
-                                                    src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${category.image}`} />}
+                                category.children.map((child) => (
+                                    <MenuItem key={child._id} value={child._id}>
+                                        <div className={styles.ImageWithTitle}>
+                                            <div className="flex items-center mr-2">
+                                                {category.image &&
+                                                    <Image height={32} width={32}
+                                                        className={styles.productListImg}
+                                                        src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${category.image}`} />}
+                                            </div>
+                                            <div className="flex items-center">
+                                                {category.title}
+                                            </div>
+                                            <DoubleArrowOutlinedIcon className="flex items-center mx-5 mt-1" />
+                                            <div className="flex items-center mr-2">
+                                                {category.image &&
+                                                    <Image height={32} width={32}
+                                                        className={styles.productListImg}
+                                                        src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${child.image}`} />}
+                                            </div>
+                                            <div className="flex items-center">
+                                                {child.title}
+                                            </div>
                                         </div>
-                                        <div className={styles.productListItem}>
-                                            {category.title}
-                                        </div>
-                                    </div>
-                                </MenuItem>
+                                    </MenuItem>
+                                ))
                             ))}
-                        </Select>
-                        <br /><br />
-                        {attributes.length > 0 &&
-                            <div>
-                                <TextField
-                                    fullWidth aria-disabled="true"
-                                    className={styles.addProductItem}
-                                    label='Product Variants' placeholder='Product Variants'
-                                    value={attributes}
-                                />
-                                <br /><br />
-                            </div>}
-                        <InputLabel>Select Brand</InputLabel>
-                        <Select fullWidth
-                            value={brandId} onChange={(e) => setBrandId(e.target.value)}>
+                        </TextField>
+                    </div>
+                    <br />
+                    <div className="flex justify-between">
+                        <TextField
+                            className="w-5/12"
+                            fullWidth
+                            size="small"
+                            label="Select Brand"
+                            select
+                            value={product.brandId}
+                            onChange={(e) => setProduct({ ...product, brandId: e.target.value })}>
                             {brands.map((brand) => (
                                 <MenuItem value={brand._id} key={brand._id}>
                                     <div className={styles.ImageWithTitle}>
@@ -150,40 +173,84 @@ export default function NewProduct({ stores, categories, brands }) {
                                     </div>
                                 </MenuItem>
                             ))}
-                        </Select>
-                        <br /><br />
-                        <Button
-                            onClick={handleSubmit}
-                            type='submit'
-                            color='primary'
-                            variant="contained"
-                            style={{ margin: '8px 0' }}
-                            fullWidth>
-                            Create Product
-                        </Button>
-                    </form>
+                        </TextField>
+                        <TextField
+                            className="w-6/12"
+                            fullWidth
+                            size="small"
+                            label="Select Warehouse / Store"
+                            select
+                            value={product.storeId}
+                            onChange={(e) => setProduct({ ...product, storeId: e.target.value })}>
+                            {stores.map((store) => (
+                                <MenuItem value={store._id} key={store._id}>
+                                    <div className={styles.ImageWithTitle}>
+                                        <div className={styles.productListItem}>
+                                            <Image height={32} width={32}
+                                                className={styles.productListImg}
+                                                src={`${process.env.NEXT_PUBLIC_thumbURL}/stores/${store.banner}`} />
+                                        </div>
+                                        <div className={styles.productListItem}>
+                                            {store.title}
+                                        </div>
+                                    </div>
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    </div>
+                    {/* {attributes.length > 0 &&
+                            <div>
+                                <TextField
+                                    fullWidth aria-disabled="true"
+                                    className={styles.addProductItem}
+                                    label='Product Variants' placeholder='Product Variants'
+                                    value={attributes}
+                                />
+                                <br /><br />
+                            </div>} */}
+
                     <br />
-                    <Typography >
-                        <Link href="/products">Back to Products</Link>
-                    </Typography>
-                </Paper>
-            </Grid >
+                    <div className="flex justify-between">
+                        <FormControlLabel
+                            className="w-5/12"
+                            control={<Checkbox checked={product.isFeatured}
+                                onChange={(e) => setProduct({ ...product, isFeatured: e.target.checked })}
+                                size="small" />}
+                            label="Featured Product" />
+
+                        <TextField
+                            className="w-6/12"
+                            size="small"
+                            inputProps={{ min: 0, max: 100, type: 'number' }}
+                            label='Discount' placeholder='Enter Discount'
+                            value={product.discount}
+                            onChange={(e) => setProduct({ ...product, discount: e.target.value })} />
+
+                    </div>
+                    <br /><br />
+                    <Button
+                        onClick={handleSubmit}
+                        type='submit'
+                        color='primary'
+                        variant="outlined"
+                        fullWidth>
+                        Create Product
+                    </Button>
+                    <br /><br />
+                    <Button
+                        onClick={clearForm}
+                        type='button'
+                        color='secondary'
+                        variant="outlined"
+                        fullWidth>
+                        Reset Form
+                    </Button>
+                </form>
+                <br /><br />
+                <Typography >
+                    <Link href="/products">Back to Products</Link>
+                </Typography>
+            </Paper>
         </div >
     );
 }
-
-export const getServerSideProps = async () => {
-    const storesData = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/stores`);
-    const categoriesData = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/categories`);
-    const categories = categoriesData.data.categories.filter((category) => category.parent_id != '');
-    const brandsData = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/brands`);
-
-    return {
-        props: {
-            stores: storesData.data.stores,
-            categories: categories,
-            brands: brandsData.data.brands
-        }
-    }
-}
-

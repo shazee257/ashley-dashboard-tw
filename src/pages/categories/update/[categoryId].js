@@ -110,7 +110,7 @@ export default function UpdateCategory({ category, categories }) {
 
     return (
         <div className="flex p-10">
-            <Paper elevation={1} style={{ padding: '20px', width: '450px' }}>
+            <Paper elevation={1} style={{ padding: '20px', width: '450px', height: '420px' }}>
                 <div>
                     <Grid align='left'>
                         <h2>Update Category</h2>
@@ -118,31 +118,34 @@ export default function UpdateCategory({ category, categories }) {
                     <br />
                     <form>
                         <TextField
+                            size="small"
                             fullWidth
                             label='Category Title'
                             placeholder='Enter Category Title'
                             value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                        />
+                            onChange={(e) => setTitle(e.target.value)} />
                         <br /><br />
-                        <InputLabel>Parent Category</InputLabel>
-                        <Select fullWidth
+                        <TextField
+                            fullWidth
+                            size="small"
                             label="Parent Category"
+                            select
                             value={parentId} onChange={(e) => setParentId(e.target.value)}
                         >
                             <MenuItem key='none' value='none' className="flex ml-15">None</MenuItem>
                             {categories.map((category) => (
                                 <MenuItem key={category._id} value={category._id} className="flex ml-15">
-                                    <div className="flex">
-                                        <Image height={32} width={32}
+                                    <div className="flex items-center">
+                                        <Image className="rounded-full"
+                                            height={32} width={32}
                                             src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${category.image}`} />
                                         <p className="ml-5">{category.title}</p>
                                     </div>
                                 </MenuItem>
                             ))}
-                        </Select>
+                        </TextField>
                         <br /><br />
-                        <InputLabel id="mutiple-select-label">Filter Attributes for Category's Products</InputLabel>
+                        {/* <InputLabel id="mutiple-select-label">Filter Attributes for Category's Products</InputLabel>
                         <Select
                             fullWidth
                             label="Filter Attributes for Category's Product"
@@ -178,7 +181,7 @@ export default function UpdateCategory({ category, categories }) {
                                 </MenuItem>
                             ))}
                         </Select>
-                        <br /><br />
+                        <br /><br /> */}
                         <Button
                             className="flex justify-center mt-5"
                             onClick={handleSubmit}
@@ -188,8 +191,7 @@ export default function UpdateCategory({ category, categories }) {
                             fullWidth
                         >Update Category</Button>
                     </form>
-
-                    <br />
+                    <br /><br /><br />
                     <Typography >
                         <Link href="/categories">Back to Categories</Link>
                     </Typography>

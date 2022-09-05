@@ -5,7 +5,7 @@
 }
 
 .sidebarWrapper {
-  padding: 20px;
+  padding: 15px;
   color: #555;
   width: 200px;
 }
@@ -35,12 +35,13 @@
   /* border-radius: 10px; */
 }
 
+
 .anchor {
   display: flex;
   align-items: center;
   text-decoration: none;
   color: inherit;
-  /* color: darkslategrey */
+  font-size: 15px;    
 }
 
 .li {
@@ -88,3 +89,4 @@
 .MenuTitleIcon {
   margin-right: 5px;
 }
+

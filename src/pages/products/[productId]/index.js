@@ -2,19 +2,18 @@ import styles from 'styles/ProductIndex.module.css';
 import axios from 'axios';
 import { DeleteOutline } from "@mui/icons-material";
 import { Button, Typography } from '@mui/material';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 const { formatDate } = require("utils/utils");
 import MuiGrid from "components/MuiGrid/MuiGrid";
 import { useState } from 'react';
 import Link from 'next/link';
+import { showNotification } from 'utils/helper';
 
 export default function Variations({ product }) {
     const [data, setData] = useState(product.variants);
 
     const handleDelete = async (id) => {
         await axios.delete(`${process.env.NEXT_PUBLIC_baseURL}/products/${product._id}/${id}`)
-            .then(({ data }) => toast.success(data.message));
+            .then(({ data }) => showNotification('success', data.message));
         setData(data.filter((item) => item._id !== id));
     }
 
@@ -65,7 +64,7 @@ export default function Variations({ product }) {
     return (
         <div className={styles.productList}>
             <div className="ml-8">
-                <h2 className="">Add Variant Feature</h2>
+                <h2 className="">Add Sizes Variantion</h2>
                 <br />
                 <div className="flex mr-5 mb-5 items-center justify-between hover:underline">
                     <div>
