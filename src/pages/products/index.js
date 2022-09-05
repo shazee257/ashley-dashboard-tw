@@ -2,7 +2,7 @@ import styles from 'styles/Product.module.css';
 import axios from 'axios';
 import { DeleteOutline } from "@mui/icons-material";
 import {
-    Button, Dialog, Grid, Paper, TextField,
+    Button, Grid, Paper, TextField,
     Typography, MenuItem, Checkbox, FormControlLabel, Modal
 } from '@mui/material';
 import DoubleArrowOutlinedIcon from '@mui/icons-material/DoubleArrowOutlined';
@@ -13,23 +13,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { showNotification } from 'utils/helper';
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
-
 export default function Products({ products }) {
     const [data, setData] = useState(products);
 
-
     const [open, setOpen] = useState(false);
+    const [editMode, setEditMode] = useState(false);
 
     useEffect(() => {
         getStores();
@@ -37,6 +25,21 @@ export default function Products({ products }) {
         getBrands();
     }, []);
 
+    const editHandler = (id) => {
+        setEditMode(true);
+        setOpen(true);
+        const product = data.find((p) => p._id === id);
+        const newProduct = {
+            id: product._id,
+            title: product.title,
+            store_id: product.store_id._id,
+            category_id: product.category_id._id,
+            brand_id: product.brand_id._id,
+            is_featured: product.is_featured,
+            discount: product.discount,
+        }
+        setProduct(newProduct);
+    }
 
     const getStores = async (e) => {
         const storesData = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/stores`);
@@ -54,11 +57,12 @@ export default function Products({ products }) {
     }
 
     const newProduct = {
+        id: "",
         title: "",
-        storeId: "",
-        categoryId: "",
-        brandId: "",
-        isFeatured: false,
+        store_id: "",
+        category_id: "",
+        brand_id: "",
+        is_featured: false,
         discount: 0
     }
 
@@ -73,47 +77,58 @@ export default function Products({ products }) {
     }
 
     const categorySelectHandler = async (e) => {
-        setProduct({ ...product, categoryId: e.target.value });
+        setProduct({ ...product, category_id: e.target.value });
         // const attr = categories.filter(item => item._id === e.target.value)[0].attributes;
         // setAttributes(attr);
     }
 
     const handleClickOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        setOpen(false);
+        clearForm();
+        setEditMode(false);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!product.title || !product.storeId || !product.categoryId || !product.brandId) {
+        if (!product.title || !product.store_id || !product.category_id || !product.brand_id) {
             showNotification("warn", "Please fill all fields");
             return;
         }
 
         const productData = {
             title: product.title,
-            store_id: product.storeId,
-            category_id: product.categoryId,
-            brand_id: product.brandId,
-            is_featured: product.isFeatured,
+            store_id: product.store_id,
+            category_id: product.category_id,
+            brand_id: product.brand_id,
+            is_featured: product.is_featured,
             discount: product.discount
         }
 
-        try {
+        if (editMode) {
+            await axios
+                .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${product.id}`, productData)
+                .then(({ data }) => {
+                    if (data.success) {
+                        showNotification("success", data.message);
+                        clearForm();
+                    }
+                }).catch(err => showNotification("error", err.response.data.message));
+        } else {
             await axios.post(`${process.env.NEXT_PUBLIC_baseURL}/products`, productData)
                 .then(({ data }) => {
                     if (data.success) {
                         data.success && showNotification("success", data.message);
-                        push(`/products/${data.product._id}`);
-                        // clearForm();
+                        clearForm();
                     }
-                })
-                .catch(err => showNotification(err));
-        } catch (error) {
-            let message = error.response ? error.response.data.message : "Only image files are allowed!";
-            showNotification(message);
+                }).catch(err => showNotification("error", err.response.data.message));
         }
-    };
 
+        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/products`);
+        setData(data.products);
+        handleClose();
+    };
 
     const handleDelete = async (id) => {
         await axios.delete(`${process.env.NEXT_PUBLIC_baseURL}/products/${id}`)
@@ -123,16 +138,7 @@ export default function Products({ products }) {
 
     const columns = [
         { field: "id", headerName: "ID", width: 330, hide: true },
-        {
-            field: "title", headerName: "Product Title", width: 350,
-            renderCell: (params) => {
-                return (
-                    <strong className={styles.productListTitle}>{params.value}</strong>
-
-                );
-            }
-
-        },
+        { field: "title", headerName: "Product Title", width: 350 },
         {
             field: "category_id.title", headerName: "Category", width: 220,
             renderCell: (params) => {
@@ -217,9 +223,9 @@ export default function Products({ products }) {
                         <Link href={`/products/${params.row._id}`}>
                             <button className={styles.productListEdit}>Product Variants</button>
                         </Link>
-                        <Link href={"/products/update/" + params.row._id}>
-                            <button className={styles.productListEdit}>Edit</button>
-                        </Link>
+                        {/* <Link href={"/products/update/" + params.row._id}> */}
+                        <button className={styles.productListEdit} onClick={() => editHandler(params.row.id)}>Edit</button>
+                        {/* </Link> */}
                         <DeleteOutline
                             className={styles.productListDelete}
                             onClick={() => handleDelete(params.row._id)}
@@ -246,25 +252,13 @@ export default function Products({ products }) {
 
 
             {/* MODAL FORM */}
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="keep-mounted-modal-title"
-                aria-describedby="keep-mounted-modal-description"
-            >
-                <div style={{
-                    display: 'flex',
-                    position: 'absolute',
-                    width: '1100px',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                }} >
+            <Modal open={open} onClose={handleClose}>
+                <div className="flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-2/4 h-2/4 rounded-lg shadow-lg">
                     <Paper elevation={1} className="p-10 w-full">
                         <Grid align='left'>
-                            <h2>New Product</h2>
+                            <h2>{editMode ? ("Update Product").toUpperCase() : ("New Product").toUpperCase()}</h2>
                         </Grid>
-                        <br />
+                        <br /><br />
                         <form autoComplete="off">
                             <div className="flex justify-between">
                                 <TextField className="w-5/12"
@@ -281,7 +275,7 @@ export default function Products({ products }) {
                                     size="small"
                                     label="Select Category"
                                     select
-                                    value={product.categoryId} onChange={categorySelectHandler}>
+                                    value={product.category_id} onChange={categorySelectHandler}>
 
                                     {categories.map((category) => (
                                         category.children.map((child) => (
@@ -320,18 +314,18 @@ export default function Products({ products }) {
                                     size="small"
                                     label="Select Brand"
                                     select
-                                    value={product.brandId}
-                                    onChange={(e) => setProduct({ ...product, brandId: e.target.value })}>
+                                    value={product.brand_id}
+                                    onChange={(e) => setProduct({ ...product, brand_id: e.target.value })}>
                                     {brands.map((brand) => (
                                         <MenuItem value={brand._id} key={brand._id}>
-                                            <div className={styles.ImageWithTitle}>
+                                            <div className="flex">
                                                 <div className={styles.productListItem}>
                                                     {brand.image &&
                                                         <Image height={32} width={32}
                                                             className={styles.productListImg}
                                                             src={`${process.env.NEXT_PUBLIC_thumbURL}/brands/${brand.image}`} />}
                                                 </div>
-                                                <div className={styles.productListItem}>
+                                                <div className="flex items-center">
                                                     {brand.title}
                                                 </div>
                                             </div>
@@ -344,11 +338,11 @@ export default function Products({ products }) {
                                     size="small"
                                     label="Select Warehouse / Store"
                                     select
-                                    value={product.storeId}
-                                    onChange={(e) => setProduct({ ...product, storeId: e.target.value })}>
+                                    value={product.store_id}
+                                    onChange={(e) => setProduct({ ...product, store_id: e.target.value })}>
                                     {stores.map((store) => (
                                         <MenuItem value={store._id} key={store._id}>
-                                            <div className={styles.ImageWithTitle}>
+                                            <div className="flex items-center">
                                                 <div className={styles.productListItem}>
                                                     <Image height={32} width={32}
                                                         className={styles.productListImg}
@@ -377,8 +371,8 @@ export default function Products({ products }) {
                             <div className="flex justify-between">
                                 <FormControlLabel
                                     className="w-5/12"
-                                    control={<Checkbox checked={product.isFeatured}
-                                        onChange={(e) => setProduct({ ...product, isFeatured: e.target.checked })}
+                                    control={<Checkbox checked={product.is_featured}
+                                        onChange={(e) => setProduct({ ...product, is_featured: e.target.checked })}
                                         size="small" />}
                                     label="Featured Product" />
 
@@ -389,7 +383,6 @@ export default function Products({ products }) {
                                     label='Discount' placeholder='Enter Discount'
                                     value={product.discount}
                                     onChange={(e) => setProduct({ ...product, discount: e.target.value })} />
-
                             </div>
                             <br /><br />
                             <Button
@@ -398,30 +391,39 @@ export default function Products({ products }) {
                                 color='primary'
                                 variant="outlined"
                                 fullWidth>
-                                Create Product
+                                {editMode ? "Update Product" : "Add Product"}
                             </Button>
                             <br /><br />
-                            <Button
-                                onClick={clearForm}
-                                type='button'
-                                color='secondary'
-                                variant="outlined"
-                                fullWidth>
-                                Reset Form
-                            </Button>
+                            <div className="flex justify-between">
+                                <Button
+                                    className="w-6/12"
+                                    onClick={clearForm}
+                                    type='button'
+                                    color='secondary'
+                                    variant="outlined"
+                                    fullWidth>
+                                    Reset Form
+                                </Button>
+                                <Button
+                                    className="w-6/12"
+                                    size="small"
+                                    onClick={handleClose}
+                                    type='button'
+                                    color='success'
+                                    variant="outlined"
+                                    fullWidth>
+                                    Close Form
+                                </Button>
+                            </div>
                         </form>
                         <br /><br />
-                        <Typography >
+                        {/* <Typography >
                             <Link href="/products">Back to Products</Link>
-                        </Typography>
+                        </Typography> */}
                     </Paper>
-                </div>
-                {/* </Dialog> */}
-            </Modal>
-
-
-
-        </div>
+                </div >
+            </Modal >
+        </div >
     );
 }
 

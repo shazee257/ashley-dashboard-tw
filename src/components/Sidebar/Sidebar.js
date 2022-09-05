@@ -70,7 +70,7 @@ export default function Sidebar() {
 
             <li className={`${styles.li} ${RegExp(/products/).test(router.pathname) ? styles.active : ""}`}>
               <Link href='/products' className={`${styles.sidebarListItem} ${styles.link}`}>
-                <a className={styles.anchor}>All Products</a>
+                <a className={styles.anchor}>Products</a>
               </Link>
             </li>
 

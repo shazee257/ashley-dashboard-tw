@@ -32,7 +32,7 @@ export default function Topbar() {
   };
 
   return (
-    <div className={`z-10 mb-5 w-full h-16 text-white sticky top-0 bg-blue-800`}>
+    <div className={`z-10 mb-5 w-full h-20 text-white sticky top-0 bg-blue-800`}>
       <div className={styles.topbarWrapper}>
         <div className={styles.topLeft}>
           <Typography component="h1" variant="h4" align="center" gutterBottom style={{ marginBottom: '0' }}>

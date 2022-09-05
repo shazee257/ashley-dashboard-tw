@@ -8,7 +8,10 @@ export default function Document() {
                     rel="stylesheet" />
                 <style>
                     {`  
-                        * { font-family: Source Sans Pro, sans-serif !important; }
+                        * { 
+                            font-family: Source Sans Pro, sans-serif !important; 
+                            font-size: 14px;
+                        }
                     `}
                 </style>
             </Head>
