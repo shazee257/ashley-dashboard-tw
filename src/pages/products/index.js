@@ -3,7 +3,7 @@ import axios from 'axios';
 import { DeleteOutline } from "@mui/icons-material";
 import {
     Button, Grid, Paper, TextField,
-    Typography, MenuItem, Checkbox, FormControlLabel, Modal
+    MenuItem, Checkbox, FormControlLabel, Modal
 } from '@mui/material';
 import DoubleArrowOutlinedIcon from '@mui/icons-material/DoubleArrowOutlined';
 const { formatDate } = require("utils/utils");
@@ -216,21 +216,20 @@ export default function Products({ products }) {
         {
             field: "action", filterable: false, sortable: false,
             headerName: "Action",
-            width: 240,
+            width: 260,
             renderCell: (params) => {
                 return (
-                    <>
+                    <div className="flex justify-center items-center">
                         <Link href={`/products/${params.row._id}`}>
-                            <button className={styles.productListEdit}>Product Variants</button>
+                            <button
+                                className="h-8 w-32 rounded-md mr-5 bg-blue-700 text-white ">Size Variants</button>
                         </Link>
-                        {/* <Link href={"/products/update/" + params.row._id}> */}
                         <button className={styles.productListEdit} onClick={() => editHandler(params.row.id)}>Edit</button>
-                        {/* </Link> */}
                         <DeleteOutline
                             className={styles.productListDelete}
                             onClick={() => handleDelete(params.row._id)}
                         />
-                    </>
+                    </div>
                 );
             },
         },
@@ -253,7 +252,7 @@ export default function Products({ products }) {
 
             {/* MODAL FORM */}
             <Modal open={open} onClose={handleClose}>
-                <div className="flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-2/4 h-2/4 rounded-lg shadow-lg">
+                <div className="flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-3/4 h-3/4 rounded-lg shadow-lg">
                     <Paper elevation={1} className="p-10 w-full">
                         <Grid align='left'>
                             <h2>{editMode ? ("Update Product").toUpperCase() : ("New Product").toUpperCase()}</h2>
