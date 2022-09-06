@@ -222,9 +222,9 @@ export default function Products({ products }) {
                     <div className="flex justify-center items-center">
                         <Link href={`/products/${params.row._id}`}>
                             <button
-                                className="h-8 w-32 rounded-md mr-5 bg-blue-700 text-white ">Size Variants</button>
+                                className="h-8 w-32 rounded-md mr-5 bg-blue-700 text-white">Size Variants</button>
                         </Link>
-                        <button className={styles.productListEdit} onClick={() => editHandler(params.row.id)}>Edit</button>
+                        <button className="h-8 w-16 rounded-md mr-5 bg-green-600 text-white" onClick={() => editHandler(params.row.id)}>Edit</button>
                         <DeleteOutline
                             className={styles.productListDelete}
                             onClick={() => handleDelete(params.row._id)}

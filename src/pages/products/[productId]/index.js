@@ -14,7 +14,7 @@ import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
 
-export default function Variations({ product }) {
+export default function Variants({ product }) {
     const [data, setData] = useState(product.variants);
 
     const handleDelete = async (id) => {
@@ -47,19 +47,19 @@ export default function Variations({ product }) {
         {
             field: "action", filterable: false, sortable: false,
             headerName: "Action",
-            width: 240,
+            width: 300,
             renderCell: (params) => {
                 return (
-                    <>
+                    <div className="flex justify-center items-center">
                         <Link href={`/products/${product._id}/${params.row._id}?size=${params.row.size}`}>
-                            <button className={styles.productListEdit}>Product Features</button>
+                            <button className="h-8 w-40 rounded-md mr-5 bg-blue-700 text-white">Product Features</button>
                         </Link>
-                        <button className={styles.productListEdit} onClick={() => editButtonHandler(params.row.id)}>Edit</button>
+                        <button className="h-8 w-16 rounded-md mr-5 bg-green-600 text-white" onClick={() => editButtonHandler(params.row.id)}>Edit</button>
                         <DeleteOutline
                             className={styles.productListDelete}
                             onClick={() => handleDelete(params.row._id)}
                         />
-                    </>
+                    </div>
                 );
             },
         },
@@ -104,7 +104,6 @@ export default function Variations({ product }) {
         };
         setVariant(newVariant);
     }
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
