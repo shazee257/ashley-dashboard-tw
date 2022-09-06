@@ -4,15 +4,18 @@ import {
     DeleteOutline,
     CloudUploadOutlined,
 } from "@mui/icons-material";
-import { Button } from '@mui/material';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {
+    Button, Grid, Paper, TextField,
+    MenuItem, Checkbox, FormControlLabel, Modal
+} from '@mui/material';
 const { formatDate } = require("utils/utils");
 import MuiGrid from "components/MuiGrid/MuiGrid";
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { showNotification } from 'utils/helper';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import CreateNewIcon from 'components/CreateNewIcon';
 
 export default function Features({ productId, variantId, productTitle, features, size }) {
     const [data, setData] = useState(features);
@@ -25,14 +28,10 @@ export default function Features({ productId, variantId, productTitle, features,
         setData(data.filter((item) => item._id !== id));
     }
 
-    const imageSelectHandler = (image) => {
-        setImage(image);
-    }
-
     const uploadHandler = async (id) => {
         // if files not selected
         if (filesToUpload.length === 0) {
-            showNotification("", "Please select files to upload", "warn");
+            toast.warn("Please select files to upload");
             return;
         }
 
@@ -45,26 +44,21 @@ export default function Features({ productId, variantId, productTitle, features,
             headers: { 'Content-Type': 'multipart/form-data' }
         }
 
-        try {
-            await axios
-                .put(`${process.env.NEXT_PUBLIC_baseURL}/products/upload/${productId}/${variantId}/${id}`, fd, config)
-                .then(({ data }) => {
-                    if (data.success) {
-                        showNotification("", data.message, "success");
-                        setFilesToUpload([]);
-                    }
-                }).catch(err => showNotification("", err.response.data.message, "warn"));
+        await axios
+            .put(`${process.env.NEXT_PUBLIC_baseURL}/products/upload/${productId}/${variantId}/${id}`, fd, config)
+            .then(({ data }) => {
+                if (data.success) {
+                    toast.success(data.message);
+                    setFilesToUpload([]);
+                }
+            }).catch(err => toast.error(err.message));
 
-            const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/products/p/${productId}`);
-            const features = data.product.variants.find((item) => item._id === variantId).features.map((v) => {
-                v.id = v._id;
-                return v;
-            });
-            setData(features);
-        } catch (error) {
-            let message = error.response ? error.response.data.message : "Only image files are allowed!";
-            toast.error(message);
-        }
+        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/products/p/${productId}`);
+        const features = data.product.variants.find((item) => item._id === variantId).features.map((v) => {
+            v.id = v._id;
+            return v;
+        });
+        setData(features);
     }
 
 
@@ -96,7 +90,7 @@ export default function Features({ productId, variantId, productTitle, features,
                                     <Image height={26} width={26}
                                         className={styles.productListImg}
                                         src={`${process.env.NEXT_PUBLIC_thumbURL}/products/${item}`}
-                                        onClick={() => imageSelectHandler(item)} />
+                                        onClick={() => setImage(item)} />
                                 </div>
                             )
                         })}
@@ -155,29 +149,37 @@ export default function Features({ productId, variantId, productTitle, features,
         <div className={styles.productList}>
             <div className={styles.main}>
                 <h2 className={styles.productTitle}>Variant ~ Features</h2>
-                <Link href={`/products/${productId}/${variantId}/create?size=${size}`}>
+                {/* <Link href={`/products/${productId}/${variantId}/create?size=${size}`}>
                     <Button variant="contained"
                         color="primary" component="label"
                         className={styles.createNewLink}>Create New</Button>
-                </Link>
+                </Link> */}
             </div>
-            <div className="ml-8 mb-5">
-                Product {`: `}<b>
-                    <Link href={`/products/${productId}`}>{productTitle}</Link>
-                </b>
-                <br />
-                <div>Size<strong>{`: ${size}`}</strong></div>
+
+            <br />
+            <div className="flex justify-between ">
+                <div className="ml-8 mb-5">
+                    Product {`: `}<strong><Link href={`/products/${productId}`}>{productTitle}</Link></strong>
+                    <br />
+                    <div>Size<strong>{`: ${size}`}</strong></div>
+                </div>
+                {/* Add Click Handler (handleClick) to icon below */}
+                <CreateNewIcon />
             </div>
 
             <MuiGrid columns={columns} data={data} />
             <br /><br />
-            {
-                image &&
+            {image &&
                 <div style={{ width: '100%', height: '450px', border: '1px solid gray', justifyContent: 'center', display: 'flex' }}>
                     <Image height={400} width={700} src={`${process.env.NEXT_PUBLIC_uploadURL}/products/${image}`} />
                 </div>
             }
-            <br /><br />
+
+
+
+
+
+
         </div >
     );
 }

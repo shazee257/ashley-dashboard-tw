@@ -1,6 +1,7 @@
 import styles from 'styles/ProductIndex.module.css';
 import axios from 'axios';
 import { DeleteOutline } from "@mui/icons-material";
+// import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import {
     Button, Grid, Paper, TextField,
     InputLabel, Modal
@@ -13,6 +14,8 @@ import { showNotification } from 'utils/helper';
 import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
+import CreateNewIcon from 'components/CreateNewIcon';
+
 
 export default function Variants({ product }) {
     const [data, setData] = useState(product.variants);
@@ -78,7 +81,10 @@ export default function Variants({ product }) {
     const [open, setOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
 
-    const handleClickOpen = () => setOpen(true);
+    const handleClickOpen = () => {
+        console.log("clicked");
+        setOpen(true);
+    }
     const handleClose = () => {
         setOpen(false);
         clearForm();
@@ -159,19 +165,11 @@ export default function Variants({ product }) {
                 <br />
                 <div className="flex mr-5 mb-5 items-center justify-between">
                     <div className='hover:underline'>
-
                         <Link href={`/products/${product._id}`}>
                             <p>Product {`: `}<b>{product.title}</b></p>
                         </Link>
-
                     </div>
-                    {/* <Link href={`/products/${product._id}/create`}> */}
-                    <Button
-                        variant="contained"
-                        onClick={handleClickOpen}
-                        color="primary" component="label"
-                        className="{styles.createNewLink}">Create New</Button>
-                    {/* </Link> */}
+                    <CreateNewIcon handleClick={handleClickOpen} />
 
                 </div>
             </div>
@@ -214,52 +212,6 @@ export default function Variants({ product }) {
                                         value={variant.purchasePrice} onChange={(e) => setVariant({ ...variant, purchasePrice: e.target.value })}
                                     />
                                 </div>
-
-
-                                {/* <TextField className="w-5/12"
-                                    multiline
-                                    maxRows={4}
-                                    size="small"
-                                    fullWidth
-                                    label='Product Title' placeholder='Enter Product Name'
-                                    value={product.title}
-                                    onChange={(e) => setProduct({ ...product, title: e.target.value })} />
-                                <TextField
-                                    className="w-6/12"
-                                    fullWidth
-                                    size="small"
-                                    label="Select Category"
-                                    select
-                                    value={product.category_id} onChange={categorySelectHandler}>
-
-                                    {categories.map((category) => (
-                                        category.children.map((child) => (
-                                            <MenuItem key={child._id} value={child._id}>
-                                                <div className="flex ">
-                                                    <div className="flex items-center mr-2">
-                                                        {category.image &&
-                                                            <Image height={32} width={32}
-                                                                className="rounded-full" layout="fixed"
-                                                                src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${category.image}`} />}
-                                                    </div>
-                                                    <div className="flex items-center">
-                                                        {category.title}
-                                                    </div>
-                                                    <DoubleArrowOutlinedIcon className="flex items-center mx-5 mt-1" />
-                                                    <div className="flex items-center mr-2">
-                                                        {category.image &&
-                                                            <Image height={32} width={32} layout="fixed"
-                                                                className="rounded-full"
-                                                                src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${child.image}`} />}
-                                                    </div>
-                                                    <div className="flex items-center">
-                                                        {child.title}
-                                                    </div>
-                                                </div>
-                                            </MenuItem>
-                                        ))
-                                    ))}
-                                </TextField> */}
                             </div>
                             <br />
                             <div className="flex justify-between">

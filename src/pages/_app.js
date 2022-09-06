@@ -3,7 +3,6 @@ import "styles/globals.css";
 import Layout from 'components/Layout/Layout';
 import LoadingPanel from "components/Loader";
 import Router, { useRouter } from "next/router";
-
 import { ToastContainer } from 'react-toastify';
 
 function MyApp({ Component, pageProps }) {

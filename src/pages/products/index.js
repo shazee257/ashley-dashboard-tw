@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { showNotification } from 'utils/helper';
+import CreateNewIcon from 'components/CreateNewIcon';
 
 export default function Products({ products }) {
     const [data, setData] = useState(products);
@@ -239,13 +240,7 @@ export default function Products({ products }) {
         <div className="flex-1">
             <div className={styles.main}>
                 <h2 className={styles.productTitle}>Products</h2>
-                {/* <Link href="/products/create"> */}
-                <Button
-                    variant="contained"
-                    onClick={handleClickOpen}
-                    color="primary" component="label"
-                    className={styles.createNewLink}>Create New</Button>
-                {/* </Link> */}
+                <CreateNewIcon handleClick={handleClickOpen} />
             </div>
             <MuiGrid data={data} columns={columns} />
 
