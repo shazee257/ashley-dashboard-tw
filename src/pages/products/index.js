@@ -134,7 +134,7 @@ export default function Products({ products }) {
 
     const handleDelete = async (id) => {
         await axios.delete(`${process.env.NEXT_PUBLIC_baseURL}/products/${id}`)
-            .then(({ data }) => toast.success(data.message);
+            .then(({ data }) => toast.success(data.message));
         setData(data.filter((item) => item._id !== id));
     }
 
