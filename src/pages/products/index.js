@@ -11,7 +11,8 @@ import MuiGrid from "components/MuiGrid/MuiGrid";
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { showNotification } from 'utils/helper';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import CreateNewIcon from 'components/CreateNewIcon';
 
 export default function Products({ products }) {
@@ -94,7 +95,7 @@ export default function Products({ products }) {
         e.preventDefault();
 
         if (!product.title || !product.store_id || !product.category_id || !product.brand_id) {
-            showNotification("warn", "Please fill all fields");
+            toast.warn("Please fill all fields");
             return;
         }
 
@@ -112,18 +113,18 @@ export default function Products({ products }) {
                 .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${product.id}`, productData)
                 .then(({ data }) => {
                     if (data.success) {
-                        showNotification("success", data.message);
+                        toast.success(data.message);
                         clearForm();
                     }
-                }).catch(err => showNotification("error", err.response.data.message));
+                }).catch(err => toast.error(err.response.data.message));
         } else {
             await axios.post(`${process.env.NEXT_PUBLIC_baseURL}/products`, productData)
                 .then(({ data }) => {
                     if (data.success) {
-                        data.success && showNotification("success", data.message);
+                        data.success && toast.success(data.message);
                         clearForm();
                     }
-                }).catch(err => showNotification("error", err.response.data.message));
+                }).catch(err => toast.error(err.response.data.message));
         }
 
         const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/products`);
@@ -133,7 +134,7 @@ export default function Products({ products }) {
 
     const handleDelete = async (id) => {
         await axios.delete(`${process.env.NEXT_PUBLIC_baseURL}/products/${id}`)
-            .then(({ data }) => showNotification("", data.message, 'success'));
+            .then(({ data }) => toast.success(data.message);
         setData(data.filter((item) => item._id !== id));
     }
 
@@ -416,7 +417,7 @@ export default function Products({ products }) {
                         </Typography> */}
                     </Paper>
                 </div >
-            </Modal >
+            </Modal>
         </div >
     );
 }

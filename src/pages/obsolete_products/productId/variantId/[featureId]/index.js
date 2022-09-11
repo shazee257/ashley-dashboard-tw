@@ -120,8 +120,6 @@ export const getServerSideProps = async (context) => {
     const feature = data.product.variants.find(v => v._id.toString() === variantId)
         .features.find(f => f._id.toString() === featureId);
 
-    console.log(feature);
-
     return {
         props: {
             colors: colorData.data.colors,
