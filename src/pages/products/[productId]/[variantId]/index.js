@@ -6,7 +6,7 @@ import {
 } from "@mui/icons-material";
 import {
     Button, Grid, Paper, TextField,
-    MenuItem, Typography, Modal
+    MenuItem, Typography, Modal, InputLabel
 } from '@mui/material';
 const { formatDate } = require("utils/utils");
 import MuiGrid from "components/MuiGrid/MuiGrid";
@@ -15,6 +15,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import dynamic from "next/dynamic";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import 'react-quill/dist/quill.snow.css';
 import CreateNewIcon from 'components/CreateNewIcon';
 
 export default function Features({ productId, variantId, productTitle, features, size }) {
@@ -80,7 +83,7 @@ export default function Features({ productId, variantId, productTitle, features,
             }
         },
         {
-            field: "images", headerName: "Feature Images", width: 300,
+            field: "images", headerName: "Feature Images", width: 220,
             renderCell: (params) => {
                 return (
                     <>
@@ -100,8 +103,8 @@ export default function Features({ productId, variantId, productTitle, features,
 
 
         },
-        { field: "quantity", headerName: "Quantity", width: 130 },
-        { field: "sku", headerName: "SKU", width: 150 },
+        { field: "quantity", headerName: "Quantity", width: 100 },
+        { field: "sku", headerName: "SKU", width: 130 },
         {
             field: "upload", headerName: "Upload Images", width: 300,
             renderCell: (params) => {
@@ -151,6 +154,7 @@ export default function Features({ productId, variantId, productTitle, features,
         color_id: "",
         quantity: "",
         sku: "",
+        zero_stock_msg: "",
         images: [],
     };
 
@@ -160,8 +164,6 @@ export default function Features({ productId, variantId, productTitle, features,
     const [colors, setColors] = useState([]);
     const [images, setImages] = useState([]);
     const [imageArray, setImageArray] = useState([]);
-
-
 
     useEffect(() => {
         getColors();
@@ -182,6 +184,7 @@ export default function Features({ productId, variantId, productTitle, features,
             quantity: feature.quantity,
             sku: feature.sku,
             images: feature.images,
+            zero_stock_msg: feature.zero_stock_msg,
         };
         setFeature(newFeature);
     }
@@ -212,10 +215,15 @@ export default function Features({ productId, variantId, productTitle, features,
         }
 
         if (editMode) {
-            const featureData = { color_id: colorId, quantity, sku };
+            const featureData = {
+                color_id: feature.color_id,
+                quantity: feature.quantity,
+                sku: feature.sku,
+                zero_stock_msg: feature.zero_stock_msg
+            };
 
             await axios
-                .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${productId}/${variantId}/${feature._id}`, featureData)
+                .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${productId}/${variantId}/${feature.id}`, featureData)
                 .then(({ data }) => {
                     data.success && toast.success(data.message);
                 }).catch(err => toast.error(err.message));
@@ -224,8 +232,9 @@ export default function Features({ productId, variantId, productTitle, features,
             fd.append("color_id", feature.color_id);
             fd.append("quantity", feature.quantity);
             fd.append("sku", feature.sku);
+            fd.append("zero_stock_msg", feature.zero_stock_msg);
             for (let i = 0; i < images.length; i++) {
-                fd.append("files", images[i]);
+                fd.append("images", images[i]);
             }
 
             await axios
@@ -237,6 +246,7 @@ export default function Features({ productId, variantId, productTitle, features,
 
         getFeatures();
         handleClose();
+        setFeature(newFeature);
     };
 
 
@@ -281,7 +291,7 @@ export default function Features({ productId, variantId, productTitle, features,
 
             {/* MODAL FORM */}
             <Modal open={open} onClose={handleClose}>
-                <div className="flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-3/4 h-3/4 rounded-lg shadow-lg">
+                <div className="flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-3/4 h-4/4 rounded-lg shadow-lg">
                     <Paper elevation={1} className="p-10 w-full">
                         <Grid align='left'>
                             <h2>{editMode ? ("Update Variant Features").toUpperCase() : ("New Variant Features").toUpperCase()}</h2>
@@ -290,7 +300,6 @@ export default function Features({ productId, variantId, productTitle, features,
                         <form autoComplete="off" onSubmit={handleSubmit} className="flex place-items-start ">
                             <div className="flex flex-col justify-between w-96 mr-10">
                                 <TextField
-                                    // className="w-6/12"
                                     fullWidth
                                     size="small"
                                     label="Select Color"
@@ -310,21 +319,32 @@ export default function Features({ productId, variantId, productTitle, features,
                                     ))}
                                 </TextField>
                                 <br />
-                                <TextField
-                                    fullWidth
-                                    inputProps={{ step: '1', min: '1', max: '1000', type: 'number' }}
-                                    label='Quantity' placeholder='Enter Quantity'
-                                    variant='outlined'
-                                    value={feature.quantity} onChange={(e) => setFeature({ ...feature, quantity: e.target.value })}
-                                />
+                                <div className='flex justify-between'>
+                                    <TextField
+                                        size='small'
+                                        fullWidth
+                                        inputProps={{ step: '1', min: '1', max: '1000', type: 'number' }}
+                                        label='Quantity' placeholder='Enter Quantity'
+                                        variant='outlined'
+                                        value={feature.quantity} onChange={(e) => setFeature({ ...feature, quantity: e.target.value })}
+                                    />
+                                    <br />
+                                    <TextField
+                                        size='small'
+                                        fullWidth
+                                        required
+                                        variant='outlined'
+                                        label='sku' placeholder='Enter SKU'
+                                        value={feature.sku} onChange={(e) => setFeature({ ...feature, sku: e.target.value })}
+                                    />
+                                </div>
                                 <br />
-                                <TextField
-                                    fullWidth
-                                    required
-                                    variant='outlined'
-                                    label='sku' placeholder='Enter SKU'
-                                    value={feature.sku} onChange={(e) => setFeature({ ...feature, sku: e.target.value })}
-                                />
+                                <div className="">
+                                    <InputLabel htmlFor="description">Zero Stock Message</InputLabel>
+                                    <ReactQuill
+                                        value={feature.zero_stock_msg} onChange={(e) => setFeature({ ...feature, zero_stock_msg: e })} />
+                                </div>
+
                                 <br />
                                 {!editMode &&
                                     <div className="flex flex-col place-items-center">

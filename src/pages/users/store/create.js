@@ -6,7 +6,7 @@ import {
     Grid, Paper, TextField, Button,
     Typography, Select, InputLabel,
     MenuItem
-} from '@material-ui/core'
+} from '@mui/material'
 import axios from 'axios';
 import { showNotification } from "utils/helper";
 import Link from "next/link";
@@ -82,81 +82,81 @@ export default function NewStoreUser({ stores }) {
     };
 
     return (
-        <div className={styles.main}>
-            <Grid>
-                <Paper elevation={0} style={{ padding: '20px', width: '400px' }}>
-                    <Grid align='left'>
-                        <h2>Create a New Store User</h2>
-                    </Grid>
-                    <br />
-                    <form encType='multipart/form-data'>
-                        <TextField
-                            className={styles.addProductItem}
-                            label='First Name' placeholder='Enter First Name'
-                            inputRef={firstNameRef}
-                        />
-                        <br />
-                        <TextField
-                            className={styles.addProductItem}
-                            label='Last Name' placeholder='Enter Last Name'
-                            inputRef={lastNameRef}
-                        />
-                        <br />
-                        <TextField className={styles.addProductItem}
-                            label='Email' placeholder='Enter Email'
-                            inputRef={emailRef} />
-                        <br /><br />
-
-                        <InputLabel>Select Store</InputLabel>
-                        <Select fullWidth displayEmpty
-                            label="Store"
-                            inputRef={storeIdRef}
-                        >
-                            {stores.map((store) => (
-                                <MenuItem value={store._id} key={store._id}>
+        <div className="flex p-5">
+            <Paper elevation={1} style={{ padding: '20px', width: '350px' }}>
+                <Grid align='left'>
+                    <h2>Create a New Store User</h2>
+                </Grid>
+                <br />
+                <form encType='multipart/form-data' onSubmit={handleSubmit}>
+                    <TextField
+                        size="small"
+                        className={styles.addProductItem}
+                        label='First Name' placeholder='Enter First Name'
+                        inputRef={firstNameRef}
+                    />
+                    <TextField
+                        size="small"
+                        className={styles.addProductItem}
+                        label='Last Name' placeholder='Enter Last Name'
+                        inputRef={lastNameRef}
+                    />
+                    <TextField
+                        size="small"
+                        className={styles.addProductItem}
+                        label='Email' placeholder='Enter Email'
+                        inputRef={emailRef} />
+                    <TextField fullWidth displayEmpty
+                        size="small"
+                        select
+                        label="Store"
+                        inputRef={storeIdRef}
+                    >
+                        {stores.map((store) => (
+                            <MenuItem value={store._id} key={store._id}>
+                                <div className={styles.productListItem}>
                                     <div className={styles.productListItem}>
-                                        <div className={styles.productListItem}>
-                                            <Image height={32} width={32}
-                                                className={styles.productListImg}
-                                                src={`${process.env.NEXT_PUBLIC_thumbURL}/stores/${store.banner}`} />
-                                        </div>
-                                        {store.title}
+                                        <Image height={32} width={32}
+                                            className={styles.productListImg}
+                                            src={`${process.env.NEXT_PUBLIC_thumbURL}/stores/${store.banner}`} />
                                     </div>
-                                </MenuItem>
-                            ))}
-                        </Select>
-                        <br /><br />
-
-                        <TextField className={styles.addProductItem}
-                            label='Phone #'
-                            placeholder='Enter Phone #'
-                            inputRef={phoneNoRef} />
-                        <br />
-                        <TextField className={styles.addProductItem}
-                            type='password' label='Password' placeholder='Enter Password'
-                            inputRef={passwordRef} />
-                        <br />
-                        <TextField className={styles.addProductItem}
-                            type='password' label='Confirm Password' placeholder='Confirm Password'
-                            inputRef={confirmPasswordRef} />
-                        <br />
-                        <br /><br />
-                        <Button
-                            onClick={handleSubmit}
-                            type='submit'
-                            color='primary'
-                            variant="contained"
-                            style={{ margin: '8px 0' }}
-                            fullWidth>
-                            Create
-                        </Button>
-                    </form>
+                                    {store.title}
+                                </div>
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                    <br /><br />
+                    <TextField
+                        size="small"
+                        className={styles.addProductItem}
+                        label='Phone #'
+                        placeholder='Enter Phone #'
+                        inputRef={phoneNoRef} />
+                    <TextField
+                        size="small"
+                        className={styles.addProductItem}
+                        type='password' label='Password' placeholder='Enter Password'
+                        inputRef={passwordRef} />
+                    <TextField
+                        size="small"
+                        className={styles.addProductItem}
+                        type='password' label='Confirm Password' placeholder='Confirm Password'
+                        inputRef={confirmPasswordRef} />
                     <br />
-                    <Typography >
-                        <Link href="/users/store">Back to Store Users</Link>
-                    </Typography>
-                </Paper>
-            </Grid>
+                    <Button
+                        type='submit'
+                        color='primary'
+                        variant="outlined"
+                        className={styles.addProductItem}
+                        fullWidth>
+                        Create
+                    </Button>
+                </form>
+                <br />
+                <Typography >
+                    <Link href="/users/store">Back to Store Users</Link>
+                </Typography>
+            </Paper>
             <div className="imageWithButton">
                 <div className={styles.productImage}>
                     {(selectedFile) ? (<img src={image} className={styles.imgObject}></img>)

@@ -2,7 +2,7 @@ import styles from "styles/UserAdminCreate.module.css";
 import { useState, useRef } from "react";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Grid, Paper, TextField, Button, Typography } from '@material-ui/core'
+import { Grid, Paper, TextField, Button, Typography } from '@mui/material'
 import axios from 'axios';
 import { showNotification } from "utils/helper";
 import Link from "next/link";
@@ -73,67 +73,66 @@ export default function NewUser() {
     }
 
     return (
-        <div className={styles.main}>
-            <Grid>
-                <Paper elevation={0} style={{ padding: '20px', width: '400px' }}>
-                    <Grid align='left'>
-                        <h2>Create a New Admin User</h2>
-                    </Grid>
+        <div className="flex place-items-start">
+            <Paper elevation={0} style={{ padding: '20px', width: '350px' }}>
+                <Grid align='left'>
+                    <h2>Create a New Admin User</h2>
+                </Grid>
+                <br />
+                <form encType='multipart/form-data' onSubmit={handleSubmit}>
+                    <TextField
+                        size='small'
+                        className={styles.addProductItem}
+                        label='First Name' placeholder='Enter First Name'
+                        inputRef={firstNameRef} />
+                    <TextField
+                        size='small'
+                        className={styles.addProductItem}
+                        label='Last Name' placeholder='Enter Last Name'
+                        inputRef={lastNameRef} />
+                    <TextField
+                        size='small'
+                        className={styles.addProductItem}
+                        label='Email' placeholder='Enter Email'
+                        inputRef={emailRef} />
+                    <TextField
+                        size='small'
+                        className={styles.addProductItem}
+                        label='Phone #'
+                        placeholder='Enter Phone #'
+                        inputRef={phoneNoRef} />
+                    <TextField
+                        size='small'
+                        className={styles.addProductItem}
+                        label='Password' placeholder='Enter Password'
+                        type='password'
+                        inputRef={passwordRef} />
+                    <TextField
+                        size='small'
+                        className={styles.addProductItem}
+                        label='Confirm Password' placeholder='Enter Password again'
+                        type='password'
+                        inputRef={confirmPasswordRef} />
                     <br />
-                    <form encType='multipart/form-data'>
-                        <TextField
-                            className={styles.addProductItem}
-                            label='First Name' placeholder='Enter First Name'
-                            inputRef={firstNameRef}
-                        />
-                        <br />
-                        <TextField
-                            className={styles.addProductItem}
-                            label='Last Name' placeholder='Enter Last Name'
-                            inputRef={lastNameRef}
-                        />
-                        <br />
-                        <TextField className={styles.addProductItem}
-                            label='Email' placeholder='Enter Email'
-                            inputRef={emailRef} />
-                        <br />
-                        <TextField className={styles.addProductItem}
-                            label='Phone #'
-                            placeholder='Enter Phone #'
-                            inputRef={phoneNoRef} />
-                        <br />
-                        <TextField className={styles.addProductItem}
-                            label='Password' placeholder='Enter Password'
-                            type='password'
-                            inputRef={passwordRef} />
-                        <br />
-                        <TextField className={styles.addProductItem}
-                            label='Confirm Password' placeholder='Enter Password again'
-                            type='password'
-                            inputRef={confirmPasswordRef} />
-                        <br />
-                        <br /><br />
-                        <Button
-                            onClick={handleSubmit}
-                            type='submit'
-                            color='primary'
-                            variant="contained"
-                            style={{ margin: '8px 0' }}
-                            fullWidth>
-                            Create
-                        </Button>
-                    </form>
-                    <br />
-                    <Typography >
-                        <Link href="/users/admin">Back to Admin Users</Link>
-                    </Typography>
-                </Paper>
-            </Grid>
-            <div className="imageWithButton">
+                    <Button
+                        className={styles.addProductItem}
+                        type='submit'
+                        color='primary'
+                        variant="outlined"
+                        fullWidth>
+                        Create
+                    </Button>
+                </form>
+                <br />
+                <Typography >
+                    <Link href="/users/admin">Back to Admin Users</Link>
+                </Typography>
+            </Paper>
+            <div className="">
                 <div className={styles.productImage}>
                     {(selectedFile) && (<img src={image} className={styles.imgObject}></img>)}
                 </div>
-                <div className={styles.imageButtonContainer}>
+                <div className="flex flex-col items-center">
                     <div><small>Only jpg, png, gif, svg, webp images are allowed</small></div>
                     <Button className={styles.imageButton} variant="contained" component="label" >Choose Image
                         <input type="file" name="image" hidden onChange={fileSelectedHandler} accept="image/*" />

@@ -43,7 +43,7 @@ export default function Login() {
 
                     cookie.set('token', data.session.token, { expires: 1 });
 
-                    push("/brands");
+                    push("/products");
                 }
             }).catch(err => showNotification(err));
     };

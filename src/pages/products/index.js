@@ -239,8 +239,8 @@ export default function Products({ products }) {
 
     return (
         <div className="flex-1">
-            <div className={styles.main}>
-                <h2 className={styles.productTitle}>Products</h2>
+            <div className="flex justify-between items-center ml-5 mr-5">
+                <h2>Products</h2>
                 <CreateNewIcon handleClick={handleClickOpen} />
             </div>
             <MuiGrid data={data} columns={columns} />

@@ -151,11 +151,11 @@ export default function Sidebar() {
               </Link>
             </li>
 
-            <li className={`${styles.li} ${RegExp(/colors/).test(router.pathname) ? styles.active : ""}`}>
+            {/* <li className={`${styles.li} ${RegExp(/colors/).test(router.pathname) ? styles.active : ""}`}>
               <Link href='/colors' className={`${styles.sidebarListItem} ${styles.link}`}>
                 <a className={styles.anchor}>Product Colors</a>
               </Link>
-            </li>
+            </li> */}
 
 
 

@@ -2,11 +2,10 @@ import styles from "styles/UserStoreUpdate.module.css";
 import { useState, useRef } from "react";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Grid, Paper, TextField, Button, Typography, InputLabel, MenuItem, Select } from '@material-ui/core'
+import { Grid, Paper, TextField, Button, Typography, InputLabel, MenuItem, Select } from '@mui/material'
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { showNotification } from "utils/helper";
-import { imageSource } from "utils/utils";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -85,85 +84,86 @@ export default function UpdateBrand(props) {
 
     return (
         <div className={styles.main}>
-            <Grid>
-                <Paper elevation={0} style={{ width: '400px', padding: '20px' }} >
-                    <Grid align='left'>
-                        <h2>Update Store User</h2>
-                    </Grid>
-                    <br />
-                    <form>
-                        <TextField
-                            className={styles.addProductItem}
-                            label='First Name' placeholder='Enter First Name'
-                            value={user.first_name} onChange={(e) => setUser({ ...user, first_name: e.target.value })}
-                        />
-                        <br />
-                        <TextField
-                            className={styles.addProductItem}
-                            label='Last Name' placeholder='Enter Last Name'
-                            value={user.last_name} onChange={(e) => setUser({ ...user, last_name: e.target.value })}
-                        />
-                        <br />
-                        <TextField className={styles.addProductItem}
-                            label='Email' placeholder='Enter Email'
-                            value={user.email} onChange={(e) => setUser({ ...user, email: e.target.value })}
-                        />
-                        <br /><br />
-                        <InputLabel>Select Store</InputLabel>
-                        <Select fullWidth displayEmpty
-                            label="Store"
-                            value={storeId}
-                            onChange={(e) => setStoreId(e.target.value)}
-                        >
-                            {props.stores.map((store) => (
-                                <MenuItem value={store._id} key={store._id}>
+            <Paper elevation={0} style={{ width: '350px', padding: '20px' }} >
+                <Grid align='left'>
+                    <h2>Update Store User</h2>
+                </Grid>
+                <br />
+                <form onSubmit={handleSubmit}>
+                    <TextField
+                        size="small"
+                        className={styles.addProductItem}
+                        label='First Name' placeholder='Enter First Name'
+                        value={user.first_name} onChange={(e) => setUser({ ...user, first_name: e.target.value })} />
+
+                    <TextField
+                        size="small"
+                        className={styles.addProductItem}
+                        label='Last Name' placeholder='Enter Last Name'
+                        value={user.last_name} onChange={(e) => setUser({ ...user, last_name: e.target.value })} />
+
+                    <TextField
+                        size="small"
+                        className={styles.addProductItem}
+                        label='Email' placeholder='Enter Email'
+                        value={user.email} onChange={(e) => setUser({ ...user, email: e.target.value })} />
+                    <TextField fullWidth displayEmpty
+                        select
+                        size="small"
+                        label="Store"
+                        value={storeId}
+                        onChange={(e) => setStoreId(e.target.value)}
+                    >
+                        {props.stores.map((store) => (
+                            <MenuItem value={store._id} key={store._id}>
+                                <div className={styles.productListItem}>
                                     <div className={styles.productListItem}>
-                                        <div className={styles.productListItem}>
-                                            <Image height={32} width={32}
-                                                className={styles.productListImg}
-                                                src={`${process.env.NEXT_PUBLIC_thumbURL}/stores/${store.banner}`} />
-                                        </div>
-                                        {store.title}
+                                        <Image height={32} width={32}
+                                            className={styles.productListImg}
+                                            src={`${process.env.NEXT_PUBLIC_thumbURL}/stores/${store.banner}`} />
                                     </div>
-                                </MenuItem>
-                            ))}
-                        </Select>
-                        <br /><br />
-                        <TextField className={styles.addProductItem}
-                            label='Phone #'
-                            placeholder='Enter Phone #'
-                            value={user.phone_no} onChange={(e) => setUser({ ...user, phone_no: e.target.value })}
-                        />
-                        <br />
-                        <TextField className={styles.addProductItem}
-                            label='Password' placeholder='Enter Password'
-                            type="password"
-                            value={user.password} onChange={(e) => setUser({ ...user, password: e.target.value })}
-                        />
-                        <br />
-                        <TextField className={styles.addProductItem}
-                            label='Confirm Password' placeholder='Enter Password again'
-                            type="password"
-                            value={user.confirm_password} onChange={(e) => setUser({ ...user, confirm_password: e.target.value })}
-                        />
-                        <br />
-                        <br /><br />
-                        <Button
-                            onClick={handleSubmit}
-                            type='submit'
-                            color='primary'
-                            variant="contained"
-                            style={{ margin: '8px 0' }}
-                            fullWidth>
-                            Update
-                        </Button>
-                    </form>
+                                    {store.title}
+                                </div>
+                            </MenuItem>
+                        ))}
+                    </TextField>
                     <br /><br />
-                    <Typography >
-                        <Link href="/users/store">Back to Store Users</Link>
-                    </Typography>
-                </Paper>
-            </Grid>
+                    <TextField
+                        size="small"
+                        className={styles.addProductItem}
+                        label='Phone #'
+                        placeholder='Enter Phone #'
+                        value={user.phone_no} onChange={(e) => setUser({ ...user, phone_no: e.target.value })}
+                    />
+                    <TextField
+                        size="small"
+                        className={styles.addProductItem}
+                        label='Password' placeholder='Enter Password'
+                        type="password"
+                        value={user.password} onChange={(e) => setUser({ ...user, password: e.target.value })}
+                    />
+                    <TextField
+                        size="small"
+                        className={styles.addProductItem}
+                        label='Confirm Password' placeholder='Enter Password again'
+                        type="password"
+                        value={user.confirm_password} onChange={(e) => setUser({ ...user, confirm_password: e.target.value })}
+                    />
+                    <br />
+                    <Button
+                        className={styles.addProductItem}
+                        type='submit'
+                        color='primary'
+                        variant="outlined"
+                        fullWidth>
+                        Update
+                    </Button>
+                </form>
+                <br /><br />
+                <Typography >
+                    <Link href="/users/store">Back to Store Users</Link>
+                </Typography>
+            </Paper>
             <div className="imageWithButton">
                 <div className={styles.productImage}>
 

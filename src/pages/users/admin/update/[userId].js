@@ -2,7 +2,7 @@ import styles from "styles/UserAdminUpdate.module.css";
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Grid, Paper, TextField, Button, Typography } from '@material-ui/core'
+import { Grid, Paper, TextField, Button, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { showNotification } from "utils/helper";
@@ -88,49 +88,51 @@ export default function UpdateBrand(props) {
                         <h2>Update Admin User</h2>
                     </Grid>
                     <br />
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <TextField
+                            size="small"
                             className={styles.addProductItem}
                             label='First Name' placeholder='Enter First Name'
                             value={user.first_name} onChange={(e) => setUser({ ...user, first_name: e.target.value })}
                         />
-                        <br />
                         <TextField
+                            size="small"
                             className={styles.addProductItem}
                             label='Last Name' placeholder='Enter Last Name'
                             value={user.last_name} onChange={(e) => setUser({ ...user, last_name: e.target.value })}
                         />
-                        <br />
-                        <TextField className={styles.addProductItem}
+                        <TextField
+                            size="small"
+                            className={styles.addProductItem}
                             label='Email' placeholder='Enter Email'
                             value={user.email} onChange={(e) => setUser({ ...user, email: e.target.value })}
                         />
-                        <br />
-                        <TextField className={styles.addProductItem}
+                        <TextField
+                            size="small"
+                            className={styles.addProductItem}
                             label='Phone #'
                             placeholder='Enter Phone #'
                             value={user.phone_no} onChange={(e) => setUser({ ...user, phone_no: e.target.value })}
                         />
-                        <br />
                         <TextField className={styles.addProductItem}
+                            size="small"
                             label='Password' placeholder='Enter Password'
                             type="password"
                             value={user.password} onChange={(e) => setUser({ ...user, password: e.target.value })}
                         />
-                        <br />
-                        <TextField className={styles.addProductItem}
+                        <TextField
+                            size="small"
+                            className={styles.addProductItem}
                             label='Confirm Password' placeholder='Enter Password again'
                             type="password"
                             value={user.confirm_password} onChange={(e) => setUser({ ...user, confirm_password: e.target.value })}
                         />
                         <br />
-                        <br /><br />
                         <Button
-                            onClick={handleSubmit}
                             type='submit'
                             color='primary'
-                            variant="contained"
-                            style={{ margin: '8px 0' }}
+                            variant="outlined"
+                            className={styles.addProductItem}
                             fullWidth>
                             Update
                         </Button>

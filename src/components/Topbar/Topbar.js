@@ -10,14 +10,13 @@ export default function Topbar() {
   const router = useRouter();
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("user"));
+    const userData = JSON.parse(cookie.get("user"));
     userData && setUser(userData);
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
     cookie.remove('token');
+    cookie.remove('user');
     router.push("/login");
   }
 

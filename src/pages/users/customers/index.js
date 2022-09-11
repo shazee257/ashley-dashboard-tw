@@ -1,6 +1,6 @@
 import styles from 'styles/UsersCustomers.module.css';
 import axios from 'axios';
-import { DeleteOutline, Phone } from "@material-ui/icons";
+import { DeleteOutline, Phone } from "@mui/icons-material";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MuiGrid from 'components/MuiGrid/MuiGrid';
@@ -14,7 +14,7 @@ export default function Customers({ users }) {
     const handleDelete = async (id) => {
         await axios.delete(`${process.env.NEXT_PUBLIC_baseURL}/users/${id}`)
             .then(({ data }) => toast.success(data.message));
-        setData(users.filter((item) => item._id !== id));
+        setData(data.filter((item) => item._id !== id));
     }
 
     const columns = [

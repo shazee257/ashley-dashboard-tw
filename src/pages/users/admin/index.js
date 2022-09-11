@@ -1,7 +1,7 @@
 import styles from 'styles/UsersAdmin.module.css';
 import axios from 'axios';
-import { DeleteOutline, Phone } from "@material-ui/icons";
-import { Button } from "@material-ui/core";
+import { DeleteOutline, Phone } from "@mui/icons-material";
+import { Button } from "@mui/material";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MuiGrid from 'components/MuiGrid/MuiGrid';
@@ -16,7 +16,7 @@ export default function AdminUsers({ users }) {
     const handleDelete = async (id) => {
         await axios.delete(`${process.env.NEXT_PUBLIC_baseURL}/users/${id}`)
             .then(({ data }) => toast.success(data.message));
-        setData(users.filter((item) => item._id !== id));
+        setData(data.filter((item) => item._id !== id));
     }
 
     const columns = [

@@ -162,7 +162,6 @@ export default function Variants({ product }) {
         <div className={styles.productList}>
             <div className="ml-8">
                 <h2 className="">Add Sizes Variantion</h2>
-                <br />
                 <div className="flex mr-5 mb-5 items-center justify-between">
                     <div className='hover:underline'>
                         <Link href={`/products/${product._id}`}>
