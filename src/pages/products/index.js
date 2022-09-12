@@ -16,7 +16,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import CreateNewIcon from 'components/CreateNewIcon';
 
 export default function Products({ products }) {
-    const [data, setData] = useState(products);
+    const [data, setData] = useState([...products]);
 
     const [open, setOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
@@ -116,7 +116,7 @@ export default function Products({ products }) {
                         toast.success(data.message);
                         clearForm();
                     }
-                }).catch(err => toast.error(err.response.data.message));
+                }).catch(err => toast.error(err.message));
         } else {
             await axios.post(`${process.env.NEXT_PUBLIC_baseURL}/products`, productData)
                 .then(({ data }) => {
@@ -124,7 +124,7 @@ export default function Products({ products }) {
                         data.success && toast.success(data.message);
                         clearForm();
                     }
-                }).catch(err => toast.error(err.response.data.message));
+                }).catch(err => toast.error(err.message));
         }
 
         const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/products`);
@@ -351,17 +351,6 @@ export default function Products({ products }) {
                                     ))}
                                 </TextField>
                             </div>
-                            {/* {attributes.length > 0 &&
-                            <div>
-                                <TextField
-                                    fullWidth aria-disabled="true"
-                                    className={styles.addProductItem}
-                                    label='Product Variants' placeholder='Product Variants'
-                                    value={attributes}
-                                />
-                                <br /><br />
-                            </div>} */}
-
                             <br />
                             <div className="flex justify-between">
                                 <FormControlLabel
@@ -375,7 +364,7 @@ export default function Products({ products }) {
                                     className="w-6/12"
                                     size="small"
                                     inputProps={{ min: 0, max: 100, type: 'number' }}
-                                    label='Discount' placeholder='Enter Discount'
+                                    label='Discount %' placeholder='Enter Discount %'
                                     value={product.discount}
                                     onChange={(e) => setProduct({ ...product, discount: e.target.value })} />
                             </div>
@@ -412,9 +401,6 @@ export default function Products({ products }) {
                             </div>
                         </form>
                         <br /><br />
-                        {/* <Typography >
-                            <Link href="/products">Back to Products</Link>
-                        </Typography> */}
                     </Paper>
                 </div >
             </Modal>

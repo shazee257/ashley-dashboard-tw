@@ -37,7 +37,7 @@ export default function NewBrand() {
         const fd = new FormData();
         fd.append('title', titleRef.current.value);
         fd.append('description', descriptionRef.current.value);
-        fd.append('image', image);
+        fd.append('image', selectedFile);
 
         const config = {
             headers: { 'Content-Type': 'multipart/form-data' }
