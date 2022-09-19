@@ -14,9 +14,11 @@ import Link from 'next/link';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CreateNewIcon from 'components/CreateNewIcon';
+import { useRouter } from 'next/router';
 
 export default function Products({ products }) {
     const [data, setData] = useState([...products]);
+    const router = useRouter();
 
     const [open, setOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
@@ -122,7 +124,8 @@ export default function Products({ products }) {
                 .then(({ data }) => {
                     if (data.success) {
                         data.success && toast.success(data.message);
-                        clearForm();
+                        handleClose();
+                        router.push(`/products/${data.product._id}`);
                     }
                 }).catch(err => toast.error(err.message));
         }
@@ -248,7 +251,7 @@ export default function Products({ products }) {
 
             {/* MODAL FORM */}
             <Modal open={open} onClose={handleClose}>
-                <div className="flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-3/4 h-3/4 rounded-lg shadow-lg">
+                <div className="flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-3/4 m-a rounded-lg shadow-lg">
                     <Paper elevation={1} className="p-10 w-full">
                         <Grid align='left'>
                             <h2>{editMode ? ("Update Product").toUpperCase() : ("New Product").toUpperCase()}</h2>

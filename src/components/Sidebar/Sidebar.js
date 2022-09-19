@@ -181,12 +181,6 @@ export default function Sidebar() {
               </Link>
             </li>
 
-            <li className={`${styles.li} ${router.pathname == "/login" ? styles.active : ""}`} onClick={handleLogout} >
-              <Link href='/login' className={`${styles.sidebarListItem} ${styles.link}`}>
-                <a className={styles.anchor}><ExitToAppRounded className={styles.sidebarIcon} />Logout</a>
-              </Link>
-            </li>
-
           </ul>
         </div>
 

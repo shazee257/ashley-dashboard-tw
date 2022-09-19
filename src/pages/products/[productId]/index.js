@@ -176,7 +176,7 @@ export default function Variants({ product }) {
 
             {/* MODAL FORM */}
             <Modal open={open} onClose={handleClose}>
-                <div className="flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-3/4 h-4/4 rounded-lg shadow-lg">
+                <div className="flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-3/4 m-auto rounded-lg shadow-lg">
                     <Paper elevation={1} className="p-10 w-full">
                         <Grid align='left'>
                             <h2>{editMode ? ("Update Size Variant").toUpperCase() : ("Add New Size Variant").toUpperCase()}</h2>
@@ -218,7 +218,7 @@ export default function Variants({ product }) {
                                     <InputLabel htmlFor="description">Description</InputLabel>
                                     <ReactQuill value={variant.description} onChange={(e) => setVariant({ ...variant, description: e })} />
                                 </div>
-                                <div className="">
+                                <div className="w-3/6">
                                     <InputLabel htmlFor="dimensions">Dimensions</InputLabel>
                                     <ReactQuill value={variant.dimensions} onChange={(e) => setVariant({ ...variant, dimensions: e })} />
                                 </div>

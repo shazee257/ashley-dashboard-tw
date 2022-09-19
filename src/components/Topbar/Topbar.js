@@ -5,11 +5,24 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import cookie from 'js-cookie';
 import { useSession, signOut } from "next-auth/react";
+import Login from "components/Login/Login";
 
 export default function Topbar() {
-  const [user, setUser] = useState("");
-  const router = useRouter();
   const { data: session } = useSession();
+  const [user, setUser] = useState(session && session.user);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  console.log("session: ", session);
+
+  const router = useRouter();
+  // if (!session) router.push("/login");
+  if (!session) {
+    return (
+      <div>
+        <Login />
+      </div>);
+  }
+
 
 
   const handleLogout = () => {
@@ -20,7 +33,6 @@ export default function Topbar() {
     router.push("/login");
   }
 
-  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -30,14 +42,13 @@ export default function Topbar() {
     setAnchorEl(null);
   };
 
-  console.log("session: ", session);
 
-  useEffect(() => {
-    session && setUser(session.user);
-    // const userData = cookie.get("user");
-    //   userData ? setUser(JSON.parse(userData)) : router.push("/login");
-    if (!session) router.push("/login");
-  }, []);
+
+  // useEffect(() => {
+  // const userData = cookie.get("user");
+  //   userData ? setUser(JSON.parse(userData)) : router.push("/login");
+
+  // }, []);
 
 
 
@@ -62,10 +73,10 @@ export default function Topbar() {
             aria-expanded={open ? 'true' : undefined}
             onClick={handleClick}>
             <div className="text-white lowercase mr-2">
-              {user.email}
+              {user?.email}
             </div>
             <div className={styles.topAvatarContainer}>
-              {user?.image ? <Image height={50} width={50} src={`${process.env.NEXT_PUBLIC_thumbURL}/users/${session.user.image}`} className={styles.topAvatar} />
+              {user?.image ? <Image height={50} width={50} src={`${process.env.NEXT_PUBLIC_thumbURL}/users/${session?.user.image}`} className={styles.topAvatar} />
                 : <Image height={50} width={50} src={`${process.env.NEXT_PUBLIC_thumbURL}/users/avatar.png`} className={styles.topAvatar} />
               }
             </div>
