@@ -4,8 +4,9 @@ import Layout from 'components/Layout/Layout';
 import LoadingPanel from "components/Loader";
 import Router, { useRouter } from "next/router";
 import { ToastContainer } from 'react-toastify';
+import { SessionProvider } from 'next-auth/react';
 
-function MyApp({ Component, pageProps }) {
+const App = ({ Component, pageProps: { session, ...pageProps } }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -36,22 +37,24 @@ function MyApp({ Component, pageProps }) {
 
   if (router.pathname === "/login") {
     return (
-      <>
+      <SessionProvider session={session}>
         {loading && <LoadingPanel />}
         <Component {...pageProps} />
         <ToastContainer />
-      </>
+      </SessionProvider>
     );
   }
 
 
   return (
-    <Layout>
-      {loading && <LoadingPanel />}
-      <Component {...pageProps} />
-      <ToastContainer />
-    </Layout>
+    <SessionProvider session={session}>
+      <Layout>
+        {loading && <LoadingPanel />}
+        <Component {...pageProps} />
+        <ToastContainer />
+      </Layout>
+    </SessionProvider>
   );
 }
 
-export default MyApp;
+export default App;

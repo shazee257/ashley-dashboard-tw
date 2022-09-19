@@ -4,19 +4,19 @@ import { Typography, Button, Menu, MenuItem } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import cookie from 'js-cookie';
+import { useSession, signOut } from "next-auth/react";
 
 export default function Topbar() {
   const [user, setUser] = useState("");
   const router = useRouter();
+  const { data: session } = useSession();
 
-  useEffect(() => {
-    const userData = cookie.get("user");
-    userData ? setUser(JSON.parse(userData)) : router.push("/login");
-  }, []);
 
   const handleLogout = () => {
-    cookie.remove('token');
-    cookie.remove('user');
+    signOut();
+    // console.log("logout");
+    // cookie.remove('token');
+    // cookie.remove('user');
     router.push("/login");
   }
 
@@ -29,6 +29,17 @@ export default function Topbar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  console.log("session: ", session);
+
+  useEffect(() => {
+    session && setUser(session.user);
+    // const userData = cookie.get("user");
+    //   userData ? setUser(JSON.parse(userData)) : router.push("/login");
+    if (!session) router.push("/login");
+  }, []);
+
+
 
   return (
     <div className={`z-10 mb-5 w-full h-20 text-white sticky top-0 bg-blue-800`}>
@@ -50,11 +61,11 @@ export default function Topbar() {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
             onClick={handleClick}>
-            <div className={styles.userRole}>
-              {`${user?.first_name} ${user?.last_name}`}
+            <div className="text-white lowercase mr-2">
+              {user.email}
             </div>
             <div className={styles.topAvatarContainer}>
-              {user?.image ? <Image height={50} width={50} src={`${process.env.NEXT_PUBLIC_thumbURL}/users/${user.image}`} className={styles.topAvatar} />
+              {user?.image ? <Image height={50} width={50} src={`${process.env.NEXT_PUBLIC_thumbURL}/users/${session.user.image}`} className={styles.topAvatar} />
                 : <Image height={50} width={50} src={`${process.env.NEXT_PUBLIC_thumbURL}/users/avatar.png`} className={styles.topAvatar} />
               }
             </div>
@@ -77,7 +88,7 @@ export default function Topbar() {
         }}
       >
         <MenuItem onClick={handleClose}>{user?.email}</MenuItem>
-        <MenuItem onClick={handleClose} style={{ textTransform: "capitalize" }}>{user?.role}</MenuItem>
+        <MenuItem onClick={handleClose} style={{ textTransform: "capitalize" }}>Admin</MenuItem>
         <MenuItem onClick={handleLogout} style={{ color: 'red' }}>Logout</MenuItem>
       </Menu>
     </div >
