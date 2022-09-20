@@ -5,32 +5,16 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import cookie from 'js-cookie';
 import { useSession, signOut } from "next-auth/react";
-import Login from "components/Login/Login";
 
 export default function Topbar() {
-  const { data: session } = useSession();
-  const [user, setUser] = useState(session && session.user);
+  const [user, setUser] = useState({});
   const [anchorEl, setAnchorEl] = useState(null);
 
-  console.log("session: ", session);
-
-  const router = useRouter();
-  // if (!session) router.push("/login");
-  if (!session) {
-    return (
-      <div>
-        <Login />
-      </div>);
-  }
-
-
+  const { data: session } = useSession();
+  console.log("Topbar session: ", session);
 
   const handleLogout = () => {
-    signOut();
-    // console.log("logout");
-    // cookie.remove('token');
-    // cookie.remove('user');
-    router.push("/login");
+    signOut({ callbackUrl: `/login` });
   }
 
   const open = Boolean(anchorEl);
@@ -42,15 +26,11 @@ export default function Topbar() {
     setAnchorEl(null);
   };
 
-
-
-  // useEffect(() => {
-  // const userData = cookie.get("user");
-  //   userData ? setUser(JSON.parse(userData)) : router.push("/login");
-
-  // }, []);
-
-
+  useEffect(() => {
+    if (session) {
+      setUser(session?.user);
+    }
+  }, []);
 
   return (
     <div className={`z-10 mb-5 w-full h-20 text-white sticky top-0 bg-blue-800`}>
@@ -105,3 +85,4 @@ export default function Topbar() {
     </div >
   );
 }
+

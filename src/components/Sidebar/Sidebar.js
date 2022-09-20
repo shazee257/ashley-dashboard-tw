@@ -62,11 +62,17 @@ export default function Sidebar() {
           <div className={styles.quickMenu} onClick={handleProductClick} >
             <div className={styles.MenuLeftItems}>
               <SupervisorAccountOutlined className={styles.MenuTitleIcon} />
-              <h3 className={styles.sidebarTitle}>Products</h3>
+              <h3 className={styles.sidebarTitle}>E-Commerce</h3>
             </div>
             {isProduct ? <ExpandMoreOutlined /> : <ExpandLessOutlined />}
           </div>
           <ul className={styles.sidebarList} hidden={isProduct}>
+
+            <li className={`${styles.li} ${RegExp(/orders/).test(router.pathname) ? styles.active : ""}`}>
+              <Link href='/orders' className={`${styles.sidebarListItem} ${styles.link}`}>
+                <a className={styles.anchor}>Orders</a>
+              </Link>
+            </li>
 
             <li className={`${styles.li} ${RegExp(/products/).test(router.pathname) ? styles.active : ""}`}>
               <Link href='/products' className={`${styles.sidebarListItem} ${styles.link}`}>

@@ -3,7 +3,6 @@ import Sidebar from "components/Sidebar/Sidebar";
 import Topbar from "components/Topbar/Topbar";
 
 export default function Layout({ children }) {
-
     return (
         <div className={styles.container}>
             <Topbar />

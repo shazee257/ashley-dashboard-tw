@@ -1,20 +1,14 @@
 import { useRef, useEffect } from "react";
-import axios from "axios";
 import { Button, Grid, Paper, Avatar, TextField, Typography, Link } from '@mui/material';
 import { LockOpenOutlined } from '@mui/icons-material';
 import { useRouter } from "next/router";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import cookie from 'js-cookie';
-import { useSession, signIn, signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
 export default function Login() {
     const { push } = useRouter();
-    const { data: session } = useSession();
-
-    if (session) {
-        push("/products");
-    }
 
     const emailRef = useRef();
     const passwordRef = useRef();

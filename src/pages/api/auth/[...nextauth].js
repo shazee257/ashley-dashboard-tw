@@ -14,7 +14,6 @@ export const authOptions = {
 
                 const user = data.user;
                 if (user.role === "admin") {
-                    console.log("user: ", user);
                     return user;
                 }
                 return null;
