@@ -35,7 +35,7 @@ export default function Categories({ categories }) {
                 return (
                     <>
                         <div className={styles.productListItem}>
-                            <Image height={32} width={32}
+                            <Image alt="" height={32} width={32}
                                 className={styles.productListImg}
                                 src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${params.row.image}`} />
                         </div>
@@ -51,7 +51,7 @@ export default function Categories({ categories }) {
                     <>
                         <div className={styles.productListItem}>
                             {params.row.parent_image ?
-                                (<Image height={32} width={32} className={styles.productListImg} src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${params.row.parent_image}`} />) : "None"}
+                                (<Image alt="" height={32} width={32} className={styles.productListImg} src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${params.row.parent_image}`} />) : "None"}
                         </div>
                         {params.row.parent_title}
                     </>

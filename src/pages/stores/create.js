@@ -108,7 +108,7 @@ export default function NewStore() {
                             fullWidth
                             label='Address'
                             placeholder="Store Address"
-                            fullWidth multiline maxRows={5}
+                            multiline maxRows={5}
                             value={store.address}
                             onChange={(e) => setStore({ ...store, address: e.target.value })} />
                         <br /><br />
@@ -150,7 +150,7 @@ export default function NewStore() {
             </Grid>
             <div className="imageWithButton">
                 <div className={styles.productImage}>
-                    {(selectedFile) && (<Image height={400} width={400} src={image} className={styles.imgObject} />)}
+                    {(selectedFile) && (<Image alt="" height={400} width={400} src={image} className={styles.imgObject} />)}
                 </div>
                 <div className={styles.imageButtonContainer}>
                     <div><small>Only jpg, png, gif, svg, webp images are allowed</small></div>

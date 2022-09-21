@@ -28,10 +28,10 @@ export default function AdminUsers({ users }) {
                     <>
                         <div className={styles.productListItem}>
                             {params.row.image ?
-                                <Image height={32} width={32}
+                                <Image alt="" height={32} width={32}
                                     className={styles.productListImg}
                                     src={`${process.env.NEXT_PUBLIC_thumbURL}/users/${params.row.image}`} />
-                                : <Image height={32} width={32}
+                                : <Image alt="" height={32} width={32}
                                     className={styles.productListImg}
                                     src={`${process.env.NEXT_PUBLIC_uploadURL}/users/avatar.png`} />
                             }

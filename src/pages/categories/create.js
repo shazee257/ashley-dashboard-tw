@@ -117,7 +117,7 @@ export default function NewCategory() {
                         {categories.map((category) => (
                             <MenuItem key={category._id} value={category._id} className="flex ml-15">
                                 <div className="flex">
-                                    <Image className="rounded-full"
+                                    <Image alt="" className="rounded-full"
                                         height={32} width={32}
                                         src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${category.image}`} />
                                     <p className="ml-5">{category.title}</p>
@@ -179,7 +179,7 @@ export default function NewCategory() {
             <div className="flex flex-col h-auto">
                 <div className={styles.productImage}>
                     {image &&
-                        <Image src={image} height={400} width={400} className={styles.imgObject} />}
+                        <Image alt="" src={image} height={400} width={400} className={styles.imgObject} />}
                 </div>
                 <div className={styles.imageButtonContainer}>
                     <div><small>Only jpg, png, gif, svg, webp images are allowed</small></div>

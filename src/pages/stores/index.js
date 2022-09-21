@@ -27,7 +27,7 @@ export default function Stores({ stores }) {
                 return (
                     <>
                         <div className={styles.productListItem}>
-                            <Image height={32} width={32} className={styles.productListImg}
+                            <Image alt="" height={32} width={32} className={styles.productListImg}
                                 src={params.row.banner ?
                                     `${process.env.NEXT_PUBLIC_thumbURL}/stores/${params.row.banner}` :
                                     `${process.env.NEXT_PUBLIC_thumbURL}/stores/store.png`} />

@@ -6,6 +6,7 @@ import { Grid, Paper, TextField, Button, Typography } from '@mui/material'
 import axios from 'axios';
 import { showNotification } from "utils/helper";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function NewUser() {
     const firstNameRef = useRef(null);
@@ -130,7 +131,7 @@ export default function NewUser() {
             </Paper>
             <div className="">
                 <div className={styles.productImage}>
-                    {(selectedFile) && (<img src={image} className={styles.imgObject}></img>)}
+                    {(selectedFile) && (<Image height={400} width={400} alt="" src={image} className={styles.imgObject} />)}
                 </div>
                 <div className="flex flex-col items-center">
                     <div><small>Only jpg, png, gif, svg, webp images are allowed</small></div>

@@ -26,7 +26,7 @@ export default function Customers({ users }) {
                 return (
                     <>
                         <div className={styles.productListItem}>
-                            <Image height={32} width={32}
+                            <Image alt="" height={32} width={32}
                                 src={params.row.image ?
                                     `${process.env.NEXT_PUBLIC_thumbURL}/users/${params.row.image}` :
                                     `${process.env.NEXT_PUBLIC_thumbURL}/users/avatar.png`} />

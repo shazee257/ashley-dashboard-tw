@@ -31,7 +31,7 @@ export default function UpdateBrand({ brand }) {
         titleRef.current.value = brand.title;
         descriptionRef.current.value = brand.description;
         setImage(brand.image);
-    }, []);
+    }, [brand]);
 
     const fileSelectedHandler = async (e) => {
         if (e.target.value) {
@@ -117,7 +117,7 @@ export default function UpdateBrand({ brand }) {
             </Grid>
             <div className="w-full rounded border-gray-900 items-center ">
                 <div className={styles.productImage}>
-                    <Image height={400} width={400}
+                    <Image alt="" height={400} width={400}
                         src={img_address ? img_address : `${process.env.NEXT_PUBLIC_uploadURL}/brands/${image}`}
                     />
                 </div>

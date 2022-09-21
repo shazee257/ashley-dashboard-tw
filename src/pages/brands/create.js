@@ -89,7 +89,7 @@ export default function NewBrand() {
             </Grid>
             <div className="w-full rounded border-gray-900 items-center ">
                 <div className={styles.productImage}>
-                    {image && <Image src={image} height={400} width={400} className={styles.imgObject} />}
+                    {image && <Image alt="" src={image} height={400} width={400} className={styles.imgObject} />}
                 </div>
                 <div className="flex flex-col items-center">
                     <div><small>Only jpg, png, gif, svg, webp images are allowed</small></div>

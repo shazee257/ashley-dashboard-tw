@@ -27,9 +27,9 @@ export default function AdminUsers({ users }) {
                 return (
                     <>
                         <div className={styles.productListItem}>
-                            {params.row.image ? <Image height={32} width={32} className={styles.productListImg}
+                            {params.row.image ? <Image alt="" height={32} width={32} className={styles.productListImg}
                                 src={`${process.env.NEXT_PUBLIC_thumbURL}/users/${params.row.image}`} />
-                                : <Image height={32} width={32} src={`${process.env.NEXT_PUBLIC_uploadURL}/users/avatar.png`} />
+                                : <Image alt="" height={32} width={32} src={`${process.env.NEXT_PUBLIC_uploadURL}/users/avatar.png`} />
                             }
                         </div>
                         {`${params.row.first_name} ${params.row.last_name}`}
@@ -44,7 +44,7 @@ export default function AdminUsers({ users }) {
                 return (
                     <>
                         <div className={styles.productListItem}>
-                            <Image height={32} width={32} className={styles.productListImg}
+                            <Image alt="" height={32} width={32} className={styles.productListImg}
                                 src={params.row.store_id.banner ?
                                     `${process.env.NEXT_PUBLIC_thumbURL}/stores/${params.row.store_id.banner}` :
                                     `${process.env.NEXT_PUBLIC_thumbURL}/stores/store.png`} />

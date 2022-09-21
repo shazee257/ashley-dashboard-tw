@@ -136,7 +136,7 @@ export default function UpdateCategory({ category, categories }) {
                             {categories.map((category) => (
                                 <MenuItem key={category._id} value={category._id} className="flex ml-15">
                                     <div className="flex items-center">
-                                        <Image className="rounded-full"
+                                        <Image alt="" className="rounded-full"
                                             height={32} width={32}
                                             src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${category.image}`} />
                                         <p className="ml-5">{category.title}</p>
@@ -200,7 +200,7 @@ export default function UpdateCategory({ category, categories }) {
             {/* Category Image */}
             <div className="imageWithButton">
                 <div className={styles.productImage}>
-                    <Image height={400} width={400}
+                    <Image alt="" height={400} width={400}
                         src={img_address ? img_address : `${process.env.NEXT_PUBLIC_uploadURL}/categories/${category.image}`}
                     />
                 </div>
@@ -213,7 +213,7 @@ export default function UpdateCategory({ category, categories }) {
             </div>
             {/* Discount Image */}
             <div className="flex flex-col ml-5 mt-10 rounded items-center border h-96">
-                <Image height={300} width={700} layout="fixed"
+                <Image alt="" height={300} width={700} layout="fixed"
                     src={discountImageAddress ? discountImageAddress : `${process.env.NEXT_PUBLIC_uploadURL}/categories/${category.discount_image}`}
                 />
                 <h1 className="text-center">Discounted Banner Image</h1>

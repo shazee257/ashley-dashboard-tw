@@ -73,7 +73,7 @@ export default function Features({ productId, variantId, productTitle, features,
                 return (
                     <>
                         <div className={styles.productListItem}>
-                            <Image height={26} width={26}
+                            <Image alt="" height={26} width={26}
                                 className={styles.productListImg}
                                 src={`${process.env.NEXT_PUBLIC_uploadURL}/colors/${params.row.color_id.image}`} />
                         </div>
@@ -90,7 +90,7 @@ export default function Features({ productId, variantId, productTitle, features,
                         {params.row.images.map((item, index) => {
                             return (
                                 <div key={index} className={styles.productListItem}>
-                                    <Image height={26} width={26}
+                                    <Image alt="" height={26} width={26}
                                         className={styles.productListImg}
                                         src={`${process.env.NEXT_PUBLIC_thumbURL}/products/${item}`}
                                         onClick={() => setImage(item)} />
@@ -285,7 +285,7 @@ export default function Features({ productId, variantId, productTitle, features,
             <br /><br />
             {image &&
                 <div style={{ width: '100%', height: '450px', border: '1px solid gray', justifyContent: 'center', display: 'flex' }}>
-                    <Image height={400} width={700} src={`${process.env.NEXT_PUBLIC_uploadURL}/products/${image}`} />
+                    <Image alt="" height={400} width={700} src={`${process.env.NEXT_PUBLIC_uploadURL}/products/${image}`} />
                 </div>}
 
 
@@ -309,7 +309,7 @@ export default function Features({ productId, variantId, productTitle, features,
                                         <MenuItem value={c._id} key={c._id}>
                                             <div className="flex items-center">
                                                 <div className="mr-2">
-                                                    <Image height={32} width={32}
+                                                    <Image alt="" height={32} width={32}
                                                         className={styles.productListImg}
                                                         src={`${process.env.NEXT_PUBLIC_uploadURL}/colors/${c.image}`} />
                                                 </div>
@@ -402,7 +402,7 @@ export default function Features({ productId, variantId, productTitle, features,
                                         {imageArray.map((image) => {
                                             return (
                                                 <div key={image} className="mr-3">
-                                                    <Image height={200} width={200} src={image} />
+                                                    <Image alt="" height={200} width={200} src={image} />
                                                 </div>
                                             )
                                         })}

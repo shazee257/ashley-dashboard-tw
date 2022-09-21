@@ -96,7 +96,7 @@ export default function NewColor() {
                         </Typography>
                     </div>
                     {/* <Grid align='right' style={{ width: '300px', marginTop: '120px', }}> */}
-                    {(image) && <Image height={200} width={200} src={image} style={{ borderRadius: '50%', }} />}
+                    {(image) && <Image alt="" height={200} width={200} src={image} style={{ borderRadius: '50%', }} />}
                     {/* </Grid> */}
                 </Paper>
             </Grid>

@@ -118,7 +118,7 @@ export default function UpdateBrand(props) {
                             <MenuItem value={store._id} key={store._id}>
                                 <div className={styles.productListItem}>
                                     <div className={styles.productListItem}>
-                                        <Image height={32} width={32}
+                                        <Image alt="" height={32} width={32}
                                             className={styles.productListImg}
                                             src={`${process.env.NEXT_PUBLIC_thumbURL}/stores/${store.banner}`} />
                                     </div>
@@ -167,7 +167,7 @@ export default function UpdateBrand(props) {
             <div className="imageWithButton">
                 <div className={styles.productImage}>
 
-                    <Image height={400} width={400}
+                    <Image alt="" height={400} width={400}
                         className={styles.imgObject}
                         src={img_address ? img_address : `${process.env.NEXT_PUBLIC_uploadURL}/users/${image}`} />
                 </div>

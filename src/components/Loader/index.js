@@ -17,9 +17,9 @@ function Loader() {
             opacity: 0.7,
 
         }}>
-            <div class={styles.loaderWrapper}>
-                <div class={`${styles.loader} ${styles.loaderOuter}`}>
-                    <div class={`${styles.loader} ${styles.loaderInner}`}></div>
+            <div className={styles.loaderWrapper}>
+                <div className={`${styles.loader} ${styles.loaderOuter}`}>
+                    <div className={`${styles.loader} ${styles.loaderInner}`}></div>
                 </div>
             </div>
         </div>

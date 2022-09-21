@@ -136,7 +136,7 @@ export default function UpdateStore({ store }) {
             </Grid>
             {/* <div className="imageWithButton">
                 <div className={styles.productImage}>
-                    {(selectedFile) && (<Image height={400} width={400} src={image} className={styles.imgObject}></Image>)}
+                    {(selectedFile) && (<Image alt="" height={400} width={400} src={image} className={styles.imgObject}></Image>)}
                 </div>
                 <div className={styles.imageButtonContainer}>
                     <div><small>Only jpg, png, gif, svg, webp images are allowed</small></div>
@@ -148,9 +148,9 @@ export default function UpdateStore({ store }) {
             <div className={styles.imageWithButton}>
                 <div className={styles.productImage}>
                     {(!image && !img_address) ?
-                        (<Image height={400} width={400} className={styles.imgObject}
+                        (<Image alt="" height={400} width={400} className={styles.imgObject}
                             src={`${process.env.NEXT_PUBLIC_uploadURL}/stores/store.png`} />) :
-                        (<Image height={400} width={400} className={styles.imgObject}
+                        (<Image alt="" height={400} width={400} className={styles.imgObject}
                             src={(image != '' && !img_address) ? `${process.env.NEXT_PUBLIC_uploadURL}/stores/${store.banner}` : (img_address)}
                         />)
                     }

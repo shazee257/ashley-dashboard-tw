@@ -30,7 +30,7 @@ export default function Colors({ colors }) {
                 return (
                     <>
                         <div className={styles.productListItem}>
-                            <Image height={32} width={32} className={styles.productListImg}
+                            <Image alt="" height={32} width={32} className={styles.productListImg}
                                 src={`${process.env.NEXT_PUBLIC_uploadURL}/colors/${params.row.image}`} />
                         </div>
                     </>
@@ -168,7 +168,7 @@ export default function Colors({ colors }) {
                                     </Button>
                                 </div>
                                 <div>
-                                    {(image) && <Image height={100} width={100} src={image} style={{ borderRadius: '50%', }} />}
+                                    {(image) && <Image alt="" height={100} width={100} src={image} style={{ borderRadius: '50%', }} />}
                                 </div>
                             </div>
                             <br /><br />

@@ -29,6 +29,7 @@ export default function Login() {
         })
 
         if (signInStatus.ok) {
+            toast.success("Login successful!");
             push(signInStatus.url)
         } else {
             toast.error("Login failed, please try again!");

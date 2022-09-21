@@ -145,7 +145,7 @@ export default function UpdateBrand(props) {
             </Grid>
             <div className="imageWithButton">
                 <div className={styles.productImage}>
-                    <Image height={400} width={400}
+                    <Image alt="" height={400} width={400}
                         className={styles.imgObject}
                         src={(img_address ? img_address : `${process.env.NEXT_PUBLIC_uploadURL}/users/${props.user.image}`)} />
                 </div>

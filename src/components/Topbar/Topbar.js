@@ -30,7 +30,7 @@ export default function Topbar() {
     if (session) {
       setUser(session?.user);
     }
-  }, []);
+  }, [session]);
 
   return (
     <div className={`z-10 mb-5 w-full h-20 text-white sticky top-0 bg-blue-800`}>
@@ -56,8 +56,8 @@ export default function Topbar() {
               {user?.email}
             </div>
             <div className={styles.topAvatarContainer}>
-              {user?.image ? <Image height={50} width={50} src={`${process.env.NEXT_PUBLIC_thumbURL}/users/${session?.user.image}`} className={styles.topAvatar} />
-                : <Image height={50} width={50} src={`${process.env.NEXT_PUBLIC_thumbURL}/users/avatar.png`} className={styles.topAvatar} />
+              {user?.image ? <Image alt="" height={50} width={50} src={`${process.env.NEXT_PUBLIC_thumbURL}/users/${session?.user.image}`} className={styles.topAvatar} />
+                : <Image alt="" height={50} width={50} src={`${process.env.NEXT_PUBLIC_thumbURL}/users/avatar.png`} className={styles.topAvatar} />
               }
             </div>
           </Button>

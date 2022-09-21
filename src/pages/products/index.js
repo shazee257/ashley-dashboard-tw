@@ -150,7 +150,7 @@ export default function Products({ products }) {
                 return (
                     <>
                         <div className={styles.productListItem}>
-                            <Image height={32} width={32} className={styles.productListImg}
+                            <Image alt="" height={32} width={32} className={styles.productListImg}
                                 src={params.row.category_id.image &&
                                     `${process.env.NEXT_PUBLIC_thumbURL}/categories/${params.row.category_id.image}`} />
                         </div>
@@ -165,7 +165,7 @@ export default function Products({ products }) {
                 return (
                     <>
                         <div className={styles.productListItem}>
-                            <Image height={32} width={32} className={styles.productListImg}
+                            <Image alt="" height={32} width={32} className={styles.productListImg}
                                 src={params.row.brand_id.image &&
                                     `${process.env.NEXT_PUBLIC_thumbURL}/brands/${params.row.brand_id.image}`} />
                         </div>
@@ -180,7 +180,7 @@ export default function Products({ products }) {
                 return (
                     <>
                         <div className={styles.productListItem}>
-                            <Image height={32} width={32} className={styles.productListImg}
+                            <Image alt="" height={32} width={32} className={styles.productListImg}
                                 src={params.row.store_id.banner &&
                                     `${process.env.NEXT_PUBLIC_thumbURL}/stores/${params.row.store_id.banner}`} />
                         </div>
@@ -281,7 +281,7 @@ export default function Products({ products }) {
                                                 <div className="flex ">
                                                     <div className="flex items-center mr-2">
                                                         {category.image &&
-                                                            <Image height={32} width={32}
+                                                            <Image alt="" height={32} width={32}
                                                                 className="rounded-full" layout="fixed"
                                                                 src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${category.image}`} />}
                                                     </div>
@@ -291,7 +291,7 @@ export default function Products({ products }) {
                                                     <DoubleArrowOutlinedIcon className="flex items-center mx-5 mt-1" />
                                                     <div className="flex items-center mr-2">
                                                         {category.image &&
-                                                            <Image height={32} width={32} layout="fixed"
+                                                            <Image alt="" height={32} width={32} layout="fixed"
                                                                 className="rounded-full"
                                                                 src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${child.image}`} />}
                                                     </div>
@@ -319,7 +319,7 @@ export default function Products({ products }) {
                                             <div className="flex">
                                                 <div className={styles.productListItem}>
                                                     {brand.image &&
-                                                        <Image height={32} width={32}
+                                                        <Image alt="" height={32} width={32}
                                                             className={styles.productListImg}
                                                             src={`${process.env.NEXT_PUBLIC_thumbURL}/brands/${brand.image}`} />}
                                                 </div>
@@ -342,7 +342,7 @@ export default function Products({ products }) {
                                         <MenuItem value={store._id} key={store._id}>
                                             <div className="flex items-center">
                                                 <div className={styles.productListItem}>
-                                                    <Image height={32} width={32}
+                                                    <Image alt="" height={32} width={32}
                                                         className={styles.productListImg}
                                                         src={`${process.env.NEXT_PUBLIC_thumbURL}/stores/${store.banner}`} />
                                                 </div>

@@ -116,7 +116,7 @@ export default function NewStoreUser({ stores }) {
                             <MenuItem value={store._id} key={store._id}>
                                 <div className={styles.productListItem}>
                                     <div className={styles.productListItem}>
-                                        <Image height={32} width={32}
+                                        <Image alt="" height={32} width={32}
                                             className={styles.productListImg}
                                             src={`${process.env.NEXT_PUBLIC_thumbURL}/stores/${store.banner}`} />
                                     </div>
@@ -159,8 +159,8 @@ export default function NewStoreUser({ stores }) {
             </Paper>
             <div className="imageWithButton">
                 <div className={styles.productImage}>
-                    {(selectedFile) ? (<img src={image} className={styles.imgObject}></img>)
-                        : (<img src={`${process.env.NEXT_PUBLIC_uploadURL}/users/avatar.png`} className={styles.imgObject}></img>)}
+                    {(selectedFile) ? (<Image width={400} height={400} alt="" src={image} className={styles.imgObject} />)
+                        : (<Image alt="" width={400} height={400} src={`${process.env.NEXT_PUBLIC_uploadURL}/users/avatar.png`} className={styles.imgObject} />)}
 
                 </div>
                 <div className={styles.imageButtonContainer}>

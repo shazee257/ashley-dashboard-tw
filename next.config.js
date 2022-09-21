@@ -3,8 +3,20 @@ const nextConfig = {
   reactStrictMode: false,
   swcMinify: true,
   images: {
-    domains: ['localhost'],
+    domains: [
+      'localhost',
+      'ashley-api.herokuapp.com'
+    ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/login',
+        permanent: true,
+      },
+    ]
+  }
 }
 
 module.exports = nextConfig

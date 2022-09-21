@@ -36,7 +36,7 @@ export default function Brands({ brands }) {
                 return (
                     <>
                         <div className={styles.productListItem}>
-                            <Image height={32} width={32} className={styles.productListImg} src={`${process.env.NEXT_PUBLIC_thumbURL}/brands/${params.row.image}`} />
+                            <Image alt="" height={32} width={32} className={styles.productListImg} src={`${process.env.NEXT_PUBLIC_thumbURL}/brands/${params.row.image}`} />
                         </div>
                         {params.row.title}
                     </>

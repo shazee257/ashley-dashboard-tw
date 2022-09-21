@@ -21,7 +21,7 @@ export const ModalImage = ({ src, alt, caption, onClose }) => {
             <span className={styles.close} onClick={onClose}>
                 &times;
             </span>
-            <img className={`${styles}.modal-content`} src={src} alt={alt} />
+            <Image width={1000} height={500} alt="" className={`${styles}.modal-content`} src={src} />
             {caption.length > 0 && <div className={styles.caption}>{caption}</div>}
         </div>
     )
@@ -82,7 +82,7 @@ export default function Banners({ banners }) {
                 return (
                     <>
                         <div className={styles.productListItem}>
-                            <Image height={32} width={32}
+                            <Image alt="" height={32} width={32}
                                 className={styles.productListImg}
                                 src={`${process.env.NEXT_PUBLIC_thumbURL}/banners/${params.row.image}`}
                                 onClick={() => { showModal(); setBannerData(params.row) }} />
@@ -403,7 +403,7 @@ export default function Banners({ banners }) {
                                                     <div className="flex ">
                                                         <div className="flex items-center mr-2">
                                                             {category.image &&
-                                                                <Image height={32} width={32}
+                                                                <Image alt="" height={32} width={32}
                                                                     className="rounded-full" layout="fixed"
                                                                     src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${category.image}`} />}
                                                         </div>
@@ -413,7 +413,7 @@ export default function Banners({ banners }) {
                                                         <DoubleArrowOutlinedIcon className="flex items-center mx-5 mt-1" />
                                                         <div className="flex items-center mr-2">
                                                             {category.image &&
-                                                                <Image height={32} width={32} layout="fixed"
+                                                                <Image alt="" height={32} width={32} layout="fixed"
                                                                     className="rounded-full"
                                                                     src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${child.image}`} />}
                                                         </div>
@@ -429,7 +429,7 @@ export default function Banners({ banners }) {
                             </div>
                             {editMode && (
                                 <div key={banner.image} className="mb-3 flex justify-center mt-5">
-                                    <Image
+                                    <Image alt=""
                                         className="flex rounded-lg"
                                         layout='fixed' height={220} width={850}
                                         src={`${process.env.NEXT_PUBLIC_uploadURL}/banners/${banner.image}`}
@@ -438,7 +438,7 @@ export default function Banners({ banners }) {
                             )}
                             {selectedFile && (
                                 <div key={banner.image} className="mb-3 flex justify-center mt-5">
-                                    <Image
+                                    <Image alt=""
                                         className="flex rounded-lg"
                                         layout='fixed' height={220} width={850} src={banner.image}
                                     />
