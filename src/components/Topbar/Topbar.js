@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { Typography, Button, Menu, MenuItem } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import cookie from 'js-cookie';
 import { useSession, signOut } from "next-auth/react";
 
 export default function Topbar() {
