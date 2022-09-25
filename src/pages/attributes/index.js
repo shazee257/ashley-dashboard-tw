@@ -14,7 +14,7 @@ import Link from 'next/link';
 import CreateNewIcon from 'components/CreateNewIcon';
 
 export default function Colors({ colors }) {
-    const [data, setData] = useState(colors);
+    const [data, setData] = useState([...colors]);
 
     const handleDelete = async (id) => {
         await axios.delete(`${process.env.NEXT_PUBLIC_baseURL}/colors/${id}`)
@@ -52,7 +52,6 @@ export default function Colors({ colors }) {
             },
         },
     ];
-
 
 
     // modal form working
@@ -126,7 +125,7 @@ export default function Colors({ colors }) {
 
             {/* MODAL FORM */}
             <Modal open={open} onClose={handleClose}>
-                <div className="flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-2/4 h-3/4 rounded-lg shadow-lg">
+                <div className="flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-2/4 h-auto rounded-lg shadow-lg">
                     <Paper elevation={1} className="p-10 w-full">
                         <Grid align='left'>
                             <h2>{editMode ? ("Update Color").toUpperCase() : ("New Color").toUpperCase()}</h2>

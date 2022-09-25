@@ -251,7 +251,7 @@ export default function Products({ products }) {
 
             {/* MODAL FORM */}
             <Modal open={open} onClose={handleClose}>
-                <div className="flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-3/4 m-a rounded-lg shadow-lg">
+                <div className="flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-3/4 h-auto rounded-lg shadow-lg">
                     <Paper elevation={1} className="p-10 w-full">
                         <Grid align='left'>
                             <h2>{editMode ? ("Update Product").toUpperCase() : ("New Product").toUpperCase()}</h2>
@@ -413,9 +413,13 @@ export default function Products({ products }) {
 
 export async function getServerSideProps() {
     const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/products`);
+    const products = data.products.map(product => {
+        product.id = product._id;
+        return product;
+    });
     return {
         props: {
-            products: data.products,
+            products
         },
     };
 }
