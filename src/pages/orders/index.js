@@ -85,10 +85,9 @@ export default function Colors({ orders }) {
             {/* MODAL FORM FOR VIEW ORDER DETAILS*/}
             <Modal open={open} onClose={handleClose}>
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-200 w-auto h-auto rounded-lg shadow-lg">
-
                     <ReactToPdf>
                         {({ toPdf, targetRef }) => (
-                            <div className="bg-gray-200 w-auto h-auto rounded-lg shadow-lg" ref={targetRef}>
+                            <div className="bg-gray-200 w-auto h-auto rounded-lg shadow-lg pb-5" ref={targetRef}>
                                 <div className="flex flex-col w-full p-4">
                                     <div className="flex flex-row justify-between items-center">
                                         <h2></h2>
@@ -188,7 +187,7 @@ export default function Colors({ orders }) {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex justify-between m-10">
+                                <div className="flex justify-between mx-5">
                                     <Button
                                         onClick={toPdf}
                                         type='button'
