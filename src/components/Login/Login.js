@@ -4,7 +4,6 @@ import { LockOpenOutlined } from '@mui/icons-material';
 import { useRouter } from "next/router";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import cookie from 'js-cookie';
 import { signIn } from "next-auth/react";
 
 export default function Login() {
