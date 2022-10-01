@@ -37,26 +37,6 @@ export default function Sidebar() {
     <div className={styles.sidebar}>
       <div className={styles.sidebarWrapper} style={{ width: '220px' }}>
 
-        {/* E-commerce */}
-        {/* <div className={styles.sidebarMenu}>
-          <div className={styles.quickMenu} onClick={handleClickMenu1} >
-            <div className={styles.MenuLeftItems}>
-              <BusinessCenterOutlined className={styles.MenuTitleIcon} />
-              <h3 className={styles.sidebarTitle}>e-Commerce</h3>
-            </div>
-            {isClicked1 ? <ExpandMoreOutlined /> : <ExpandLessOutlined />}
-          </div>
-          <ul className={styles.sidebarList} hidden={isClicked1}>
-
-            <li className={`${styles.li} ${RegExp(/products/).test(router.pathname) ? styles.active : ""}`}>
-              <Link href='/products' className={`${styles.sidebarListItem} ${styles.link}`}>
-                <a className={styles.anchor}>Products</a>
-              </Link>
-            </li>
-
-          </ul>
-        </div> */}
-
         {/* Products Categories Stores/Warehouses Brands */}
         <div className={styles.sidebarMenu}>
           <div className={styles.quickMenu} onClick={handleProductClick} >
@@ -101,6 +81,12 @@ export default function Sidebar() {
             <li className={`${styles.li} ${RegExp(/attributes/).test(router.pathname) ? styles.active : ""}`}>
               <Link href='/attributes' className={`${styles.sidebarListItem} ${styles.link}`}>
                 <a className={styles.anchor}>Attributes</a>
+              </Link>
+            </li>
+
+            <li className={`${styles.li} ${RegExp(/coupons/).test(router.pathname) ? styles.active : ""}`}>
+              <Link href='/coupons' className={`${styles.sidebarListItem} ${styles.link}`}>
+                <a className={styles.anchor}>Discount Coupons</a>
               </Link>
             </li>
 
