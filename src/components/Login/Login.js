@@ -24,7 +24,7 @@ export default function Login() {
             redirect: false,
             email: user.email,
             password: user.password,
-            callbackUrl: "/products"
+            callbackUrl: "/orders"
         })
 
         if (signInStatus.ok) {
