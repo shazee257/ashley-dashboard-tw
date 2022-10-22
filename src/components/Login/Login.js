@@ -34,7 +34,7 @@ export default function Login() {
                 if (data.status === 200) {
                     localStorage.setItem("user", JSON.stringify(data.authData));
                     toast.success(data.message);
-                    push("/order");
+                    push("/orders");
                 } else {
                     toast.error(data.message);
                 }
