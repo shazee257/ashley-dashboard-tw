@@ -3,17 +3,25 @@ import { useState, useEffect } from "react";
 import { Typography, Button, Menu, MenuItem } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useSession, signOut } from "next-auth/react";
+// import { useSession, signOut } from "next-auth/react";
 
 export default function Topbar() {
   const [user, setUser] = useState({});
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const { data: session } = useSession();
-  console.log("Topbar session: ", session);
+  useEffect(() => {
+    localStorage.getItem("user") && setUser(JSON.parse(localStorage.getItem("user")));
+  }, []);
+
+  // const userInfo = localStorage.getItem('user') && JSON.parse(localStorage.getItem("user"));
+  // userInfo && setUser(userInfo);
 
   const handleLogout = () => {
-    signOut({ callbackUrl: `/login` });
+    localStorage.removeItem("user");
+    setUser({});
+    
+    // signOut();
+    console.log("logout");
   }
 
   const open = Boolean(anchorEl);
@@ -24,12 +32,6 @@ export default function Topbar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  useEffect(() => {
-    if (session) {
-      setUser(session?.user);
-    }
-  }, [session]);
 
   return (
     <div className={`z-10 mb-5 w-full h-20 text-white sticky top-0 bg-blue-800`}>
@@ -55,7 +57,7 @@ export default function Topbar() {
               {user?.email}
             </div>
             <div className={styles.topAvatarContainer}>
-              {user?.image ? <Image alt="" height={50} width={50} src={`${process.env.NEXT_PUBLIC_thumbURL}/users/${session?.user.image}`} className={styles.topAvatar} />
+              {user?.image ? <Image alt="" height={50} width={50} src={`${process.env.NEXT_PUBLIC_thumbURL}/users/${user?.image}`} className={styles.topAvatar} />
                 : <Image alt="" height={50} width={50} src={`${process.env.NEXT_PUBLIC_thumbURL}/users/avatar.png`} className={styles.topAvatar} />
               }
             </div>

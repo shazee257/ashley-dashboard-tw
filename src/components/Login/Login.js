@@ -3,8 +3,9 @@ import { Button, Grid, Paper, Avatar, TextField, Typography, Link } from '@mui/m
 import { LockOpenOutlined } from '@mui/icons-material';
 import { useRouter } from "next/router";
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { signIn } from "next-auth/react";
+import axios from "axios";
+// import 'react-toastify/dist/ReactToastify.css';
+// import { signIn } from "next-auth/react";
 
 export default function Login() {
     const { push } = useRouter();
@@ -20,45 +21,22 @@ export default function Login() {
             password: passwordRef.current.value
         };
 
-        const signInStatus = await signIn('credentials', {
-            redirect: false,
-            email: user.email,
-            password: user.password,
-            callbackUrl: "/orders"
-        })
-
-        if (signInStatus.ok) {
-            toast.success("Login successful!");
-            push(signInStatus.url)
-        } else {
-            toast.error("Login failed, please try again!");
-        }
-        // await axios.post(`${process.env.NEXT_PUBLIC_baseURL}/users/login`, user)
-        //     .then(({ data }) => {
-        //         console.log("data: ", data);
-        //         if (data.success) {
-        //             // localStorage.setItem("user", JSON.stringify({
-        //             //     first_name: data.user.first_name ? data.user.first_name : "",
-        //             //     last_name: data.user.last_name ? data.user.last_name : "",
-        //             //     email: data.user.email,
-        //             //     image: data.user.image ? data.user.image : null,
-        //             //     role: data.user.role,
-        //             // }));
-        //             // localStorage.setItem("token", data.session.token);
-        //             toast.success(data.message);
-        //             cookie.set('user', JSON.stringify({
-        //                 first_name: data.user.first_name ? data.user.first_name : "",
-        //                 last_name: data.user.last_name ? data.user.last_name : "",
-        //                 email: data.user.email,
-        //                 image: data.user.image ? data.user.image : null,
-        //                 role: data.user.role,
-        //             }), { expires: 1 });
-
-        //             cookie.set('token', data.session.token, { expires: 1 });
-
-        //             push("/products");
-        //         }
-        //     }).catch(err => toast.error(err.message));
+        await axios
+            .post(
+                `${process.env.NEXT_PUBLIC_baseURL}/users/login`,
+                user, { withCredentials: true }
+            )
+            .then(({ data }) => {
+                if (data.status === 200) {
+                    localStorage.setItem("user", JSON.stringify(data.authData));
+                    toast.success(data.message);
+                    push("/order");
+                } else {
+                    toast.error(data.message);
+                }
+            }).catch(err => {
+                console.log("err: ", err);
+            })
     };
 
     const paperStyle = { padding: 20, width: 280, margin: "200px auto" }
