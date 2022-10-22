@@ -14,10 +14,7 @@ import { useRouter } from "next/router";
 import { useState } from 'react';
 
 export default function Sidebar() {
-  const [isClicked1, setIsClicked1] = useState(false);
-  const [isClicked2, setIsClicked2] = useState(false);
-  const [isClicked3, setIsClicked3] = useState(false);
-  const [isClicked4, setIsClicked4] = useState(false);
+  const [isUser, setIsUser] = useState(false);
   const [isProduct, setIsProduct] = useState(false);
 
   const router = useRouter();
@@ -27,10 +24,7 @@ export default function Sidebar() {
     router.push('/login');
   }
 
-  const handleClickMenu1 = () => setIsClicked1(!isClicked1);
-  const handleClickMenu2 = () => setIsClicked2(!isClicked2);
-  const handleClickMenu3 = () => setIsClicked3(!isClicked3);
-  const handleClickMenu4 = () => setIsClicked4(!isClicked4);
+  const usersClickHandler = () => setIsUser(!isUser);
   const handleProductClick = () => setIsProduct(!isProduct);
 
   return (
@@ -47,6 +41,12 @@ export default function Sidebar() {
             {isProduct ? <ExpandMoreOutlined /> : <ExpandLessOutlined />}
           </div>
           <ul className={styles.sidebarList} hidden={isProduct}>
+
+            <li className={`${styles.li} ${RegExp(/banners/).test(router.pathname) ? styles.active : ""}`}>
+              <Link href='/banners' className={`${styles.sidebarListItem} ${styles.link}`}>
+                <a className={styles.anchor}>Banners</a>
+              </Link>
+            </li>
 
             <li className={`${styles.li} ${RegExp(/orders/).test(router.pathname) ? styles.active : ""}`}>
               <Link href='/orders' className={`${styles.sidebarListItem} ${styles.link}`}>
@@ -95,14 +95,14 @@ export default function Sidebar() {
 
         {/* Users Management */}
         <div className={styles.sidebarMenu}>
-          <div className={styles.quickMenu} onClick={handleClickMenu2} >
+          <div className={styles.quickMenu} onClick={usersClickHandler} >
             <div className={styles.MenuLeftItems}>
               <SupervisorAccountOutlined className={styles.MenuTitleIcon} />
               <h3 className={styles.sidebarTitle}>Users Management</h3>
             </div>
-            {isClicked2 ? <ExpandMoreOutlined /> : <ExpandLessOutlined />}
+            {isUser ? <ExpandMoreOutlined /> : <ExpandLessOutlined />}
           </div>
-          <ul className={styles.sidebarList} hidden={isClicked2}>
+          <ul className={styles.sidebarList} hidden={isUser}>
 
             <li className={`${styles.li} ${RegExp(/users\/admin/).test(router.pathname) ? styles.active : ""}`}>
               <Link href='/users/admin' className={`${styles.sidebarListItem} ${styles.link}`}>
@@ -122,56 +122,6 @@ export default function Sidebar() {
               </Link>
             </li>
 
-
-          </ul>
-        </div>
-
-        {/* CMS */}
-        <div className={styles.sidebarMenu}>
-          <div className={styles.quickMenu} onClick={handleClickMenu3} >
-            <div className={styles.MenuLeftItems}>
-              <TrackChangesOutlined className={styles.MenuTitleIcon} />
-              <h3 className={styles.sidebarTitle}>Content Mgmt Sys</h3>
-            </div>
-            {isClicked3 ? <ExpandMoreOutlined /> : <ExpandLessOutlined />}
-          </div>
-          <ul className={styles.sidebarList} hidden={isClicked3}>
-
-            <li className={`${styles.li} ${RegExp(/banners/).test(router.pathname) ? styles.active : ""}`}>
-              <Link href='/banners' className={`${styles.sidebarListItem} ${styles.link}`}>
-                <a className={styles.anchor}>Banners</a>
-              </Link>
-            </li>
-
-            {/* <li className={`${styles.li} ${RegExp(/colors/).test(router.pathname) ? styles.active : ""}`}>
-              <Link href='/colors' className={`${styles.sidebarListItem} ${styles.link}`}>
-                <a className={styles.anchor}>Product Colors</a>
-              </Link>
-            </li> */}
-
-
-
-
-          </ul>
-        </div>
-
-        {/* Settings */}
-        <div className={styles.sidebarMenu}>
-          <div className={styles.quickMenu} onClick={handleClickMenu4} >
-            <div className={styles.MenuLeftItems}>
-              <SettingsOutlined className={styles.MenuTitleIcon} />
-              <h3 className={styles.sidebarTitle}>Settings</h3>
-            </div>
-            {isClicked4 ? <ExpandMoreOutlined /> : <ExpandLessOutlined />}
-          </div>
-          <ul className={styles.sidebarList} hidden={isClicked4}>
-
-            <li className={`${styles.li} ${router.pathname == "/settings" ? styles.active : ""}`}>
-              <Link href='/' className={`${styles.sidebarListItem} ${styles.link}`}>
-                <a className={styles.anchor}>
-                  Settings</a>
-              </Link>
-            </li>
 
           </ul>
         </div>

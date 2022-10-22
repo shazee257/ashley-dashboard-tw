@@ -4,14 +4,18 @@ import { LockOpenOutlined } from '@mui/icons-material';
 import { useRouter } from "next/router";
 import { toast } from 'react-toastify';
 import axios from "axios";
-// import 'react-toastify/dist/ReactToastify.css';
-// import { signIn } from "next-auth/react";
 
 export default function Login() {
     const { push } = useRouter();
 
     const emailRef = useRef();
     const passwordRef = useRef();
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();

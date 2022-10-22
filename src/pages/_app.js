@@ -50,15 +50,11 @@ const App = ({ Component, pageProps }) => {
 
 
   return (
-    <>
-      {/* <SessionProvider session={session}> */}
-      <Layout>
-        {loading && <LoadingPanel />}
-        <Component {...pageProps} />
-        <ToastContainer />
-      </Layout>
-      {/* </SessionProvider> */}
-    </>
+    <Layout>
+      {loading && <LoadingPanel />}
+      <Component {...pageProps} />
+      <ToastContainer />
+    </Layout>
   );
 }
 

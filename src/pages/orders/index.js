@@ -9,7 +9,7 @@ const { formatDate } = require("utils/utils");
 import ReactToPdf from 'react-to-pdf';
 
 
-export default function Colors({ orders }) {
+export default function Orders({ orders }) {
     const [data, setData] = useState([...orders]);
 
     const columns = [
