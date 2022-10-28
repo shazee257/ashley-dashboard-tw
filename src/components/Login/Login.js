@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button, Grid, Paper, Avatar, TextField, Typography, Link } from '@mui/material';
 import { LockOpenOutlined } from '@mui/icons-material';
 import { useRouter } from "next/router";
@@ -7,22 +7,23 @@ import axios from "axios";
 
 export default function Login() {
     const { push } = useRouter();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-    const emailRef = useRef();
-    const passwordRef = useRef();
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const user = {
-            email: emailRef.current.value,
-            password: passwordRef.current.value
-        };
-
         await axios
             .post(
                 `${process.env.NEXT_PUBLIC_baseURL}/users/login`,
-                user, { withCredentials: true }
+                { email, password },
+                { withCredentials: true }
             )
             .then(({ data }) => {
                 if (data.status === 200) {
@@ -43,39 +44,39 @@ export default function Login() {
 
 
     return (
-        <>
-            <Grid>
-                <Paper elevation={10} style={paperStyle}>
-                    <form onSubmit={handleSubmit}>
-                        <Grid align='center' className="mb-10">
-                            <Avatar style={avatarStyle}><LockOpenOutlined /></Avatar>
-                            <h2>Sign In</h2>
-                        </Grid>
+        <Grid>
+            <Paper elevation={10} style={paperStyle}>
+                <form onSubmit={handleSubmit}>
+                    <Grid align='center' className="mb-10">
+                        <Avatar style={avatarStyle}><LockOpenOutlined /></Avatar>
+                        <h2>Sign In</h2>
+                    </Grid>
 
-                        <TextField
-                            label='Email'
-                            placeholder='Enter Email'
-                            fullWidth
-                            inputRef={emailRef}
-                        />
-                        <br /><br />
-                        <TextField
-                            label='Password'
-                            placeholder='Enter password'
-                            type='password'
-                            fullWidth
-                            inputRef={passwordRef}
-                        />
-                        <br /><br />
-                        <Button type="submit" color='primary' variant="outlined" style={btnstyle} fullWidth >Sign in</Button>
-                    </form>
-                    <Typography >
-                        <Link href="/forgotpassword" >
-                            Forgot password ?
-                        </Link>
-                    </Typography>
-                </Paper>
-            </Grid>
-        </>
+                    <TextField
+                        label='Email'
+                        placeholder='Enter Email'
+                        fullWidth
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <br /><br />
+                    <TextField
+                        label='Password'
+                        placeholder='Enter password'
+                        type='password'
+                        fullWidth
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <br /><br />
+                    <Button type="submit" color='primary' variant="outlined" style={btnstyle} fullWidth >Sign in</Button>
+                </form>
+                <Typography >
+                    <Link href="/forgotpassword" >
+                        Forgot password ?
+                    </Link>
+                </Typography>
+            </Paper>
+        </Grid>
     )
 }
