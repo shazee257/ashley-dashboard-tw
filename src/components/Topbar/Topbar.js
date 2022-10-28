@@ -56,10 +56,10 @@ export default function Topbar() {
             aria-expanded={open ? 'true' : undefined}
             onClick={handleClick}>
             <div className="text-white lowercase mr-2">
-              {user.email}
+              {user?.email}
             </div>
             <div className={styles.topAvatarContainer}>
-              {user.image && <Image className="-z-10" alt="pic" layout="fixed" height={40} width={40} src={`${process.env.NEXT_PUBLIC_thumbURL}/users/${user.image}`} />
+              {user?.image && <Image className="-z-10" alt="pic" layout="fixed" height={40} width={40} src={`${process.env.NEXT_PUBLIC_thumbURL}/users/${user?.image}`} />
                 // : <Image alt="pic" height={50} width={50} src={`${process.env.NEXT_PUBLIC_thumbURL}/users/avatar.png`} className={styles.topAvatar} />
               }
             </div>
@@ -81,8 +81,8 @@ export default function Topbar() {
           horizontal: 'left',
         }}
       >
-        <MenuItem onClick={handleClose}>{user.email}</MenuItem>
-        <MenuItem onClick={handleClose} style={{ textTransform: "capitalize" }}>{user.role}</MenuItem>
+        <MenuItem onClick={handleClose}>{user?.email}</MenuItem>
+        <MenuItem onClick={handleClose} style={{ textTransform: "capitalize" }}>{user?.role}</MenuItem>
         <MenuItem onClick={handleLogout} style={{ color: 'red' }}>Logout</MenuItem>
       </Menu>
     </div >
