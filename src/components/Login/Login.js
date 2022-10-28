@@ -10,12 +10,6 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -28,7 +22,7 @@ export default function Login() {
             .then(({ data }) => {
                 if (data.status === 200) {
                     localStorage.setItem("user", JSON.stringify(data.authData));
-                    toast.success(data.message);
+                    // toast.success(data.message);
                     push("/orders");
                 } else {
                     toast.error(data.message);

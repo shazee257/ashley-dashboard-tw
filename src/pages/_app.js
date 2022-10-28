@@ -5,7 +5,6 @@ import LoadingPanel from "components/Loader";
 import Router, { useRouter } from "next/router";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// import { SessionProvider } from 'next-auth/react';
 
 const App = ({ Component, pageProps }) => {
   const router = useRouter();
