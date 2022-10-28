@@ -36,28 +36,32 @@ const App = ({ Component, pageProps }) => {
 
   }, []);
 
-  if (router.pathname === "/login") {
-    return (
-      <>
-        {/* <SessionProvider session={session}> */}
-        {loading && <LoadingPanel />}
-        <Component {...pageProps} />
-        <ToastContainer />
-        {/* </SessionProvider> */}
-      </>
-    );
-  }
+  // if (router.pathname === "/login") {
+  //   return (
+  //     <>
+  //       {loading && <LoadingPanel />}
+  //       <Component {...pageProps} />
+  //       <ToastContainer />
+  //     </>
+  //   );
+  // }
 
 
   return (
     <>
-      {/* <SessionProvider session={session}> */}
-      <Layout>
-        {loading && <LoadingPanel />}
-        <Component {...pageProps} />
-        <ToastContainer />
-      </Layout>
-      {/* </SessionProvider> */}
+      {router.pathname === "/login" ?
+        <>
+          {loading && <LoadingPanel />}
+          <Component {...pageProps} />
+          <ToastContainer />
+        </>
+        :
+        <Layout >
+          {loading && <LoadingPanel />}
+          <Component {...pageProps} />
+          <ToastContainer />
+        </Layout>
+      }
     </>
   );
 }

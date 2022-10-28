@@ -4,8 +4,6 @@ import { LockOpenOutlined } from '@mui/icons-material';
 import { useRouter } from "next/router";
 import { toast } from 'react-toastify';
 import axios from "axios";
-// import 'react-toastify/dist/ReactToastify.css';
-// import { signIn } from "next-auth/react";
 
 export default function Login() {
     const { push } = useRouter();
@@ -30,7 +28,7 @@ export default function Login() {
                 if (data.status === 200) {
                     localStorage.setItem("user", JSON.stringify(data.authData));
                     toast.success(data.message);
-                    push("/order");
+                    push("/orders");
                 } else {
                     toast.error(data.message);
                 }

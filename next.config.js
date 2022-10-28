@@ -8,14 +8,13 @@ const nextConfig = {
       'ashley-api.herokuapp.com'
     ],
   },
+
   async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/login',
-        permanent: true,
-      },
-    ]
+    return [{
+      source: '/',
+      destination: '/login',
+      permanent: true,
+    }]
   }
 }
 

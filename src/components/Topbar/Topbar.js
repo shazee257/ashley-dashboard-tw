@@ -3,25 +3,25 @@ import { useState, useEffect } from "react";
 import { Typography, Button, Menu, MenuItem } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/router";
-// import { useSession, signOut } from "next-auth/react";
+import Link from "next/link";
 
 export default function Topbar() {
   const [user, setUser] = useState({});
   const [anchorEl, setAnchorEl] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
-    localStorage.getItem("user") && setUser(JSON.parse(localStorage.getItem("user")));
+    const user = localStorage.getItem("user") && JSON.parse(localStorage.getItem("user"));
+    if (!user) {
+      router.push("/login");
+    }
+    setUser(user);
   }, []);
-
-  // const userInfo = localStorage.getItem('user') && JSON.parse(localStorage.getItem("user"));
-  // userInfo && setUser(userInfo);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    setUser({});
-    
-    // signOut();
     console.log("logout");
+    router.push("/login");
   }
 
   const open = Boolean(anchorEl);
@@ -36,10 +36,12 @@ export default function Topbar() {
   return (
     <div className={`z-10 mb-5 w-full h-20 text-white sticky top-0 bg-blue-800`}>
       <div className={styles.topbarWrapper}>
-        <div className={styles.topLeft}>
-          <Typography component="h1" variant="h4" align="center" gutterBottom style={{ marginBottom: '0' }}>
-            Ashley Furniture
-          </Typography>
+        <div className={`${styles.topLeft} cursor-pointer`}>
+          <Link href="/" >
+            <Typography component="h1" variant="h4" align="center" gutterBottom style={{ marginBottom: '0' }}>
+              Ashley Furniture
+            </Typography>
+          </Link>
         </div>
         <div className={styles.topCenter}>
           <Typography component="h1" variant="h4" gutterBottom style={{ marginBottom: '0' }} >

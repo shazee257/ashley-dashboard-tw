@@ -20,6 +20,7 @@ export async function getServerSideProps(context) {
 }
 
 export default function UpdateBrand({ brand }) {
+    
     const router = useRouter();
     const titleRef = useRef(null);
     const descriptionRef = useRef(null);
