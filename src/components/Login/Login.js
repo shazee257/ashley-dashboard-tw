@@ -17,7 +17,7 @@ export default function Login() {
             .post(
                 `${process.env.NEXT_PUBLIC_baseURL}/users/login`,
                 { email, password },
-                { withCredentials: true }
+                // { withCredentials: true }
             )
             .then(({ data }) => {
                 if (data.status === 200) {
