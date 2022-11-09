@@ -72,7 +72,7 @@ export default function Customers({ users }) {
                     <div className={styles.subscriptionDiv}>
                         {params.row.email_subscription ?
                             <button className={styles.subscribedButton}>Subscribed</button>
-                            : <button className={styles.noSubscribedButton}>No</button>}
+                            : <button className={styles.noSubscribedButton}>Not subscribed</button>}
                     </div>
                 );
             },
