@@ -4,6 +4,7 @@ import { Typography, Button, Menu, MenuItem } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import axios from "axios";
 
 export default function Topbar() {
   const [user, setUser] = useState({});
@@ -19,9 +20,17 @@ export default function Topbar() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    console.log("logout");
-    router.push("/login");
+    axios.post(`${process.env.NEXT_PUBLIC_baseURL}/users/logout`, {},
+      { withCredentials: true }
+    ).then(({ data }) => {
+      if (data.success) {
+        localStorage.removeItem("user");
+        router.push("/login");
+      }
+    }).catch(err => {
+      console.log("err: ", err);
+    })
+
   }
 
   const open = Boolean(anchorEl);
