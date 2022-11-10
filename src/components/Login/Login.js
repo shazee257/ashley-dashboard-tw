@@ -52,6 +52,8 @@ export default function Login() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
+                    <p>test@gmail.com</p>
+                    <p>Password: test</p>
                     <br /><br />
                     <TextField
                         label='Password'
