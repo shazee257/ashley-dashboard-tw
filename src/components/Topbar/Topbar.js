@@ -48,7 +48,7 @@ export default function Topbar() {
         <div className={`${styles.topLeft} cursor-pointer`}>
           <Link href="/" >
             <Typography component="h1" variant="h4" align="center" gutterBottom style={{ marginBottom: '0' }}>
-              Ashley Furniture
+              Mecca Furniture
             </Typography>
           </Link>
         </div>
