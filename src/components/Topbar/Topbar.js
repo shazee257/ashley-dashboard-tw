@@ -25,7 +25,7 @@ export default function Topbar() {
     ).then(({ data }) => {
       if (data.success) {
         localStorage.removeItem("user");
-        router.push("/login");
+        router.push("/");
       }
     }).catch(err => {
       console.log("err: ", err);

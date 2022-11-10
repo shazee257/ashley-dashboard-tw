@@ -22,7 +22,6 @@ export default function Login() {
             .then(({ data }) => {
                 if (data.status === 200) {
                     localStorage.setItem("user", JSON.stringify(data.authData));
-                    // toast.success(data.message);
                     push("/orders");
                 } else {
                     toast.error(data.message);

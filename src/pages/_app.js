@@ -7,7 +7,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const App = ({ Component, pageProps }) => {
-  const router = useRouter();
+  // const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -48,15 +48,15 @@ const App = ({ Component, pageProps }) => {
 
   return (
     <>
-      {router.pathname == "/login" ?
+      {/* {router.pathname == "/login" ?
         <Component {...pageProps} />
-        :
-        <Layout>
-          {loading && <LoadingPanel />}
-          <Component {...pageProps} />
-          <ToastContainer />
-        </Layout>
-      }
+        : */}
+      <Layout>
+        {loading && <LoadingPanel />}
+        <Component {...pageProps} />
+        <ToastContainer />
+      </Layout>
+      {/* } */}
     </>
   );
 }
