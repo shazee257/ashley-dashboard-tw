@@ -48,14 +48,10 @@ const App = ({ Component, pageProps }) => {
 
   return (
     <>
-      {router.pathname === "/login" ?
-        <>
-          {loading && <LoadingPanel />}
-          <Component {...pageProps} />
-          <ToastContainer />
-        </>
+      {router.pathname == "/login" ?
+        <Component {...pageProps} />
         :
-        <Layout >
+        <Layout>
           {loading && <LoadingPanel />}
           <Component {...pageProps} />
           <ToastContainer />
