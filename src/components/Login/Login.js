@@ -31,6 +31,11 @@ export default function Login() {
             })
     };
 
+
+    useEffect(() => {
+        toast.info("Login: test@gmail.com Password: test");
+    }, []);
+
     const paperStyle = { padding: 20, width: 280, margin: "200px auto" }
     const avatarStyle = { backgroundColor: '#1bbd7e' }
     const btnstyle = { margin: '8px 0' }
@@ -52,8 +57,8 @@ export default function Login() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
-                    <p>test@gmail.com</p>
-                    <p>Password: test</p>
+                    {/* <p>test@gmail.com</p>
+                    <p>Password: test</p> */}
                     <br /><br />
                     <TextField
                         label='Password'
