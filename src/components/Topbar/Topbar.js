@@ -14,7 +14,7 @@ export default function Topbar() {
   useEffect(() => {
     const user = localStorage.getItem("user") && JSON.parse(localStorage.getItem("user"));
     if (!user) {
-      router.push("/login");
+      router.push("/");
     }
     setUser(user);
   }, []);
@@ -68,9 +68,9 @@ export default function Topbar() {
               {user?.email}
             </div>
             <div className={styles.topAvatarContainer}>
-              {user?.image && <Image className="-z-10" alt="pic" layout="fixed" height={40} width={40} src={`${process.env.NEXT_PUBLIC_thumbURL}/users/${user?.image}`} />
-                // : <Image alt="pic" height={50} width={50} src={`${process.env.NEXT_PUBLIC_thumbURL}/users/avatar.png`} className={styles.topAvatar} />
-              }
+              {/* {user?.image && <Image className="-z-10" alt="pic" layout="fixed" height={40} width={40} src={`${process.env.NEXT_PUBLIC_thumbURL}/users/${user?.image}`} /> */}
+              <Image alt="pic" height={40} width={40} src={`${process.env.NEXT_PUBLIC_thumbURL}/users/avatar.png`} className={styles.topAvatar} />
+              {/* } */}
             </div>
           </Button>
         </div>
