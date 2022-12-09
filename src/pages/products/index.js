@@ -131,7 +131,10 @@ export default function Products({ products }) {
         }
 
         const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/products`);
-        setData(data.products);
+        setData(data.products.map(elem => ({
+            ...elem,
+            id: elem._id
+        })));
         handleClose();
     };
 
