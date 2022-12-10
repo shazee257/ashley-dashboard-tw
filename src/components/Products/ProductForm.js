@@ -1,29 +1,51 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from 'styles/Product.module.css';
 import {
     Button, Grid, Paper, TextField,
-    MenuItem, Checkbox, FormControlLabel, Modal
+    MenuItem, Checkbox, FormControlLabel, Modal, Popover, Typography, IconButton, InputLabel
 } from '@mui/material';
 import DoubleArrowOutlinedIcon from '@mui/icons-material/DoubleArrowOutlined';
-import { formatDate } from "utils/utils";
 import Image from 'next/image';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
+import { Add, ArrowBack } from '@mui/icons-material';
+import dynamic from "next/dynamic";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import 'react-quill/dist/quill.snow.css';
+import FeatureForm from './FeatureForm';
+import VariantForm from './VariantForm';
 
 export default function ProductForm({
     editMode,
     product,
+    newProduct,
+    setProduct,
     categories,
     brands,
     stores,
-    newProduct,
-    setProduct
+    colors,
+    addVariation,
+    variant,
+    feature,
+    images,
+    imageArray,
+    setCategories,
+    setBrands,
+    setStores,
+    setColors,
+    setAddVariation,
+    setVariant,
+    setFeature,
+    setImages,
+    setImageArray,
+    clearForm
 }) {
-    const clearForm = () => {
-        setProduct(newProduct);
-    }
+    const router = useRouter();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        debugger
         if (!product.title || !product.store_id || !product.category_id || !product.brand_id) {
             toast.warn("Please fill all fields");
             return;
@@ -52,167 +74,183 @@ export default function ProductForm({
                 .then(({ data }) => {
                     if (data.success) {
                         data.success && toast.success(data.message);
-                        handleClose();
-                        router.push(`/products/${data.product._id}`);
+                        // handleClose();
+                        router.push(`/products`);
                     }
                 }).catch(err => toast.error(err.message));
         }
-
-        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/products`);
-        setData(data.products.map(elem => ({
-            ...elem,
-            id: elem._id
-        })));
-        handleClose();
     };
 
     const categorySelectHandler = async (e) => {
         setProduct({ ...product, category_id: e.target.value });
     }
+    const addVariations = () => {
+        console.log('here');
+        setAddVariation(true)
+    }
+
 
     return (
-        <Paper elevation={1} className="p-10 w-full">
-            <Grid align='left'>
-                <h2>{editMode ? ("Update Product").toUpperCase() : ("New Product").toUpperCase()}</h2>
-            </Grid>
-            <br /><br />
-            <form autoComplete="off">
-                <div className="flex justify-between">
-                    <TextField className="w-5/12"
-                        multiline
-                        maxRows={4}
-                        size="small"
-                        fullWidth
-                        label='Product Title' placeholder='Enter Product Name'
-                        value={product.title}
-                        onChange={(e) => setProduct({ ...product, title: e.target.value })} />
-                    <TextField
-                        className="w-6/12"
-                        fullWidth
-                        size="small"
-                        label="Select Category"
-                        select
-                        value={product.category_id} onChange={categorySelectHandler}>
-
-                        {categories.map((category) => (
-                            category.children.map((child) => (
-                                <MenuItem key={child._id} value={child._id}>
-                                    <div className="flex ">
-                                        <div className="flex items-center mr-2">
-                                            {category.image &&
-                                                <Image alt="pic" height={32} width={32}
-                                                    className="rounded-full" layout="fixed"
-                                                    src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${category.image}`} />}
-                                        </div>
-                                        <div className="flex items-center">
-                                            {category.title}
-                                        </div>
-                                        <DoubleArrowOutlinedIcon className="flex items-center mx-5 mt-1" />
-                                        <div className="flex items-center mr-2">
-                                            {category.image &&
-                                                <Image alt="ppic" height={32} width={32} layout="fixed"
-                                                    className="rounded-full"
-                                                    src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${child.image}`} />}
-                                        </div>
-                                        <div className="flex items-center">
-                                            {child.title}
-                                        </div>
-                                    </div>
-                                </MenuItem>
-                            ))
-                        ))}
-                    </TextField>
-                </div>
-                <br />
-                <div className="flex justify-between">
-                    <TextField
-                        className="w-5/12"
-                        fullWidth
-                        size="small"
-                        label="Select Brand"
-                        select
-                        value={product.brand_id}
-                        onChange={(e) => setProduct({ ...product, brand_id: e.target.value })}>
-                        {brands.map((brand) => (
-                            <MenuItem value={brand._id} key={brand._id}>
-                                <div className="flex">
-                                    <div className={styles.productListItem}>
-                                        {brand.image &&
-                                            <Image alt="pc" height={32} width={32}
-                                                className={styles.productListImg}
-                                                src={`${process.env.NEXT_PUBLIC_thumbURL}/brands/${brand.image}`} />}
-                                    </div>
-                                    <div className="flex items-center">
-                                        {brand.title}
-                                    </div>
-                                </div>
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                    <TextField
-                        className="w-6/12"
-                        fullWidth
-                        size="small"
-                        label="Select Warehouse / Store"
-                        select
-                        value={product.store_id}
-                        onChange={(e) => setProduct({ ...product, store_id: e.target.value })}>
-                        {stores.map((store) => (
-                            <MenuItem value={store._id} key={store._id}>
-                                <div className="flex items-center">
-                                    <div className={styles.productListItem}>
-                                        <Image alt="" height={32} width={32}
-                                            className={styles.productListImg}
-                                            src={`${process.env.NEXT_PUBLIC_thumbURL}/stores/${store.banner}`} />
-                                    </div>
-                                    <div className={styles.productListItem}>
-                                        {store.title}
-                                    </div>
-                                </div>
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                </div>
-                <br />
-                <div className="flex justify-between">
-                    <FormControlLabel
-                        className="w-5/12"
-                        control={<Checkbox checked={product.is_featured}
-                            onChange={(e) => setProduct({ ...product, is_featured: e.target.checked })}
-                            size="small" />}
-                        label="Featured Product" />
-
-                    <TextField
-                        className="w-6/12"
-                        size="small"
-                        inputProps={{ min: 0, max: 100, type: 'number' }}
-                        label='Discount %' placeholder='Enter Discount %'
-                        value={product.discount}
-                        onChange={(e) => setProduct({ ...product, discount: e.target.value })} />
-                </div>
-                <br /><br />
-                <Button
-                    onClick={handleSubmit}
-                    type='submit'
-                    color='primary'
-                    variant="outlined"
-                    fullWidth>
-                    {editMode ? "Update Product" : "Add Product"}
-                </Button>
-                <br /><br />
-                <div className="flex justify-between">
+        <>
+            <div className='col-span-12'>
+                <div className='flex justify-between'>
+                    <Typography variant='h5' style={{}}>{editMode ? ("Update Product").toUpperCase() : ("Add Product").toUpperCase()}</Typography>
                     <Button
-                        className="w-6/12"
-                        onClick={clearForm}
-                        type='button'
-                        color='secondary'
+                        onClick={handleSubmit}
+                        type='submit'
+                        color='primary'
                         variant="outlined"
-                        fullWidth>
-                        Reset Form
+                        style={{ float: 'right' }}>
+                        {editMode ? "Update Product" : "Add Product"}
                     </Button>
                 </div>
-            </form>
-            <br /><br />
-        </Paper>
+            </div>
+            <div className='col-span-8'>
+                    <Grid container>
+                        <Grid item lg={12}>
+                            <Paper elevation={4} className="p-10">
+
+                                <form autoComplete="off" style={{ width: '100%' }}>
+                                    <div className="flex justify-between">
+                                        <TextField
+                                            multiline
+                                            maxRows={4}
+                                            size="small"
+                                            fullWidth
+                                            label='Product Title' placeholder='Enter Product Name'
+                                            value={product.title}
+                                            onChange={(e) => setProduct({ ...product, title: e.target.value })} />
+                                        {/* <TextField
+                                            className="w-6/12"
+                                            fullWidth
+                                            size="small"
+                                            label="Select Category"
+                                            select
+                                            value={product.category_id} onChange={categorySelectHandler}>
+
+                                           
+                                        </TextField> */}
+                                    </div>
+                                    <br />
+                                    <div className="flex justify-between">
+                                        <TextField
+                                            className="w-5/12"
+                                            fullWidth
+                                            size="small"
+                                            label="Select Brand"
+                                            select
+                                            value={product.brand_id}
+                                            onChange={(e) => setProduct({ ...product, brand_id: e.target.value })}>
+                                            {brands.map((brand) => (
+                                                <MenuItem value={brand._id} key={brand._id}>
+                                                    <div className="flex">
+                                                        <div className={styles.productListItem}>
+                                                            {brand.image &&
+                                                                <Image alt="pc" height={32} width={32}
+                                                                    className={styles.productListImg}
+                                                                    src={`${process.env.NEXT_PUBLIC_thumbURL}/brands/${brand.image}`} />}
+                                                        </div>
+                                                        <div className="flex items-center">
+                                                            {brand.title}
+                                                        </div>
+                                                    </div>
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
+                                        <TextField
+                                            className="w-6/12"
+                                            fullWidth
+                                            size="small"
+                                            label="Select Warehouse / Store"
+                                            select
+                                            value={product.store_id}
+                                            onChange={(e) => setProduct({ ...product, store_id: e.target.value })}>
+                                            {stores.map((store) => (
+                                                <MenuItem value={store._id} key={store._id}>
+                                                    <div className="flex items-center">
+                                                        <div className={styles.productListItem}>
+                                                            <Image alt="" height={32} width={32}
+                                                                className={styles.productListImg}
+                                                                src={`${process.env.NEXT_PUBLIC_thumbURL}/stores/${store.banner}`} />
+                                                        </div>
+                                                        <div className={styles.productListItem}>
+                                                            {store.title}
+                                                        </div>
+                                                    </div>
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
+                                    </div>
+                                    <br />
+                                    <div className="flex justify-between">
+                                        <FormControlLabel
+                                            className="w-5/12"
+                                            control={<Checkbox checked={product.is_featured}
+                                                onChange={(e) => setProduct({ ...product, is_featured: e.target.checked })}
+                                                size="small" />}
+                                            label="Featured Product" />
+
+                                        <TextField
+                                            className="w-6/12"
+                                            size="small"
+                                            inputProps={{ min: 0, max: 100, type: 'number' }}
+                                            label='Discount %' placeholder='Enter Discount %'
+                                            value={product.discount}
+                                            onChange={(e) => setProduct({ ...product, discount: e.target.value })} />
+                                    </div>
+                                    <br /><br />
+                                    <div className="flex justify-between">
+                                        <Button
+                                            className="w-5/12"
+                                            onClick={clearForm}
+                                            type='button'
+                                            color='secondary'
+                                            variant="outlined"
+                                            fullWidth>
+                                            Reset Form
+                                        </Button>
+                                    </div>
+                                </form>
+                                <br /><br />
+                            </Paper>
+                        </Grid>
+                    </Grid>
+            </div>
+            <div className='col-span-4 shadow-lg rounded-lg max-h-96 overflow-x-auto'>
+                <Paper elevation={4} className='px-4 py-2'>
+                    <Typography variant='body1'>Select Category</Typography>
+
+                    {categories.map((category) => (
+                        category.children.map((child) => (
+                            <Typography key={child._id} value={child._id} className='my-2 cursor-pointer hover:bg-slate-100 p-2'
+                                style={product.category_id === child._id ? { background: 'blue' } : {}}
+                                onChange={() => setProduct({ ...product, category_id: child._id })}>
+                                <div className="flex ">
+                                    <div className="flex items-center mr-2">
+                                        {category.image &&
+                                            <Image alt="pic" height={32} width={32}
+                                                className="rounded-full" layout="fixed"
+                                                src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${category.image}`} />}
+                                    </div>
+                                    <div className="flex items-center">
+                                        {category.title}
+                                    </div>
+                                    <DoubleArrowOutlinedIcon className="flex items-center mx-5 mt-1" />
+                                    <div className="flex items-center mr-2">
+                                        {category.image &&
+                                            <Image alt="ppic" height={32} width={32} layout="fixed"
+                                                className="rounded-full"
+                                                src={`${process.env.NEXT_PUBLIC_thumbURL}/categories/${child.image}`} />}
+                                    </div>
+                                    <div className="flex items-center">
+                                        {child.title}
+                                    </div>
+                                </div>
+                            </Typography>
+                        ))
+                    ))}
+                </Paper>
+            </div>
+        </>
     )
 }
