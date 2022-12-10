@@ -148,6 +148,11 @@ console.log(variation);
                 anchor={'right'}
                 open={addVariation}
                 onClose={() => setAddVariation(false)}
+                PaperProps={{
+                    sx: {
+                        width: '45%'
+                    }
+                }}
             >
                 <VariantForm
                     productId={product.category_id}
