@@ -79,9 +79,9 @@ export default function AddProduct() {
         setEditMode(false);
     };
 
-     // clear form fields
-     const clearProdForm = () => {
-       setProduct(newProduct)
+    // clear form fields
+    const clearProdForm = () => {
+        setProduct(newProduct)
     }
     // clear form fields
     const clearForm = () => {
@@ -90,32 +90,32 @@ export default function AddProduct() {
 
     return (
         <div className="grid grid-cols-12 gap-4 p-14 h-auto w-full">
-          
-                <ProductForm
-                    editMode={editMode}
-                    product={product}
-                    categories={categories}
-                    brands={brands}
-                    stores={stores}
-                    colors={colors}
-                    addVariation={addVariation}
-                    variant={variant}
-                    feature={feature}
-                    images={images}
-                    imageArray={imageArray}
-                    setCategories={setCategories}
-                    setBrands={setBrands}
-                    setStores={setStores}
-                    setColors={setColors}
-                    setAddVariation={setAddVariation}
-                    setVariant={setVariant}
-                    setFeature={setFeature}
-                    setImages={setImages}
-                    setImageArray={setImageArray}
-                    newProduct={newProduct}
-                    setProduct={setProduct}
-                    clearForm={clearProdForm}
-                />
+
+            <ProductForm
+                editMode={editMode}
+                product={product}
+                categories={categories}
+                brands={brands}
+                stores={stores}
+                colors={colors}
+                addVariation={addVariation}
+                variant={variant}
+                feature={feature}
+                images={images}
+                imageArray={imageArray}
+                setCategories={setCategories}
+                setBrands={setBrands}
+                setStores={setStores}
+                setColors={setColors}
+                setAddVariation={setAddVariation}
+                setVariant={setVariant}
+                setFeature={setFeature}
+                setImages={setImages}
+                setImageArray={setImageArray}
+                newProduct={newProduct}
+                setProduct={setProduct}
+                clearForm={clearProdForm}
+            />
 
             {/* {addVariation &&
                 <div className='col-span-12'>
@@ -143,6 +143,11 @@ export default function AddProduct() {
                 anchor={'right'}
                 open={addVariation}
                 onClose={() => setAddVariation(false)}
+                PaperProps={{
+                    sx: {
+                        width: '45%'
+                    }
+                }}
             >
                 <VariantForm
                     variant={variant}
@@ -151,7 +156,6 @@ export default function AddProduct() {
                     clearForm={clearForm}
                     setAddVariation={setAddVariation}
                 />
-
             </Drawer>
         </div>
     )
