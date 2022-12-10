@@ -94,7 +94,7 @@ export default function ProductForm({
         <>
             <div className='col-span-12'>
                 <div className='flex justify-between'>
-                    <Typography variant='h5' color='primary'>{editMode ? ("Update Product").toUpperCase() : ("Add Product").toUpperCase()}</Typography>
+                    <Typography variant='h5' style={{}}>{editMode ? ("Update Product").toUpperCase() : ("Add Product").toUpperCase()}</Typography>
                     <Button
                         onClick={handleSubmit}
                         type='submit'
@@ -106,14 +106,12 @@ export default function ProductForm({
                 </div>
             </div>
             <div className='col-span-8'>
-                <Grid container>
-                    <Grid item lg={12}>
-                        <Paper elevation={4} className="p-10">
-                            <Typography className='mb-4' variant='h6'>{("Product details").toUpperCase()}</Typography>
+                    <Grid container>
+                        <Grid item lg={12}>
+                            <Paper elevation={4} className="p-10">
 
-                            <form autoComplete="off" style={{ width: '100%' }}>
-                                <div className='grid grid-cols-4 gap-6'>
-                                    <div className="col-span-4 md:col-span-4">
+                                <form autoComplete="off" style={{ width: '100%' }}>
+                                    <div className="flex justify-between">
                                         <TextField
                                             multiline
                                             maxRows={4}
@@ -133,8 +131,10 @@ export default function ProductForm({
                                            
                                         </TextField> */}
                                     </div>
-                                    <div className="col-span-4 md:col-span-2">
+                                    <br />
+                                    <div className="flex justify-between">
                                         <TextField
+                                            className="w-5/12"
                                             fullWidth
                                             size="small"
                                             label="Select Brand"
@@ -157,9 +157,8 @@ export default function ProductForm({
                                                 </MenuItem>
                                             ))}
                                         </TextField>
-                                    </div>
-                                    <div className="col-span-4 md:col-span-2">
                                         <TextField
+                                            className="w-6/12"
                                             fullWidth
                                             size="small"
                                             label="Select Warehouse / Store"
@@ -182,29 +181,27 @@ export default function ProductForm({
                                             ))}
                                         </TextField>
                                     </div>
-                                    <div className="col-span-4 md:col-span-2">
+                                    <br />
+                                    <div className="flex justify-between">
+                                        <FormControlLabel
+                                            className="w-5/12"
+                                            control={<Checkbox checked={product.is_featured}
+                                                onChange={(e) => setProduct({ ...product, is_featured: e.target.checked })}
+                                                size="small" />}
+                                            label="Featured Product" />
+
                                         <TextField
-                                            className='w-full'
+                                            className="w-6/12"
                                             size="small"
                                             inputProps={{ min: 0, max: 100, type: 'number' }}
                                             label='Discount %' placeholder='Enter Discount %'
                                             value={product.discount}
-                                            onChange={(e) => setProduct({ ...product, discount: e.target.value })}
-                                        />
+                                            onChange={(e) => setProduct({ ...product, discount: e.target.value })} />
                                     </div>
-                                    <div className="col-span-4 md:col-span-2">
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox checked={product.is_featured}
-                                                    onChange={(e) => setProduct({ ...product, is_featured: e.target.checked })}
-                                                    size="small"
-                                                />
-                                            }
-                                            label="Featured Product"
-                                        />
-                                    </div>
-                                    <div className="col-span-4 md:col-span-1">
+                                    <br /><br />
+                                    <div className="flex justify-between">
                                         <Button
+                                            className="w-5/12"
                                             onClick={clearForm}
                                             type='button'
                                             color='secondary'
@@ -213,12 +210,11 @@ export default function ProductForm({
                                             Reset Form
                                         </Button>
                                     </div>
-                                </div>
-                            </form>
-                            <br /><br />
-                        </Paper>
+                                </form>
+                                <br /><br />
+                            </Paper>
+                        </Grid>
                     </Grid>
-                </Grid>
             </div>
             <div className='col-span-4 shadow-lg rounded-lg max-h-96 overflow-x-auto'>
                 <Paper elevation={4} className='px-4 py-2'>
@@ -226,9 +222,9 @@ export default function ProductForm({
 
                     {categories.map((category) => (
                         category.children.map((child) => (
-                            <Typography key={child._id} value={child._id} className='my-2 cursor-pointer hover:bg-slate-100 p-2'
-                                style={product.category_id === child._id ? { background: 'blue' } : {}}
-                                onChange={() => setProduct({ ...product, category_id: child._id })}>
+                            <Typography key={child._id} value={child._id}
+                            className={product.category_id === child._id ? 'bg-indigo-100 my-2 cursor-pointer hover:bg-slate-100 p-2' : 'my-2 cursor-pointer hover:bg-slate-100 p-2'}
+                                onClick={() => setProduct({ ...product, category_id: child._id })}>
                                 <div className="flex ">
                                     <div className="flex items-center mr-2">
                                         {category.image &&

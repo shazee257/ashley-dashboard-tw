@@ -41,12 +41,14 @@ export default function AddProduct() {
     const [brands, setBrands] = useState([]);
     const [stores, setStores] = useState([]);
     const [colors, setColors] = useState([]);
+    const [variation, setVariation] = useState([]);
+    const [features, setFeatures] = useState([]);
     const [addVariation, setAddVariation] = useState(false);
     const [variant, setVariant] = useState(newVariant);
     const [feature, setFeature] = useState(newFeature);
     const [images, setImages] = useState([]);
     const [imageArray, setImageArray] = useState([]);
-
+console.log(variation);
     React.useEffect(() => {
         getCategories();
         getBrands();
@@ -136,26 +138,28 @@ export default function AddProduct() {
 
             <div className='col-span-8 mt-8'>
                 <VariantGrid
-                    setAddVariation={setAddVariation} />
+                    setAddVariation={setAddVariation} 
+                    variation={variation}  
+                    />
+                     
             </div>
 
             <Drawer
                 anchor={'right'}
                 open={addVariation}
                 onClose={() => setAddVariation(false)}
-                PaperProps={{
-                    sx: {
-                        width: '45%'
-                    }
-                }}
             >
                 <VariantForm
+                    productId={product.category_id}
+                    setVariation={setVariation}
+                    variation={variation}
                     variant={variant}
                     setVariant={setVariant}
                     editMode={editMode}
                     clearForm={clearForm}
                     setAddVariation={setAddVariation}
                 />
+
             </Drawer>
         </div>
     )
