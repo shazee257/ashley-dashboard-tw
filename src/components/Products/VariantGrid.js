@@ -6,13 +6,34 @@ import styles from 'styles/ProductIndex.module.css';
 import { formatDate } from 'utils/utils';
 import { Link } from 'react-router-dom';
 
-export default function VariantGrid({ setAddVariation, variation }) {
-    console.log("variationin",variation);
+export default function VariantGrid({ setAddVariation, variation, setVariant, setVariation }) {
+    console.log("variationin", variation);
+
+
+    const variantEditHandler = (row) => {
+        let findRow = variation.find((list) => list.id === row.id);
+        setVariant({
+            id: row.id,
+            size: row.size,
+            salePrice: row.sale_price,
+            purchasePrice: row.purchase_price,
+            description: findRow.description,
+            dimensions: findRow.dimensions,
+            edit: true
+        })
+    }
+    const handleDelete = (id) => {
+        let detail = variation.filter((a, index) => a.id !== id);
+        setVariation(detail)
+    }
+
+
+
     const columns = [
-        { field: "id", headerName: "ID", width: 330, hide: true },
-        { field: "size", headerName: "Product Sizes", width: 200 },
+        { field: "id", headerName: "ID", hide: true },
+        { field: "size", headerName: "Product Sizes", flex: 1, },
         {
-            field: "sale_price", headerName: "Sale Price", width: 180, type: "number",
+            field: "sale_price", headerName: "Sale Price", type: "number", align: 'center', flex: 1,
             renderCell: (params) => {
                 return (
                     <span className={styles.price_value}>{`$${Number(params.value).toFixed(2)}`}</span>
@@ -20,31 +41,27 @@ export default function VariantGrid({ setAddVariation, variation }) {
             }
         },
         {
-            field: "purchase_price", headerName: "Purchase Price", width: 180, type: "number",
+            field: "purchase_price", headerName: "Purchase Price", type: "number", align: 'center', flex: 1,
             valueFormatter: (params) => `$${Number(params.value).toFixed(2)}`
         },
-        // { field: "description", headerName: "Description", width: 220 },
-        // { field: "dimensions", headerName: "Dimensions", width: 220 },
         {
-            field: "createdAt", headerName: "Added on", width: 140, type: 'dateTime', hide: true,
-            valueFormatter: (params) => formatDate(params.value ),
-        },
-        {
-            field: "action", filterable: false, sortable: false,
+            field: "action", filterable: false, sortable: false, align: 'center', flex: 1,
             headerName: "Action",
-            width: 300,
+
             renderCell: (params) => {
                 return (
                     <div className="flex justify-center items-center">
                         {/* <Link 
                          href={`/products/${'product._id'}/${params.row._id}?size=${params.row.size}`}
                         > */}
-                            <button className="h-8 w-40 rounded-md mr-5 bg-blue-700 text-white">Product Features</button>
+                        <button className="h-8 w-40 rounded-md mr-5 bg-blue-700 text-white">Product Features</button>
                         {/* </Link> */}
-                        <button className="h-8 w-16 rounded-md mr-5 bg-green-600 text-white" >Edit</button>
+                        <button className="h-8 w-16 rounded-md mr-5 bg-green-600 text-white" onClick={() => variantEditHandler(params?.row)}>
+                            Edit
+                        </button>
                         <DeleteOutline
                             className={styles.productListDelete}
-                            // onClick={() => handleDelete(params.row._id)}
+                            onClick={() => handleDelete(params.row.id)}
                         />
                     </div>
                 );
@@ -60,7 +77,7 @@ export default function VariantGrid({ setAddVariation, variation }) {
                         <Add />
                     </IconButton>
                 </div>
-                <MuiGrid columns={columns} data={variation} />
+                <MuiGrid columns={columns} data={variation} className='w-full' />
             </Paper>
         </Grid>
     )

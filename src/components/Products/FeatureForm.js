@@ -12,7 +12,7 @@ import 'react-quill/dist/quill.snow.css';
 import Image from 'next/image';
 
 
-const FeatureForm = ({ feature, setFeature, colors, imageArray, editMode, setImageArray, setImages }) => {
+const FeatureForm = ({ variation, feature, setFeature, colors, imageArray, editMode, setImageArray, setImages, setFeatures, features }) => {
 
     const fileSelectHandler = (e) => {
         const selectedFileArray = Array.from(e.target.files);
@@ -20,107 +20,169 @@ const FeatureForm = ({ feature, setFeature, colors, imageArray, editMode, setIma
         setImages(e.target.files);
     }
 
+    // clear form fields
+    const clearForm = () => {
+        const newFeature = {
+            variant: "",
+            id: "",
+            color_id: "",
+            quantity: "",
+            sku: "",
+            zero_stock_msg: "",
+            images: [],
+        };
+        setFeature(newFeature);
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!feature.color_id || !feature.quantity || !feature.sku) {
-            toast.error("Please fill all fields");
-            return;
-        }
-
-        const config = {
-            headers: { 'Content-Type': 'multipart/form-data' }
-        }
-
-        if (editMode) {
-            const featureData = {
+        if (feature.edit) {
+            let index = features.findIndex((list) => list.id === feature.id)
+            let new_detail = {
+                id: feature.variant,
+                variant: feature.variant,
                 color_id: feature.color_id,
                 quantity: feature.quantity,
                 sku: feature.sku,
-                zero_stock_msg: feature.zero_stock_msg
-            };
-
-            await axios
-                .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${productId}/${variantId}/${feature.id}`, featureData)
-                .then(({ data }) => {
-                    data.success && toast.success(data.message);
-                }).catch(err => toast.error(err.message));
-        } else {
-            const fd = new FormData();
-            fd.append("color_id", feature.color_id);
-            fd.append("quantity", feature.quantity);
-            fd.append("sku", feature.sku);
-            fd.append("zero_stock_msg", feature.zero_stock_msg);
-            for (let i = 0; i < images.length; i++) {
-                fd.append("images", images[i]);
+                zero_stock_msg: feature.zero_stock_msg,
+                images: feature.images,
+                edit: false
             }
-
-            await axios
-                .post(`${process.env.NEXT_PUBLIC_baseURL}/products/${productId}/${variantId}`, fd, config)
-                .then(({ data }) => {
-                    data.success && toast.success(data.message);
-                }).catch(err => toast.error(err.message));
+            // 1. Make a shallow copy of the array
+            let temp_state = [...features];
+            temp_state[index] = new_detail;
+            // 2. Set the state to our new copy
+            setFeatures(temp_state);
+        } else {
+            const featureData = {
+                id: feature.variant,
+                variant: feature.variant,
+                color_id: feature.color_id,
+                quantity: feature.quantity,
+                sku: feature.sku,
+                zero_stock_msg: feature.zero_stock_msg,
+                images: feature.images,
+                edit: false
+            }
+            setFeatures([...features, featureData])
         }
+
+        // if (!feature.color_id || !feature.quantity || !feature.sku) {
+        //     toast.error("Please fill all fields");
+        //     return;
+        // }
+
+        // const config = {
+        //     headers: { 'Content-Type': 'multipart/form-data' }
+        // }
+
+        // if (editMode) {
+        //     const featureData = {
+        //         color_id: feature.color_id,
+        //         quantity: feature.quantity,
+        //         sku: feature.sku,
+        //         zero_stock_msg: feature.zero_stock_msg
+        //     };
+
+        //     await axios
+        //         .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${productId}/${variantId}/${feature.id}`, featureData)
+        //         .then(({ data }) => {
+        //             data.success && toast.success(data.message);
+        //         }).catch(err => toast.error(err.message));
+        // } else {
+        //     const fd = new FormData();
+        //     fd.append("color_id", feature.color_id);
+        //     fd.append("quantity", feature.quantity);
+        //     fd.append("sku", feature.sku);
+        //     fd.append("zero_stock_msg", feature.zero_stock_msg);
+        //     for (let i = 0; i < images.length; i++) {
+        //         fd.append("images", images[i]);
+        //     }
+
+        //     await axios
+        //         .post(`${process.env.NEXT_PUBLIC_baseURL}/products/${productId}/${variantId}`, fd, config)
+        //         .then(({ data }) => {
+        //             data.success && toast.success(data.message);
+        //         }).catch(err => toast.error(err.message));
+        // }
 
         // getFeatures();
         // handleClose();
-        // setFeature(newFeature);
+        clearForm();
     };
 
     return (
         <div>
-            <Paper elevation={1} className="p-10 w-full">
+            <Paper elevation={4} className="p-10 w-full">
                 <Grid align='left'>
                     <h2>{editMode ? ("Update Variant Features").toUpperCase() : ("New Variant Features").toUpperCase()}</h2>
                 </Grid>
                 <br /><br />
-                <form autoComplete="off" onSubmit={handleSubmit} className="flex place-items-start ">
-                    <div className="flex flex-col justify-between w-96 mr-10">
-                        <TextField
-                            fullWidth
-                            size="small"
-                            label="Select Color"
-                            select
-                            value={feature.color_id} onChange={(e) => setFeature({ ...feature, color_id: e.target.value })}
-                        >
-                            {colors.map((c) => (
-                                <MenuItem value={c._id} key={c._id}>
-                                    <div className="flex items-center">
-                                        <div className="mr-2">
-                                            <Image alt="" height={32} width={32}
-                                                className={styles.productListImg}
-                                                src={`${process.env.NEXT_PUBLIC_uploadURL}/colors/${c.image}`} />
+                <form autoComplete="off" onSubmit={handleSubmit}>
+                    <div className='grid grid-cols-4 gap-4'>
+                        <div className='col-span-2'>
+                            <TextField
+                                className='w-full'
+                                size="small"
+                                label="Select Variant"
+                                select
+                                value={feature.variant} onChange={(e) => setFeature({ ...feature, variant: e.target.value })}
+                            >
+                                {variation.map((c, index) => (
+                                    <MenuItem value={index} key={c._id}>
+                                        {c.size}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        </div>
+                        <div className='col-span-2'>
+                            <TextField
+                                className='w-full'
+                                size="small"
+                                label="Select Color"
+                                select
+                                value={feature.color_id} onChange={(e) => setFeature({ ...feature, color_id: e.target.value })}
+                            >
+                                {colors.map((c) => (
+                                    <MenuItem value={c._id} key={c._id}>
+                                        <div className="flex items-center">
+                                            <div className="mr-2">
+                                                <Image alt="" height={32} width={32}
+                                                    className={styles.productListImg}
+                                                    src={`${process.env.NEXT_PUBLIC_uploadURL}/colors/${c.image}`} />
+                                            </div>
+                                            {c.title}
                                         </div>
-                                        {c.title}
-                                    </div>
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                        <br />
-                        <div className='flex justify-between'>
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        </div>
+                        <div className='col-span-2'>
                             <TextField
                                 size='small'
-                                fullWidth
+                                className="w-full"
                                 inputProps={{ step: '1', min: '1', max: '1000', type: 'number' }}
                                 label='Quantity' placeholder='Enter Quantity'
                                 variant='outlined'
                                 value={feature.quantity} onChange={(e) => setFeature({ ...feature, quantity: e.target.value })}
                             />
-                            <br />
+                        </div>
+                        <div className='col-span-2'>
                             <TextField
                                 size='small'
-                                fullWidth
+                                className="w-full"
                                 required
                                 variant='outlined'
                                 label='sku' placeholder='Enter SKU'
                                 value={feature.sku} onChange={(e) => setFeature({ ...feature, sku: e.target.value })}
                             />
                         </div>
-                        <br />
-                        <div className="">
+                        <div className="col-span-4 w-full">
                             <InputLabel htmlFor="description">Zero Stock Message</InputLabel>
                             <ReactQuill
                                 value={feature.zero_stock_msg} onChange={(e) => setFeature({ ...feature, zero_stock_msg: e })}
+
                             />
                         </div>
 
@@ -150,24 +212,25 @@ const FeatureForm = ({ feature, setFeature, colors, imageArray, editMode, setIma
                             {editMode ? "Update Variant Feature" : "Add Variant Feature"}
                         </Button>
                         <br /><br />
-                    </div>
-                    {imageArray.length > 0 &&
-                        <div className=''>
-                            <br />
-                            <Typography style={{ textAlign: 'center', fontSize: '20px', fontWeight: 'bold', justifyContent: 'center' }}>
-                                Images Selected
-                            </Typography>
-                            <div className='flex flex-wrap p-10 border-l-stone-700 '>
-                                {imageArray.map((image) => {
-                                    return (
-                                        <div key={image} className="mr-3">
-                                            <Image alt="" height={200} width={200} src={image} />
-                                        </div>
-                                    )
-                                })}
+
+                        {imageArray.length > 0 &&
+                            <div className=''>
+                                <br />
+                                <Typography style={{ textAlign: 'center', fontSize: '20px', fontWeight: 'bold', justifyContent: 'center' }}>
+                                    Images Selected
+                                </Typography>
+                                <div className='flex flex-wrap p-10 border-l-stone-700 '>
+                                    {imageArray.map((image) => {
+                                        return (
+                                            <div key={image} className="mr-3">
+                                                <Image alt="" height={200} width={200} src={image} />
+                                            </div>
+                                        )
+                                    })}
+                                </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
                 </form>
                 <br /><br />
             </Paper>

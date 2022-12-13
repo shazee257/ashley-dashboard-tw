@@ -12,44 +12,57 @@ import 'react-quill/dist/quill.snow.css';
 import { showNotification } from 'utils/helper';
 import { ArrowBack } from '@mui/icons-material';
 
-const VariantForm = ({ variant, setVariant, editMode, clearForm, setAddVariation, productId, setVariation, variation }) => {
+const VariantForm = ({ variant, setVariant, editMode, setAddVariation, productId, setVariation, variation }) => {
 
 
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        const variantData = {
-            id: productId,
-            createdAt: new Date(),
-            size: variant.size,
-            sale_price: variant.salePrice,
-            purchase_price: variant.purchasePrice,
-            description: variant.description,
-            dimensions: variant.dimensions,
-            action: ''
+    // clear form fields
+    const clearForm = () => {
+        const newVariant = {
+            id: "",
+            size: "",
+            salePrice: 0,
+            purchasePrice: 0,
+            description: "",
+            dimensions: "",
+            edit: false
         }
-        setVariation([...variation, variantData])
-        // if (editMode) {
-        //     await axios
-        //         .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${productId}/${variant.id}`, variantData)
-        //         .then(({ data }) => {
-        //             if (data.success) {
-        //                 showNotification("success", data.message);
-        //                 clearForm();
-        //             }
-        //         }).catch(err => showNotification("error", err.response.data.message));
-        // } else {
-        //     await axios.post(`${process.env.NEXT_PUBLIC_baseURL}/products/${productId}`, variantData)
-        //         .then(({ data }) => {
-        //             if (data.success) {
-        //                 data.success && showNotification("success", data.message);
-        //                 clearForm();
-        //             }
-        //         }).catch(err => showNotification("error", err.response.data.message));
-        // }
-        // getVariants(productId);
-        setAddVariation(false)
+        setVariant(newVariant);
+    }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (variant.edit) {
+            let index = variation.findIndex((list) => list.id === variant.id)
+            let new_detail = {
+                id: productId,
+                createdAt: new Date(),
+                size: variant.size,
+                sale_price: variant.salePrice,
+                purchase_price: variant.purchasePrice,
+                description: variant.description,
+                dimensions: variant.dimensions,
+                action: '',
+                edit: false
+            }
+            // 1. Make a shallow copy of the array
+            let temp_state = [...variation];
+            temp_state[index] = new_detail;
+            // 2. Set the state to our new copy
+            setVariation(temp_state);
+        } else {
+            const variantData = {
+                id: productId,
+                createdAt: new Date(),
+                size: variant.size,
+                sale_price: variant.salePrice,
+                purchase_price: variant.purchasePrice,
+                description: variant.description,
+                dimensions: variant.dimensions,
+                action: '',
+                edit: false
+            }
+            setVariation([...variation, variantData])
+        }
+        clearForm();
     }
 
     const getVariants = async (productId) => {
@@ -64,10 +77,10 @@ const VariantForm = ({ variant, setVariant, editMode, clearForm, setAddVariation
     }
 
     return (
-        <div className='w-full p-10'>
-            <IconButton onClick={() => setAddVariation(false)}>
+        <Paper elevation={4} className="p-10 w-full p-10">
+            {/* <IconButton onClick={() => setAddVariation(false)}>
                 <ArrowBack />
-            </IconButton>
+            </IconButton> */}
             <Grid align='left'>
                 <h2>{editMode ? ("Update Size Variant").toUpperCase() : ("Add New Size Variant").toUpperCase()}</h2>
             </Grid>
@@ -101,7 +114,8 @@ const VariantForm = ({ variant, setVariant, editMode, clearForm, setAddVariation
                             inputProps={{ step: '0.01', min: '0', max: '100', type: 'number' }}
                             variant='outlined' type='number'
                             label='Purchase Price' placeholder='Enter Purchase Price'
-                            value={variant.purchasePrice} onChange={(e) => setVariant({ ...variant, purchasePrice: e.target.value })}
+                            value={variant.purchasePrice}
+                            onChange={(e) => setVariant({ ...variant, purchasePrice: e.target.value })}
                         />
                     </div>
                     <div className="col-span-4 w-full">
@@ -122,16 +136,16 @@ const VariantForm = ({ variant, setVariant, editMode, clearForm, setAddVariation
                 <br />
                 <br />
                 <Button
-                    onClick={handleSubmit}
+                    onClick={(e) => handleSubmit(e)}
                     type='submit'
                     color='primary'
                     variant="outlined"
                     fullWidth>
-                    {editMode ? "Update Size Variant" : "Add Size Variant"}
+                    {variant.edit ? "Update Size Variant" : "Add Size Variant"}
                 </Button>
                 <br /><br />
             </form>
-        </div>
+        </Paper>
     )
 }
 

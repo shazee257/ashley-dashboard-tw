@@ -39,47 +39,48 @@ export default function ProductForm({
     setFeature,
     setImages,
     setImageArray,
-    clearForm
+    clearForm,
+    handleSubmit
 }) {
     const router = useRouter();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        debugger
-        if (!product.title || !product.store_id || !product.category_id || !product.brand_id) {
-            toast.warn("Please fill all fields");
-            return;
-        }
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     debugger
+    //     if (!product.title || !product.store_id || !product.category_id || !product.brand_id) {
+    //         toast.warn("Please fill all fields");
+    //         return;
+    //     }
 
-        const productData = {
-            title: product.title,
-            store_id: product.store_id,
-            category_id: product.category_id,
-            brand_id: product.brand_id,
-            is_featured: product.is_featured,
-            discount: product.discount
-        }
+    //     const productData = {
+    //         title: product.title,
+    //         store_id: product.store_id,
+    //         category_id: product.category_id,
+    //         brand_id: product.brand_id,
+    //         is_featured: product.is_featured,
+    //         discount: product.discount
+    //     }
 
-        if (editMode) {
-            await axios
-                .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${product.id}`, productData)
-                .then(({ data }) => {
-                    if (data.success) {
-                        toast.success(data.message);
-                        clearForm();
-                    }
-                }).catch(err => toast.error(err.message));
-        } else {
-            await axios.post(`${process.env.NEXT_PUBLIC_baseURL}/products`, productData)
-                .then(({ data }) => {
-                    if (data.success) {
-                        data.success && toast.success(data.message);
-                        // handleClose();
-                        router.push(`/products`);
-                    }
-                }).catch(err => toast.error(err.message));
-        }
-    };
+    //     if (editMode) {
+    //         await axios
+    //             .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${product.id}`, productData)
+    //             .then(({ data }) => {
+    //                 if (data.success) {
+    //                     toast.success(data.message);
+    //                     clearForm();
+    //                 }
+    //             }).catch(err => toast.error(err.message));
+    //     } else {
+    //         await axios.post(`${process.env.NEXT_PUBLIC_baseURL}/products`, productData)
+    //             .then(({ data }) => {
+    //                 if (data.success) {
+    //                     data.success && toast.success(data.message);
+    //                     // handleClose();
+    //                     router.push(`/products`);
+    //                 }
+    //             }).catch(err => toast.error(err.message));
+    //     }
+    // };
 
     const categorySelectHandler = async (e) => {
         setProduct({ ...product, category_id: e.target.value });
@@ -96,7 +97,7 @@ export default function ProductForm({
                 <div className='flex justify-between'>
                     <Typography variant='h5' color='primary'>{editMode ? ("Update Product").toUpperCase() : ("Add Product").toUpperCase()}</Typography>
                     <Button
-                        onClick={handleSubmit}
+                        onClick={(e) => handleSubmit(e)}
                         type='submit'
                         color='primary'
                         variant="outlined"

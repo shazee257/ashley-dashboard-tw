@@ -7,6 +7,9 @@ import { ArrowBack } from '@mui/icons-material';
 import VariantForm from 'components/Products/VariantForm';
 import FeatureForm from 'components/Products/FeatureForm';
 import VariantGrid from 'components/Products/VariantGrid';
+import FeatureGrid from 'components/Products/FeatureGrid';
+import { toast } from 'react-toastify';
+import { showNotification } from 'utils/helper';
 
 export default function AddProduct() {
 
@@ -26,8 +29,10 @@ export default function AddProduct() {
         purchasePrice: 0,
         description: "",
         dimensions: "",
+        edit: false
     }
     const newFeature = {
+        variant: "",
         id: "",
         color_id: "",
         quantity: "",
@@ -48,7 +53,7 @@ export default function AddProduct() {
     const [feature, setFeature] = useState(newFeature);
     const [images, setImages] = useState([]);
     const [imageArray, setImageArray] = useState([]);
-console.log(variation);
+    console.log(variant);
     React.useEffect(() => {
         getCategories();
         getBrands();
@@ -85,10 +90,84 @@ console.log(variation);
     const clearProdForm = () => {
         setProduct(newProduct)
     }
-    // clear form fields
-    const clearForm = () => {
-        setVariant(newVariant);
-    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!product.title || !product.store_id || !product.category_id || !product.brand_id) {
+            toast.warn("Please fill all fields");
+            return;
+        }
+
+        const productData = {
+            title: product.title,
+            store_id: product.store_id,
+            category_id: product.category_id,
+            brand_id: product.brand_id,
+            is_featured: product.is_featured,
+            discount: product.discount
+        }
+
+        const variantData = {
+            size: variant.size,
+            sale_price: variant.salePrice,
+            purchase_price: variant.purchasePrice,
+            description: variant.description,
+            dimensions: variant.dimensions,
+        }
+
+        if (editMode) {
+            await axios
+                .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${product.id}`, productData)
+                .then(async ({ data }) => {
+                    if (data.success) {
+                        toast.success(data.message);
+                        // clearForm();
+                        if (editMode) {
+                            await axios
+                                .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${data._id}/${variant.id}`, variantData)
+                                .then(({ data }) => {
+                                    if (data.success) {
+                                        showNotification("success", data.message);
+                                    }
+                                }).catch(err => showNotification("error", err.response.data.message));
+                        } else {
+                            await axios.post(`${process.env.NEXT_PUBLIC_baseURL}/products/${data._id}`, variantData)
+                                .then(({ data }) => {
+                                    if (data.success) {
+                                        data.success && showNotification("success", data.message);
+                                    }
+                                }).catch(err => showNotification("error", err.response.data.message));
+                        }
+
+                    }
+                }).catch(err => toast.error(err.message));
+        } else {
+            await axios.post(`${process.env.NEXT_PUBLIC_baseURL}/products`, productData)
+                .then(async ({ data }) => {
+                    if (data.success) {
+                        // data.success && toast.success(data.message);
+                        if (editMode) {
+                            await axios
+                                .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${data._id}/${variant.id}`, variantData)
+                                .then(({ data }) => {
+                                    if (data.success) {
+                                        showNotification("success", data.message);
+                                    }
+                                }).catch(err => showNotification("error", err.response.data.message));
+                        } else {
+                            await axios.post(`${process.env.NEXT_PUBLIC_baseURL}/products/${data.product._id}`, variantData)
+                                .then(({ data }) => {
+                                    if (data.success) {
+                                        data.success && showNotification("success", data.message);
+                                    }
+                                }).catch(err => showNotification("error", err.response.data.message));
+                        }
+                    }
+                }).catch(err => toast.error(err.message));
+        }
+    };
+
 
     return (
         <div className="grid grid-cols-12 gap-4 p-14 h-auto w-full">
@@ -117,43 +196,10 @@ console.log(variation);
                 newProduct={newProduct}
                 setProduct={setProduct}
                 clearForm={clearProdForm}
+                handleSubmit={handleSubmit}
             />
 
-            {/* {addVariation &&
-                <div className='col-span-12'>
-                    <IconButton onClick={() => setAddVariation(false)}>
-                        <ArrowBack />
-                    </IconButton>
-                    <FeatureForm
-                        feature={feature}
-                        setFeature={setFeature}
-                        colors={colors}
-                        images={images}
-                        imageArray={imageArray}
-                        editMode={editMode}
-                        setImageArray={setImageArray}
-                        setImages={setImages} />
-                </div>
-            } */}
-
-            <div className='col-span-8 mt-8'>
-                <VariantGrid
-                    setAddVariation={setAddVariation} 
-                    variation={variation}  
-                    />
-                     
-            </div>
-
-            <Drawer
-                anchor={'right'}
-                open={addVariation}
-                onClose={() => setAddVariation(false)}
-                PaperProps={{
-                    sx: {
-                        width: '45%'
-                    }
-                }}
-            >
+            <div className='col-span-12'>
                 <VariantForm
                     productId={product.category_id}
                     setVariation={setVariation}
@@ -161,11 +207,41 @@ console.log(variation);
                     variant={variant}
                     setVariant={setVariant}
                     editMode={editMode}
-                    clearForm={clearForm}
                     setAddVariation={setAddVariation}
                 />
-
-            </Drawer>
+            </div>
+            <div className='col-span-12 mt-8'>
+                <VariantGrid
+                    setAddVariation={setAddVariation}
+                    variation={variation}
+                    setVariant={setVariant}
+                    setVariation={setVariation}
+                />
+            </div>
+            <div className='col-span-12'>
+                <FeatureForm
+                    variation={variation}
+                    feature={feature}
+                    setFeature={setFeature}
+                    colors={colors}
+                    images={images}
+                    imageArray={imageArray}
+                    editMode={editMode}
+                    setImageArray={setImageArray}
+                    setImages={setImages}
+                    setFeatures={setFeatures}
+                    features={features}
+                />
+            </div>
+            <div className='col-span-12'>
+                <FeatureGrid
+                    setFeatures={setFeatures}
+                    features={features}
+                    feature={feature}
+                    colors={colors}
+                    setFeature={setFeature}
+                />
+            </div>
         </div>
     )
 }
