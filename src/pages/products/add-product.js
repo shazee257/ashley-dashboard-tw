@@ -10,9 +10,11 @@ import VariantGrid from 'components/Products/VariantGrid';
 import FeatureGrid from 'components/Products/FeatureGrid';
 import { toast } from 'react-toastify';
 import { showNotification } from 'utils/helper';
+import { useRouter } from 'next/router';
 
 export default function AddProduct() {
 
+    const router = useRouter();
     const newProduct = {
         id: "",
         title: "",
@@ -25,8 +27,8 @@ export default function AddProduct() {
     const newVariant = {
         id: "",
         size: "",
-        salePrice: 0,
-        purchasePrice: 0,
+        sale_price: 0,
+        purchase_price: 0,
         description: "",
         dimensions: "",
         edit: false
@@ -53,14 +55,55 @@ export default function AddProduct() {
     const [feature, setFeature] = useState(newFeature);
     const [images, setImages] = useState([]);
     const [imageArray, setImageArray] = useState([]);
-    console.log(variant);
+    const [filesToUpload, setFilesToUpload] = useState([]);
+
+
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
+        var results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return "";
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
     React.useEffect(() => {
+        let edit = getParameterByName('edit');
+        if (edit) {
+            setEditMode(true);
+            getProduct();
+        }
         getCategories();
         getBrands();
         getStores();
         getColors();
     }, [])
 
+    const getProduct = async () => {
+        let id = getParameterByName('id')
+        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/products/p/${id}`);
+        console.log(data);
+        let res = data.product;
+        setProduct({
+            id: res._id,
+            title: res.title,
+            store_id: res.store_id._id,
+            category_id: res.category_id._id,
+            brand_id: res.brand_id._id,
+            is_featured: res.is_featured,
+            discount: res.discount
+        });
+        setVariation(res.variants.map(elem => ({
+            ...elem,
+            id: elem._id
+        })));
+        setFeatures(res.variants[0].features.map(elem => ({
+            ...elem,
+            id: elem._id
+        })))
+
+    }
     const getColors = async () => {
         const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/colors`);
         setColors(data.colors);
@@ -98,71 +141,49 @@ export default function AddProduct() {
             toast.warn("Please fill all fields");
             return;
         }
-
         const productData = {
             title: product.title,
             store_id: product.store_id,
             category_id: product.category_id,
             brand_id: product.brand_id,
             is_featured: product.is_featured,
-            discount: product.discount
+            discount: product.discount,
+            variants: variation
+
+        }
+        const editProductData = {
+            title: product.title,
+            store_id: product.store_id,
+            category_id: product.category_id,
+            brand_id: product.brand_id,
+            is_featured: product.is_featured,
+            discount: product.discount,
+
         }
 
         const variantData = {
             size: variant.size,
-            sale_price: variant.salePrice,
-            purchase_price: variant.purchasePrice,
+            sale_price: variant.sale_price,
+            purchase_price: variant.purchase_price,
             description: variant.description,
             dimensions: variant.dimensions,
         }
-
         if (editMode) {
             await axios
-                .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${product.id}`, productData)
+                .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${product.id}`, editProductData)
                 .then(async ({ data }) => {
                     if (data.success) {
                         toast.success(data.message);
                         // clearForm();
-                        if (editMode) {
-                            await axios
-                                .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${data._id}/${variant.id}`, variantData)
-                                .then(({ data }) => {
-                                    if (data.success) {
-                                        showNotification("success", data.message);
-                                    }
-                                }).catch(err => showNotification("error", err.response.data.message));
-                        } else {
-                            await axios.post(`${process.env.NEXT_PUBLIC_baseURL}/products/${data._id}`, variantData)
-                                .then(({ data }) => {
-                                    if (data.success) {
-                                        data.success && showNotification("success", data.message);
-                                    }
-                                }).catch(err => showNotification("error", err.response.data.message));
-                        }
-
                     }
                 }).catch(err => toast.error(err.message));
         } else {
             await axios.post(`${process.env.NEXT_PUBLIC_baseURL}/products`, productData)
                 .then(async ({ data }) => {
                     if (data.success) {
-                        // data.success && toast.success(data.message);
-                        if (editMode) {
-                            await axios
-                                .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${data._id}/${variant.id}`, variantData)
-                                .then(({ data }) => {
-                                    if (data.success) {
-                                        showNotification("success", data.message);
-                                    }
-                                }).catch(err => showNotification("error", err.response.data.message));
-                        } else {
-                            await axios.post(`${process.env.NEXT_PUBLIC_baseURL}/products/${data.product._id}`, variantData)
-                                .then(({ data }) => {
-                                    if (data.success) {
-                                        data.success && showNotification("success", data.message);
-                                    }
-                                }).catch(err => showNotification("error", err.response.data.message));
-                        }
+                        data.success && toast.success(data.message);
+                        router.push('/products')
+
                     }
                 }).catch(err => toast.error(err.message));
         }
@@ -208,6 +229,7 @@ export default function AddProduct() {
                     setVariant={setVariant}
                     editMode={editMode}
                     setAddVariation={setAddVariation}
+                    product={product}
                 />
             </div>
             <div className='col-span-12 mt-8'>
@@ -216,11 +238,13 @@ export default function AddProduct() {
                     variation={variation}
                     setVariant={setVariant}
                     setVariation={setVariation}
+                    variant={variant}
                 />
             </div>
             <div className='col-span-12'>
                 <FeatureForm
                     variation={variation}
+                    setVariation={setVariation}
                     feature={feature}
                     setFeature={setFeature}
                     colors={colors}
@@ -231,15 +255,23 @@ export default function AddProduct() {
                     setImages={setImages}
                     setFeatures={setFeatures}
                     features={features}
+                    product={product}
+                    setFilesToUpload={setFilesToUpload}
+                    filesToUpload={filesToUpload}
+                    variant={variant}
+
                 />
             </div>
             <div className='col-span-12'>
                 <FeatureGrid
+                    variationArray={variation}
                     setFeatures={setFeatures}
                     features={features}
                     feature={feature}
                     colors={colors}
                     setFeature={setFeature}
+                    product={product}
+                    variant={variant}
                 />
             </div>
         </div>

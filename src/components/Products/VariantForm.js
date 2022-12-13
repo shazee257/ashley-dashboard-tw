@@ -12,7 +12,7 @@ import 'react-quill/dist/quill.snow.css';
 import { showNotification } from 'utils/helper';
 import { ArrowBack } from '@mui/icons-material';
 
-const VariantForm = ({ variant, setVariant, editMode, setAddVariation, productId, setVariation, variation }) => {
+const VariantForm = ({ variant, setVariant, editMode, setAddVariation, productId, setVariation, variation, product }) => {
 
 
     // clear form fields
@@ -20,15 +20,16 @@ const VariantForm = ({ variant, setVariant, editMode, setAddVariation, productId
         const newVariant = {
             id: "",
             size: "",
-            salePrice: 0,
-            purchasePrice: 0,
+            sale_price: 0,
+            purchase_price: 0,
             description: "",
             dimensions: "",
             edit: false
         }
         setVariant(newVariant);
     }
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
+
         e.preventDefault();
         if (variant.edit) {
             let index = variation.findIndex((list) => list.id === variant.id)
@@ -36,8 +37,8 @@ const VariantForm = ({ variant, setVariant, editMode, setAddVariation, productId
                 id: productId,
                 createdAt: new Date(),
                 size: variant.size,
-                sale_price: variant.salePrice,
-                purchase_price: variant.purchasePrice,
+                sale_price: variant.sale_price,
+                purchase_price: variant.purchase_price,
                 description: variant.description,
                 dimensions: variant.dimensions,
                 action: '',
@@ -53,8 +54,8 @@ const VariantForm = ({ variant, setVariant, editMode, setAddVariation, productId
                 id: productId,
                 createdAt: new Date(),
                 size: variant.size,
-                sale_price: variant.salePrice,
-                purchase_price: variant.purchasePrice,
+                sale_price: variant.sale_price,
+                purchase_price: variant.purchase_price,
                 description: variant.description,
                 dimensions: variant.dimensions,
                 action: '',
@@ -62,7 +63,36 @@ const VariantForm = ({ variant, setVariant, editMode, setAddVariation, productId
             }
             setVariation([...variation, variantData])
         }
-        clearForm();
+        if (editMode) {
+            const variantData = {
+                id: variant.id,
+                createdAt: new Date(),
+                size: variant.size,
+                sale_price: variant.sale_price,
+                purchase_price: variant.purchase_price,
+                description: variant.description,
+                dimensions: variant.dimensions,
+                action: '',
+                edit: false
+            }
+            await axios
+                .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${product.id}/${variant.id}`, variantData)
+                .then(({ data }) => {
+                    if (data.success) {
+                        showNotification("success", data.message);
+                        clearForm();
+                    }
+                }).catch(err => showNotification("error", err.response.data.message));
+        }
+        setVariant({
+            id: "",
+            size: "",
+            sale_price: 0,
+            purchase_price: 0,
+            description: "",
+            dimensions: "",
+            edit: false
+        });
     }
 
     const getVariants = async (productId) => {
@@ -104,7 +134,7 @@ const VariantForm = ({ variant, setVariant, editMode, setAddVariation, productId
                             inputProps={{ step: '0.01', min: '0', max: '100', type: 'number' }}
                             variant='outlined'
                             label='Sale Price' placeholder='Enter Sale Price'
-                            value={variant.salePrice} onChange={(e) => setVariant({ ...variant, salePrice: e.target.value })}
+                            value={variant.sale_price} onChange={(e) => setVariant({ ...variant, sale_price: e.target.value })}
                         />
                     </div>
                     <div className='col-span-2'>
@@ -114,8 +144,8 @@ const VariantForm = ({ variant, setVariant, editMode, setAddVariation, productId
                             inputProps={{ step: '0.01', min: '0', max: '100', type: 'number' }}
                             variant='outlined' type='number'
                             label='Purchase Price' placeholder='Enter Purchase Price'
-                            value={variant.purchasePrice}
-                            onChange={(e) => setVariant({ ...variant, purchasePrice: e.target.value })}
+                            value={variant.purchase_price}
+                            onChange={(e) => setVariant({ ...variant, purchase_price: e.target.value })}
                         />
                     </div>
                     <div className="col-span-4 w-full">

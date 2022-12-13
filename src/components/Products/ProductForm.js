@@ -96,14 +96,16 @@ export default function ProductForm({
             <div className='col-span-12'>
                 <div className='flex justify-between'>
                     <Typography variant='h5' color='primary'>{editMode ? ("Update Product").toUpperCase() : ("Add Product").toUpperCase()}</Typography>
-                    <Button
-                        onClick={(e) => handleSubmit(e)}
-                        type='submit'
-                        color='primary'
-                        variant="outlined"
-                        style={{ float: 'right' }}>
-                        {editMode ? "Update Product" : "Add Product"}
-                    </Button>
+                    {!editMode &&
+                        <Button
+                            onClick={(e) => handleSubmit(e)}
+                            type='submit'
+                            color='primary'
+                            variant="outlined"
+                            style={{ float: 'right' }}>
+                            {editMode ? "Update Product" : "Add Product"}
+                        </Button>
+                    }
                 </div>
             </div>
             <div className='col-span-8'>
@@ -213,6 +215,18 @@ export default function ProductForm({
                                             fullWidth>
                                             Reset Form
                                         </Button>
+                                    </div>
+                                    <div className="col-span-4 md:col-span-1">
+                                        {editMode &&
+                                            <Button
+                                                onClick={(e) => handleSubmit(e)}
+                                                type='submit'
+                                                color='primary'
+                                                variant="outlined"
+                                                style={{ float: 'right' }}>
+                                                {editMode ? "Update Product" : "Add Product"}
+                                            </Button>
+                                        }
                                     </div>
                                 </div>
                             </form>

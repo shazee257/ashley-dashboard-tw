@@ -10,9 +10,12 @@ import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
 import Image from 'next/image';
+import { showNotification } from 'utils/helper';
 
 
-const FeatureForm = ({ variation, feature, setFeature, colors, imageArray, editMode, setImageArray, setImages, setFeatures, features }) => {
+const FeatureForm = ({ setVariation, variation,variant, feature, setFeature, colors, imageArray, editMode, setImageArray, setImages, setFeatures, features, product,
+    filesToUpload }) => {
+
 
     const fileSelectHandler = (e) => {
         const selectedFileArray = Array.from(e.target.files);
@@ -53,6 +56,8 @@ const FeatureForm = ({ variation, feature, setFeature, colors, imageArray, editM
             let temp_state = [...features];
             temp_state[index] = new_detail;
             // 2. Set the state to our new copy
+            let temp = [...variation];
+            temp[feature.variant] = features;
             setFeatures(temp_state);
         } else {
             const featureData = {
@@ -65,50 +70,46 @@ const FeatureForm = ({ variation, feature, setFeature, colors, imageArray, editM
                 images: feature.images,
                 edit: false
             }
+            let test = variation.map((res, index) => {
+                if (index === feature.variant) {
+                    return { ...res, features: [feature] }
+                }
+                else {
+                    return res
+                }
+            })
+            setVariation(test)
             setFeatures([...features, featureData])
         }
 
-        // if (!feature.color_id || !feature.quantity || !feature.sku) {
-        //     toast.error("Please fill all fields");
-        //     return;
-        // }
-
-        // const config = {
-        //     headers: { 'Content-Type': 'multipart/form-data' }
-        // }
-
-        // if (editMode) {
-        //     const featureData = {
-        //         color_id: feature.color_id,
-        //         quantity: feature.quantity,
-        //         sku: feature.sku,
-        //         zero_stock_msg: feature.zero_stock_msg
-        //     };
-
-        //     await axios
-        //         .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${productId}/${variantId}/${feature.id}`, featureData)
-        //         .then(({ data }) => {
-        //             data.success && toast.success(data.message);
-        //         }).catch(err => toast.error(err.message));
-        // } else {
-        //     const fd = new FormData();
-        //     fd.append("color_id", feature.color_id);
-        //     fd.append("quantity", feature.quantity);
-        //     fd.append("sku", feature.sku);
-        //     fd.append("zero_stock_msg", feature.zero_stock_msg);
-        //     for (let i = 0; i < images.length; i++) {
-        //         fd.append("images", images[i]);
-        //     }
-
-        //     await axios
-        //         .post(`${process.env.NEXT_PUBLIC_baseURL}/products/${productId}/${variantId}`, fd, config)
-        //         .then(({ data }) => {
-        //             data.success && toast.success(data.message);
-        //         }).catch(err => toast.error(err.message));
-        // }
-
-        // getFeatures();
-        // handleClose();
+        if (editMode) {
+            const data = {
+                id: feature.variant,
+                variant: feature.variant,
+                color_id: feature.color_id,
+                quantity: feature.quantity,
+                sku: feature.sku,
+                zero_stock_msg: feature.zero_stock_msg,
+                images: feature.images,
+                edit: false
+            }
+            let Id = ''
+            let findVariantId = variation.map((res) => {
+              res.features.map((fea) => {
+                if (fea._id === feature.id) {
+                  Id = res._id
+                }
+              })
+            })
+            await axios
+                .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${product.id}/${Id}/${feature.id}`, data)
+                .then(({ data }) => {
+                    if (data.success) {
+                        showNotification("success", data.message);
+                        clearForm();
+                    }
+                }).catch(err => showNotification("error", err.response.data.message));
+        }
         clearForm();
     };
 

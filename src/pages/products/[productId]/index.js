@@ -71,8 +71,8 @@ export default function Variants({ product }) {
     const newVariant = {
         id: "",
         size: "",
-        salePrice: 0,
-        purchasePrice: 0,
+        sale_price: 0,
+        purchase_price: 0,
         description: "",
         dimensions: "",
     }
@@ -103,8 +103,8 @@ export default function Variants({ product }) {
         const newVariant = {
             id: variant._id,
             size: variant.size,
-            salePrice: variant.sale_price,
-            purchasePrice: variant.purchase_price,
+            sale_price: variant.sale_price,
+            purchase_price: variant.purchase_price,
             description: variant.description,
             dimensions: variant.dimensions,
         };
@@ -116,8 +116,8 @@ export default function Variants({ product }) {
 
         const variantData = {
             size: variant.size,
-            sale_price: variant.salePrice,
-            purchase_price: variant.purchasePrice,
+            sale_price: variant.sale_price,
+            purchase_price: variant.purchase_price,
             description: variant.description,
             dimensions: variant.dimensions,
         }
@@ -199,7 +199,7 @@ export default function Variants({ product }) {
                                         inputProps={{ step: '0.01', min: '0', max: '100', type: 'number' }}
                                         variant='outlined'
                                         label='Sale Price' placeholder='Enter Sale Price'
-                                        value={variant.salePrice} onChange={(e) => setVariant({ ...variant, salePrice: e.target.value })}
+                                        value={variant.sale_price} onChange={(e) => setVariant({ ...variant, sale_price: e.target.value })}
                                     />
                                     <br /><br />
                                     <TextField
@@ -208,7 +208,7 @@ export default function Variants({ product }) {
                                         inputProps={{ step: '0.01', min: '0', max: '100', type: 'number' }}
                                         variant='outlined' type='number'
                                         label='Purchase Price' placeholder='Enter Purchase Price'
-                                        value={variant.purchasePrice} onChange={(e) => setVariant({ ...variant, purchasePrice: e.target.value })}
+                                        value={variant.purchase_price} onChange={(e) => setVariant({ ...variant, purchase_price: e.target.value })}
                                     />
                                 </div>
                             </div>

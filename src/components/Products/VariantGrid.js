@@ -6,34 +6,30 @@ import styles from 'styles/ProductIndex.module.css';
 import { formatDate } from 'utils/utils';
 import { Link } from 'react-router-dom';
 
-export default function VariantGrid({ setAddVariation, variation, setVariant, setVariation }) {
-    console.log("variationin", variation);
-
+export default function VariantGrid({ variant, setAddVariation, variation, setVariant, setVariation }) {
 
     const variantEditHandler = (row) => {
         let findRow = variation.find((list) => list.id === row.id);
-        setVariant({
+        setVariant(variant => ({
             id: row.id,
             size: row.size,
-            salePrice: row.sale_price,
-            purchasePrice: row.purchase_price,
+            sale_price: row.sale_price,
+            purchase_price: row.purchase_price,
             description: findRow.description,
             dimensions: findRow.dimensions,
             edit: true
-        })
+        }))
     }
     const handleDelete = (id) => {
         let detail = variation.filter((a, index) => a.id !== id);
         setVariation(detail)
     }
 
-
-
     const columns = [
         { field: "id", headerName: "ID", hide: true },
         { field: "size", headerName: "Product Sizes", flex: 1, },
         {
-            field: "sale_price", headerName: "Sale Price", type: "number", align: 'center', flex: 1,
+            field: "sale_price", headerName: "Sale Price", type: "number", headerAlign: 'center', align: 'center', flex: 1,
             renderCell: (params) => {
                 return (
                     <span className={styles.price_value}>{`$${Number(params.value).toFixed(2)}`}</span>
@@ -41,21 +37,16 @@ export default function VariantGrid({ setAddVariation, variation, setVariant, se
             }
         },
         {
-            field: "purchase_price", headerName: "Purchase Price", type: "number", align: 'center', flex: 1,
+            field: "purchase_price", headerName: "Purchase Price", type: "number", headerAlign: 'center', align: 'center', flex: 1,
             valueFormatter: (params) => `$${Number(params.value).toFixed(2)}`
         },
         {
-            field: "action", filterable: false, sortable: false, align: 'center', flex: 1,
+            field: "action", filterable: false, sortable: false, headerAlign: 'center', align: 'center', flex: 1,
             headerName: "Action",
 
             renderCell: (params) => {
                 return (
                     <div className="flex justify-center items-center">
-                        {/* <Link 
-                         href={`/products/${'product._id'}/${params.row._id}?size=${params.row.size}`}
-                        > */}
-                        <button className="h-8 w-40 rounded-md mr-5 bg-blue-700 text-white">Product Features</button>
-                        {/* </Link> */}
                         <button className="h-8 w-16 rounded-md mr-5 bg-green-600 text-white" onClick={() => variantEditHandler(params?.row)}>
                             Edit
                         </button>
