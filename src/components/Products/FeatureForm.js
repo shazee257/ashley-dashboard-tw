@@ -2,7 +2,14 @@ import React from 'react'
 import {
     Grid,
     Paper,
-    TextField, MenuItem, InputLabel, Button, Typography
+    TextField,
+    MenuItem,
+    InputLabel,
+    Button,
+    Typography,
+    Card,
+    IconButton
+
 } from '@mui/material'
 import axios from 'axios';
 import styles from 'styles/ProductFeatures.module.css';
@@ -11,11 +18,32 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
 import Image from 'next/image';
 import { showNotification } from 'utils/helper';
+import { Delete } from '@mui/icons-material';
 
 
-const FeatureForm = ({ setVariation, variation,variant, feature, setFeature, colors, imageArray, editMode, setImageArray, setImages, setFeatures, features, product,
+const FeatureForm = ({ setVariation,
+    variation,
+    variant,
+    feature,
+    setFeature,
+    colors,
+    imageArray,
+    editMode,
+    setImageArray,
+    setImages,
+    setFeatures,
+    features,
+    product,
     filesToUpload }) => {
 
+    const [iamgesArray, setiamgesArray] = React.useState([]);
+
+    React.useEffect(() => {
+        if (feature.edit) {
+            const selectedFileArray = Array.from(filesToUpload);
+            setiamgesArray(selectedFileArray.map((file) => URL.createObjectURL(file)));
+        }
+    }, [filesToUpload, feature])
 
     const fileSelectHandler = (e) => {
         const selectedFileArray = Array.from(e.target.files);
@@ -95,11 +123,11 @@ const FeatureForm = ({ setVariation, variation,variant, feature, setFeature, col
             }
             let Id = ''
             let findVariantId = variation.map((res) => {
-              res.features.map((fea) => {
-                if (fea._id === feature.id) {
-                  Id = res._id
-                }
-              })
+                res.features.map((fea) => {
+                    if (fea._id === feature.id) {
+                        Id = res._id
+                    }
+                })
             })
             await axios
                 .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${product.id}/${Id}/${feature.id}`, data)
@@ -231,6 +259,40 @@ const FeatureForm = ({ setVariation, variation,variant, feature, setFeature, col
                                 </div>
                             </div>
                         }
+                        {feature.edit && filesToUpload.length > 0 && iamgesArray?.map((res, Index) => (
+                            <>
+                                <Grid item
+                                    xs={12}
+                                    sm={12}
+                                    md={12}
+                                    lg={2}
+                                    style={{ marginTop: '10px', marginBottom: '10px', marginLeft: '10px', marginRight: '10px' }}
+                                >
+                                    <Card
+                                        style={{
+                                            width: '150px',
+                                            height: '150px',
+                                            marginRight: '15px'
+                                        }}>
+                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                            <IconButton
+                                                onClick={() => {
+                                                    let detail = iamgesArray.filter((a, index) => index !== Index);
+                                                    setiamgesArray(detail)
+                                                }}
+                                                style={{
+                                                    color: 'red'
+                                                }}
+                                                fontSize='small'
+                                            >
+                                                <Delete fontSize='small' />
+                                            </IconButton>
+                                            <img src={res} style={{ width: '100px', height: '100px' }} />
+                                        </div>
+                                    </Card>
+                                </Grid>
+                            </>
+                        ))}
                     </div>
                 </form>
                 <br /><br />

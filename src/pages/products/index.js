@@ -86,7 +86,8 @@ export default function Products({ products }) {
         // setAttributes(attr);
     }
 
-    const handleClickOpen = () => setOpen(true);
+    const handleClickOpen = () => router.push(`/products/add-product`);
+    
     const handleClose = () => {
         setOpen(false);
         clearForm();

@@ -54,9 +54,9 @@ export default function AddProduct() {
     const [variant, setVariant] = useState(newVariant);
     const [feature, setFeature] = useState(newFeature);
     const [images, setImages] = useState([]);
+    const [productImages, setProductImages] = useState();
     const [imageArray, setImageArray] = useState([]);
     const [filesToUpload, setFilesToUpload] = useState([]);
-
 
     function getParameterByName(name, url) {
         if (!url) url = window.location.href;
@@ -133,6 +133,26 @@ export default function AddProduct() {
     const clearProdForm = () => {
         setProduct(newProduct)
     }
+    const uploadHandler = async (id) => {
+
+        const config = {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        }
+        
+        const fd = new FormData();
+        for (let i = 0; i < productImages.length; i++) {
+          fd.append("files", productImages[i]);
+        }
+
+        await axios
+            .put(`${process.env.NEXT_PUBLIC_baseURL}/products/uploadThumbnail/${id}`, fd, config)
+            .then(({ data }) => {
+                if (data.success) {
+                    toast.success(data.message);
+                    setFilesToUpload([]);
+                }
+            }).catch(err => toast.error(err.message));
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -169,6 +189,9 @@ export default function AddProduct() {
             dimensions: variant.dimensions,
         }
         if (editMode) {
+            if (productImages) {
+                uploadHandler(product.id)
+            }
             await axios
                 .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${product.id}`, editProductData)
                 .then(async ({ data }) => {
@@ -180,7 +203,11 @@ export default function AddProduct() {
         } else {
             await axios.post(`${process.env.NEXT_PUBLIC_baseURL}/products`, productData)
                 .then(async ({ data }) => {
+                    debugger
                     if (data.success) {
+                        if (productImages) {
+                            uploadHandler(data.product._id)
+                        }
                         data.success && toast.success(data.message);
                         router.push('/products')
 
@@ -218,6 +245,8 @@ export default function AddProduct() {
                 setProduct={setProduct}
                 clearForm={clearProdForm}
                 handleSubmit={handleSubmit}
+                productImages={productImages}
+                setProductImages={setProductImages}
             />
 
             <div className='col-span-12'>
@@ -272,6 +301,8 @@ export default function AddProduct() {
                     setFeature={setFeature}
                     product={product}
                     variant={variant}
+                    filesToUpload={filesToUpload}
+                    setFilesToUpload={setFilesToUpload}
                 />
             </div>
         </div>

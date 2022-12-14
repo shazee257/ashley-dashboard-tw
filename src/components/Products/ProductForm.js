@@ -40,7 +40,9 @@ export default function ProductForm({
     setImages,
     setImageArray,
     clearForm,
-    handleSubmit
+    handleSubmit,
+    productImages,
+    setProductImages
 }) {
     const router = useRouter();
 
@@ -82,6 +84,8 @@ export default function ProductForm({
     //     }
     // };
 
+    const [viewImage, setviewImage] = useState('');
+
     const categorySelectHandler = async (e) => {
         setProduct({ ...product, category_id: e.target.value });
     }
@@ -90,6 +94,11 @@ export default function ProductForm({
         setAddVariation(true)
     }
 
+    const fileSelectHandler = (e) => {
+        let imageUrl = URL.createObjectURL(e.target.files[0]);
+        setviewImage(imageUrl);
+        setProductImages(e.target.files);
+    }
 
     return (
         <>
@@ -206,6 +215,22 @@ export default function ProductForm({
                                             label="Featured Product"
                                         />
                                     </div>
+                                    <div className="col-span-4 md:col-span-2">
+                                        <Button
+                                            type='button'
+                                            color='secondary'
+                                            variant="outlined"
+                                            size='small'>
+                                            <input
+                                                style={{ background: 'rgb(108 148 168)' }}
+                                                type="file"
+                                                name="image"
+                                                className={styles.productListEdit}
+                                                onChange={(e) => fileSelectHandler(e)}
+                                                accept="image/webp, image/*"
+                                            />
+                                        </Button>
+                                    </div>
                                     <div className="col-span-4 md:col-span-1">
                                         <Button
                                             onClick={clearForm}
@@ -228,6 +253,11 @@ export default function ProductForm({
                                             </Button>
                                         }
                                     </div>
+                                    {viewImage &&
+                                        <img alt="pc" height={100} width={100}
+                                            className={styles.productListImg}
+                                            src={viewImage} />
+                                    }
                                 </div>
                             </form>
                             <br /><br />

@@ -15,9 +15,12 @@ const FeatureGrid = ({
   colors,
   variant,
   product,
-  variationArray
+  variationArray,
+  setFilesToUpload,
+  filesToUpload
+
 }) => {
-  const [filesToUpload, setFilesToUpload] = React.useState([]);
+
 
   const featureEditHandler = (row) => {
     let findRow = features.find((list) => list.id === row.id);
