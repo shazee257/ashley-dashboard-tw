@@ -35,6 +35,7 @@ const VariantForm = ({ variant, setVariant, editMode, clearVairantForm, setVaria
             temp_state[index] = new_detail;
             // 2. Set the state to our new copy
             setVariation(temp_state);
+            clearVairantForm();
         } else {
             let id = 0;
             const variantData = {
@@ -49,9 +50,6 @@ const VariantForm = ({ variant, setVariant, editMode, clearVairantForm, setVaria
                 edit: false
             }
             setVariation([...variation, variantData])
-        }
-        if (!editMode) {
-            clearVairantForm();
         }
         if (editMode) {
             const variantData = {

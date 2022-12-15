@@ -263,7 +263,7 @@ const FeatureForm = ({
                         </div>
 
                         <br />
-                        {!editMode &&
+                        {/* {!editMode &&
                             <div className="flex flex-col place-items-center">
                                 <Button
                                     fullWidth
@@ -277,7 +277,7 @@ const FeatureForm = ({
                                 </Button>
                                 <div><small>Only jpg, png, gif, svg images are allowed</small></div>
                             </div>
-                        }
+                        } */}
                         <br /><br />
                         <div className='flex gap-2 col-span-4'>
                             <Button

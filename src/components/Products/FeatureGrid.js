@@ -90,7 +90,7 @@ const FeatureGrid = ({
         )
       }
     },
-    {
+    ... editMode ? [{
       field: "images", headerName: "Feature Images", width: 220, flex: 1,
       renderCell: (params) => {
         return (
@@ -108,12 +108,10 @@ const FeatureGrid = ({
           </>
         )
       }
-
-
-    },
+    }] : [],
     { field: "quantity", headerName: "Quantity", width: 100, flex: 1 },
     { field: "sku", headerName: "SKU", width: 130, flex: 1 },
-    {
+    ... editMode ? [{
       field: "upload", headerName: "Upload Images", width: 300,
       renderCell: (params) => {
         return (
@@ -135,7 +133,7 @@ const FeatureGrid = ({
           </>
         )
       }
-    },
+    }] : [],
     {
       field: "action", filterable: false, sortable: false, flex: 1,
       headerName: "Action",
