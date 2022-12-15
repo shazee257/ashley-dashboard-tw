@@ -84,6 +84,7 @@ export default function AddProduct() {
         let id = getParameterByName('id')
         const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/products/p/${id}`);
         console.log(data);
+        debugger
         let res = data.product;
         setProduct({
             id: res._id,
@@ -94,6 +95,7 @@ export default function AddProduct() {
             is_featured: res.is_featured,
             discount: res.discount
         });
+        setProductImages([res.thumbnail_image]);
         setVariation(res.variants.map(elem => ({
             ...elem,
             id: elem._id
@@ -145,7 +147,7 @@ export default function AddProduct() {
         }
 
         await axios
-            .put(`${process.env.NEXT_PUBLIC_baseURL}/products/uploadThumbnail/${id}`, fd, config)
+            .put(`${process.env.NEXT_PUBLIC_baseURL}/products/upload-thumbnail/${id}/a/b`, fd, config)
             .then(({ data }) => {
                 if (data.success) {
                     toast.success(data.message);

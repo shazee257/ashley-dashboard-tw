@@ -231,10 +231,10 @@ export default function Products({ products }) {
             renderCell: (params) => {
                 return (
                     <div className="flex justify-center items-center">
-                        <Link href={`/products/${params.row._id}`}>
+                        {/* <Link href={`/products/${params.row._id}`}>
                             <button
                                 className="h-8 w-32 rounded-md mr-5 bg-blue-700 text-white">Size Variants</button>
-                        </Link>
+                        </Link> */}
                         <button className="h-8 w-16 rounded-md mr-5 bg-green-600 text-white" onClick={() => router.push(`/products/add-product?edit=${true}&id=${params.row._id}`)}>Edit</button>
                         <DeleteOutline
                             className={styles.productListDelete}
