@@ -12,29 +12,15 @@ import 'react-quill/dist/quill.snow.css';
 import { showNotification } from 'utils/helper';
 import { ArrowBack } from '@mui/icons-material';
 
-const VariantForm = ({ variant, setVariant, editMode, setAddVariation, productId, setVariation, variation, product }) => {
+const VariantForm = ({ variant, setVariant, editMode, clearVairantForm, setVariation, variation, product }) => {
 
-
-    // clear form fields
-    const clearForm = () => {
-        const newVariant = {
-            id: "",
-            size: "",
-            sale_price: 0,
-            purchase_price: 0,
-            description: "",
-            dimensions: "",
-            edit: false
-        }
-        setVariant(newVariant);
-    }
     const handleSubmit = async (e) => {
 
         e.preventDefault();
         if (variant.edit) {
             let index = variation.findIndex((list) => list.id === variant.id)
             let new_detail = {
-                id: productId,
+                id: variant.id,
                 createdAt: new Date(),
                 size: variant.size,
                 sale_price: variant.sale_price,
@@ -50,8 +36,9 @@ const VariantForm = ({ variant, setVariant, editMode, setAddVariation, productId
             // 2. Set the state to our new copy
             setVariation(temp_state);
         } else {
+            let id = 0;
             const variantData = {
-                id: productId,
+                id: variation?.length === 0 ? id : id + 1,
                 createdAt: new Date(),
                 size: variant.size,
                 sale_price: variant.sale_price,
@@ -62,6 +49,9 @@ const VariantForm = ({ variant, setVariant, editMode, setAddVariation, productId
                 edit: false
             }
             setVariation([...variation, variantData])
+        }
+        if (!editMode) {
+            clearVairantForm();
         }
         if (editMode) {
             const variantData = {
@@ -84,15 +74,6 @@ const VariantForm = ({ variant, setVariant, editMode, setAddVariation, productId
                     }
                 }).catch(err => showNotification("error", err.response.data.message));
         }
-        setVariant({
-            id: "",
-            size: "",
-            sale_price: 0,
-            purchase_price: 0,
-            description: "",
-            dimensions: "",
-            edit: false
-        });
     }
 
     const getVariants = async (productId) => {
@@ -165,14 +146,23 @@ const VariantForm = ({ variant, setVariant, editMode, setAddVariation, productId
                 </div>
                 <br />
                 <br />
-                <Button
-                    onClick={(e) => handleSubmit(e)}
-                    type='submit'
-                    color='primary'
-                    variant="outlined"
-                    fullWidth>
-                    {variant.edit ? "Update Size Variant" : "Add Size Variant"}
-                </Button>
+                <div className='flex gap-2 col-span-4'>
+                    <Button
+                        onClick={(e) => handleSubmit(e)}
+                        type='submit'
+                        color='primary'
+                        variant="outlined"
+                        fullWidth>
+                        {variant.edit ? "Update Size Variant" : "Add Size Variant"}
+                    </Button>
+                    <Button
+                        onClick={() => clearVairantForm()}
+                        color='primary'
+                        variant="outlined"
+                        fullWidth>
+                        {"Reset Form"}
+                    </Button>
+                </div>
                 <br /><br />
             </form>
         </Paper>

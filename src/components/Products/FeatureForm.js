@@ -21,7 +21,8 @@ import { showNotification } from 'utils/helper';
 import { Delete } from '@mui/icons-material';
 
 
-const FeatureForm = ({ setVariation,
+const FeatureForm = ({
+    setVariation,
     variation,
     variant,
     feature,
@@ -34,7 +35,9 @@ const FeatureForm = ({ setVariation,
     setFeatures,
     features,
     product,
-    filesToUpload }) => {
+    filesToUpload,
+    getProduct,
+    clearFeatureForm }) => {
 
     const [iamgesArray, setiamgesArray] = React.useState([]);
 
@@ -69,6 +72,7 @@ const FeatureForm = ({ setVariation,
         e.preventDefault();
 
         if (feature.edit) {
+            // Edit feature from grid handling
             let index = features.findIndex((list) => list.id === feature.id)
             let new_detail = {
                 id: feature.variant,
@@ -87,30 +91,7 @@ const FeatureForm = ({ setVariation,
             let temp = [...variation];
             temp[feature.variant] = features;
             setFeatures(temp_state);
-        } else {
-            const featureData = {
-                id: feature.variant,
-                variant: feature.variant,
-                color_id: feature.color_id,
-                quantity: feature.quantity,
-                sku: feature.sku,
-                zero_stock_msg: feature.zero_stock_msg,
-                images: feature.images,
-                edit: false
-            }
-            let test = variation.map((res, index) => {
-                if (index === feature.variant) {
-                    return { ...res, features: [feature] }
-                }
-                else {
-                    return res
-                }
-            })
-            setVariation(test)
-            setFeatures([...features, featureData])
-        }
 
-        if (editMode) {
             const data = {
                 id: feature.variant,
                 variant: feature.variant,
@@ -121,6 +102,7 @@ const FeatureForm = ({ setVariation,
                 images: feature.images,
                 edit: false
             }
+            console.log('variation: ', variation)
             let Id = ''
             let findVariantId = variation.map((res) => {
                 res.features.map((fea) => {
@@ -129,6 +111,9 @@ const FeatureForm = ({ setVariation,
                     }
                 })
             })
+            console.log('product.id: ', product.id)
+            console.log('Id: ', Id)
+            console.log('feature.id: ', feature.id)
             await axios
                 .put(`${process.env.NEXT_PUBLIC_baseURL}/products/${product.id}/${Id}/${feature.id}`, data)
                 .then(({ data }) => {
@@ -137,6 +122,68 @@ const FeatureForm = ({ setVariation,
                         clearForm();
                     }
                 }).catch(err => showNotification("error", err.response.data.message));
+        } else {
+            if (editMode) {
+                // Adding feature in Edit mode
+                let new_detail = {
+                    id: feature.variant,
+                    variant: feature.variant,
+                    color_id: feature.color_id,
+                    quantity: feature.quantity,
+                    sku: feature.sku,
+                    zero_stock_msg: feature.zero_stock_msg,
+                    images: feature.images,
+                    edit: false
+                }
+
+                const variant = variation[feature.variant];
+                const payload = {
+                    _id: variant._id,
+                    description: variant.description,
+                    dimensions: variant.dimensions,
+                    size: variant.size,
+                    sale_price: variant.sale_price,
+                    purchase_price: variant.purchase_price,
+                    features: [...variant.features, new_detail]
+                }
+                console.log('payload: ', payload)
+                debugger;
+
+                await axios
+                    .put(`${process.env.NEXT_PUBLIC_baseURL}/products/updateVariant/${product.id}/${variant._id}`, payload)
+                    .then(({ data }) => {
+                        if (data.success) {
+                            showNotification("success", data.message);
+                            clearForm();
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1000)
+                        }
+                    }).catch(err => showNotification("error", err?.response?.data?.message));
+
+            } else {
+                // Add Form handling
+                const featureData = {
+                    id: feature.variant,
+                    variant: feature.variant,
+                    color_id: feature.color_id,
+                    quantity: feature.quantity,
+                    sku: feature.sku,
+                    zero_stock_msg: feature.zero_stock_msg,
+                    images: feature.images,
+                    edit: false
+                }
+                let test = variation.map((res, index) => {
+                    if (index === feature.variant) {
+                        return { ...res, features: [feature] }
+                    }
+                    else {
+                        return res
+                    }
+                })
+                setVariation(test)
+                setFeatures([...features, featureData])
+            }
         }
         clearForm();
     };
@@ -232,14 +279,22 @@ const FeatureForm = ({ setVariation,
                             </div>
                         }
                         <br /><br />
-
-                        <Button
-                            type='submit'
-                            color='primary'
-                            variant="outlined"
-                            fullWidth>
-                            {editMode ? "Update Variant Feature" : "Add Variant Feature"}
-                        </Button>
+                        <div className='flex gap-2 col-span-4'>
+                            <Button
+                                type='submit'
+                                color='primary'
+                                variant="outlined"
+                                fullWidth>
+                                {editMode ? "Update Variant Feature" : "Add Variant Feature"}
+                            </Button>
+                            <Button
+                                onClick={() => clearFeatureForm()}
+                                color='primary'
+                                variant="outlined"
+                                fullWidth>
+                                {"Reset Form"}
+                            </Button>
+                        </div>
                         <br /><br />
 
                         {imageArray.length > 0 &&

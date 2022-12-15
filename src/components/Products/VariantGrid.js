@@ -10,7 +10,7 @@ export default function VariantGrid({ variant, setAddVariation, variation, setVa
 
     const variantEditHandler = (row) => {
         let findRow = variation.find((list) => list.id === row.id);
-        setVariant(variant => ({
+        setVariant({
             id: row.id,
             size: row.size,
             sale_price: row.sale_price,
@@ -18,7 +18,7 @@ export default function VariantGrid({ variant, setAddVariation, variation, setVa
             description: findRow.description,
             dimensions: findRow.dimensions,
             edit: true
-        }))
+        })
     }
     const handleDelete = (id) => {
         let detail = variation.filter((a, index) => a.id !== id);

@@ -58,6 +58,8 @@ export default function AddProduct() {
     const [imageArray, setImageArray] = useState([]);
     const [filesToUpload, setFilesToUpload] = useState([]);
 
+    console.log("variant", variant);
+    // console.log("feature", feature);
     function getParameterByName(name, url) {
         if (!url) url = window.location.href;
         name = name.replace(/[\[\]]/g, "\\$&");
@@ -83,8 +85,6 @@ export default function AddProduct() {
     const getProduct = async () => {
         let id = getParameterByName('id')
         const { data } = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/products/p/${id}`);
-        console.log(data);
-        debugger
         let res = data.product;
         setProduct({
             id: res._id,
@@ -100,7 +100,11 @@ export default function AddProduct() {
             ...elem,
             id: elem._id
         })));
-        setFeatures(res.variants[0].features.map(elem => ({
+        let array = []
+        let fature = res.variants.map((elem) => {
+            array.push(...elem.features)
+        })
+        setFeatures(array.map(elem => ({
             ...elem,
             id: elem._id
         })))
@@ -133,17 +137,25 @@ export default function AddProduct() {
 
     // clear form fields
     const clearProdForm = () => {
-        setProduct(newProduct)
+        setProduct(newProduct);
+    }
+    // clear form fields
+    const clearVairantForm = () => {
+        setVariant(newVariant);
+    }
+    // clear form fields
+    const clearFeatureForm = () => {
+        setFeature(newFeature);
     }
     const uploadHandler = async (id) => {
 
         const config = {
             headers: { 'Content-Type': 'multipart/form-data' }
         }
-        
+
         const fd = new FormData();
         for (let i = 0; i < productImages.length; i++) {
-          fd.append("files", productImages[i]);
+            fd.append("files", productImages[i]);
         }
 
         await axios
@@ -261,6 +273,7 @@ export default function AddProduct() {
                     editMode={editMode}
                     setAddVariation={setAddVariation}
                     product={product}
+                    clearVairantForm={clearVairantForm}
                 />
             </div>
             <div className='col-span-12 mt-8'>
@@ -270,6 +283,8 @@ export default function AddProduct() {
                     setVariant={setVariant}
                     setVariation={setVariation}
                     variant={variant}
+                    clearVairantForm={clearVairantForm}
+
                 />
             </div>
             <div className='col-span-12'>
@@ -290,6 +305,7 @@ export default function AddProduct() {
                     setFilesToUpload={setFilesToUpload}
                     filesToUpload={filesToUpload}
                     variant={variant}
+                    clearFeatureForm={clearFeatureForm}
 
                 />
             </div>
@@ -297,6 +313,7 @@ export default function AddProduct() {
                 <FeatureGrid
                     variationArray={variation}
                     setFeatures={setFeatures}
+                    editMode={editMode}
                     features={features}
                     feature={feature}
                     colors={colors}
@@ -305,6 +322,8 @@ export default function AddProduct() {
                     variant={variant}
                     filesToUpload={filesToUpload}
                     setFilesToUpload={setFilesToUpload}
+                    clearFeatureForm={clearFeatureForm}
+                    getProduct={getProduct}
                 />
             </div>
         </div>

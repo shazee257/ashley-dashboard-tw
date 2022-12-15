@@ -17,8 +17,8 @@ const FeatureGrid = ({
   product,
   variationArray,
   setFilesToUpload,
-  filesToUpload
-
+  filesToUpload,
+  editMode
 }) => {
 
 
@@ -81,7 +81,8 @@ const FeatureGrid = ({
     {
       field: "color_id", headerName: "Color", width: 150, flex: 1,
       renderCell: (params) => {
-        let color = colors.find((list) => list._id === typeof (params.row.color_id) === 'object' ? params.row.color_id._id : params.row.color_id)
+        let id = editMode ? params.row.color_id._id : params.row.color_id
+        let color = colors.find((list) => list._id ===  id)
         return (
           <>
             {color?.title}

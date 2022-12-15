@@ -91,25 +91,25 @@ export default function Variants({ product }) {
         setEditMode(false);
     };
     // clear form fields
-    const clearForm = () => {
-        setVariant(newVariant);
-    }
+    // const clearForm = () => {
+    //     setVariant(newVariant);
+    // }
 
-    const editButtonHandler = (id) => {
-        setEditMode(true);
-        setOpen(true);
-        const variant = data.find((item) => item._id === id);
+    // const editButtonHandler = (id) => {
+    //     setEditMode(true);
+    //     setOpen(true);
+    //     const variant = data.find((item) => item._id === id);
 
-        const newVariant = {
-            id: variant._id,
-            size: variant.size,
-            sale_price: variant.sale_price,
-            purchase_price: variant.purchase_price,
-            description: variant.description,
-            dimensions: variant.dimensions,
-        };
-        setVariant(newVariant);
-    }
+    //     const newVariant = {
+    //         id: variant._id,
+    //         size: variant.size,
+    //         sale_price: variant.sale_price,
+    //         purchase_price: variant.purchase_price,
+    //         description: variant.description,
+    //         dimensions: variant.dimensions,
+    //     };
+    //     setVariant(newVariant);
+    // }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -159,107 +159,108 @@ export default function Variants({ product }) {
 
 
     return (
-        <div className={styles.productList}>
-            <div className="ml-8">
-                <h2 className="">Add Sizes Variantion</h2>
-                <div className="flex mr-5 mb-5 items-center justify-between">
-                    <div className='hover:underline'>
-                        <Link href={`/products/${product._id}`}>
-                            <p>Product {`: `}<b>{product.title}</b></p>
-                        </Link>
-                    </div>
-                    <CreateNewIcon handleClick={handleClickOpen} />
+        <></>
+        // <div className={styles.productList}>
+        //     <div className="ml-8">
+        //         <h2 className="">Add Sizes Variantion</h2>
+        //         <div className="flex mr-5 mb-5 items-center justify-between">
+        //             <div className='hover:underline'>
+        //                 <Link href={`/products/${product._id}`}>
+        //                     <p>Product {`: `}<b>{product.title}</b></p>
+        //                 </Link>
+        //             </div>
+        //             <CreateNewIcon handleClick={handleClickOpen} />
 
-                </div>
-            </div>
-            <MuiGrid columns={columns} data={data} />
+        //         </div>
+        //     </div>
+        //     <MuiGrid columns={columns} data={data} />
 
-            {/* MODAL FORM */}
-            <Modal open={open} onClose={handleClose}>
-                <div className="flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-3/4 m-auto rounded-lg shadow-lg">
-                    <Paper elevation={1} className="p-10 w-full">
-                        <Grid align='left'>
-                            <h2>{editMode ? ("Update Size Variant").toUpperCase() : ("Add New Size Variant").toUpperCase()}</h2>
-                        </Grid>
-                        <br />
-                        <form autoComplete="off">
-                            <div className="flex justify-between">
-                                <TextField
-                                    required
-                                    className="w-1/2 pr-5"
-                                    size="small"
-                                    label='Product Size' placeholder='Enter Product Size' variant='outlined'
-                                    value={variant.size} onChange={(e) => setVariant({ ...variant, size: e.target.value })}
-                                />
-                                <br /><br />
-                                <div className="flex w-1/2">
-                                    <TextField
-                                        className="mx-5 w-1/2"
-                                        size="small" required
-                                        inputProps={{ step: '0.01', min: '0', max: '100', type: 'number' }}
-                                        variant='outlined'
-                                        label='Sale Price' placeholder='Enter Sale Price'
-                                        value={variant.sale_price} onChange={(e) => setVariant({ ...variant, sale_price: e.target.value })}
-                                    />
-                                    <br /><br />
-                                    <TextField
-                                        className="w-1/2"
-                                        size="small"
-                                        inputProps={{ step: '0.01', min: '0', max: '100', type: 'number' }}
-                                        variant='outlined' type='number'
-                                        label='Purchase Price' placeholder='Enter Purchase Price'
-                                        value={variant.purchase_price} onChange={(e) => setVariant({ ...variant, purchase_price: e.target.value })}
-                                    />
-                                </div>
-                            </div>
-                            <br />
-                            <div className="flex justify-between">
-                                <div className="pr-5">
-                                    <InputLabel htmlFor="description">Description</InputLabel>
-                                    <ReactQuill value={variant.description} onChange={(e) => setVariant({ ...variant, description: e })} />
-                                </div>
-                                <div className="w-3/6">
-                                    <InputLabel htmlFor="dimensions">Dimensions</InputLabel>
-                                    <ReactQuill value={variant.dimensions} onChange={(e) => setVariant({ ...variant, dimensions: e })} />
-                                </div>
-                            </div>
-                            <br />
-                            <Button
-                                onClick={handleSubmit}
-                                type='submit'
-                                color='primary'
-                                variant="outlined"
-                                fullWidth>
-                                {editMode ? "Update Size Variant" : "Add Size Variant"}
-                            </Button>
-                            <br /><br />
-                            <div className="flex justify-between">
-                                <Button
-                                    className="w-6/12"
-                                    onClick={clearForm}
-                                    type='button'
-                                    color='secondary'
-                                    variant="outlined"
-                                    fullWidth>
-                                    Reset Form
-                                </Button>
-                                <Button
-                                    className="w-6/12"
-                                    size="small"
-                                    onClick={handleClose}
-                                    type='button'
-                                    color='success'
-                                    variant="outlined"
-                                    fullWidth>
-                                    Close Form
-                                </Button>
-                            </div>
-                        </form>
-                    </Paper>
-                </div>
-            </Modal>
+        //     {/* MODAL FORM */}
+        //     <Modal open={open} onClose={handleClose}>
+        //         <div className="flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-3/4 m-auto rounded-lg shadow-lg">
+        //             <Paper elevation={1} className="p-10 w-full">
+        //                 <Grid align='left'>
+        //                     <h2>{editMode ? ("Update Size Variant").toUpperCase() : ("Add New Size Variant").toUpperCase()}</h2>
+        //                 </Grid>
+        //                 <br />
+        //                 <form autoComplete="off">
+        //                     <div className="flex justify-between">
+        //                         <TextField
+        //                             required
+        //                             className="w-1/2 pr-5"
+        //                             size="small"
+        //                             label='Product Size' placeholder='Enter Product Size' variant='outlined'
+        //                             value={variant.size} onChange={(e) => setVariant({ ...variant, size: e.target.value })}
+        //                         />
+        //                         <br /><br />
+        //                         <div className="flex w-1/2">
+        //                             <TextField
+        //                                 className="mx-5 w-1/2"
+        //                                 size="small" required
+        //                                 inputProps={{ step: '0.01', min: '0', max: '100', type: 'number' }}
+        //                                 variant='outlined'
+        //                                 label='Sale Price' placeholder='Enter Sale Price'
+        //                                 value={variant.sale_price} onChange={(e) => setVariant({ ...variant, sale_price: e.target.value })}
+        //                             />
+        //                             <br /><br />
+        //                             <TextField
+        //                                 className="w-1/2"
+        //                                 size="small"
+        //                                 inputProps={{ step: '0.01', min: '0', max: '100', type: 'number' }}
+        //                                 variant='outlined' type='number'
+        //                                 label='Purchase Price' placeholder='Enter Purchase Price'
+        //                                 value={variant.purchase_price} onChange={(e) => setVariant({ ...variant, purchase_price: e.target.value })}
+        //                             />
+        //                         </div>
+        //                     </div>
+        //                     <br />
+        //                     <div className="flex justify-between">
+        //                         <div className="pr-5">
+        //                             <InputLabel htmlFor="description">Description</InputLabel>
+        //                             <ReactQuill value={variant.description} onChange={(e) => setVariant({ ...variant, description: e })} />
+        //                         </div>
+        //                         <div className="w-3/6">
+        //                             <InputLabel htmlFor="dimensions">Dimensions</InputLabel>
+        //                             <ReactQuill value={variant.dimensions} onChange={(e) => setVariant({ ...variant, dimensions: e })} />
+        //                         </div>
+        //                     </div>
+        //                     <br />
+        //                     <Button
+        //                         onClick={handleSubmit}
+        //                         type='submit'
+        //                         color='primary'
+        //                         variant="outlined"
+        //                         fullWidth>
+        //                         {editMode ? "Update Size Variant" : "Add Size Variant"}
+        //                     </Button>
+        //                     <br /><br />
+        //                     <div className="flex justify-between">
+        //                         <Button
+        //                             className="w-6/12"
+        //                             onClick={clearForm}
+        //                             type='button'
+        //                             color='secondary'
+        //                             variant="outlined"
+        //                             fullWidth>
+        //                             Reset Form
+        //                         </Button>
+        //                         <Button
+        //                             className="w-6/12"
+        //                             size="small"
+        //                             onClick={handleClose}
+        //                             type='button'
+        //                             color='success'
+        //                             variant="outlined"
+        //                             fullWidth>
+        //                             Close Form
+        //                         </Button>
+        //                     </div>
+        //                 </form>
+        //             </Paper>
+        //         </div>
+        //     </Modal>
 
-        </div>
+        // </div>
     );
 }
 

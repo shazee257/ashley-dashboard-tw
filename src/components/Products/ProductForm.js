@@ -250,7 +250,7 @@ export default function ProductForm({
                                     </div>
                                     <div className="col-span-4 md:col-span-1">
                                         <Button
-                                            onClick={clearForm}
+                                            onClick={() => clearForm()}
                                             type='button'
                                             color='secondary'
                                             variant="outlined"
