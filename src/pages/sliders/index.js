@@ -29,7 +29,7 @@ export const ModalImage = ({ src, alt, caption, onClose }) => {
 
 export default function Banners({ banners }) {
 
-    const [data, setData] = useState(banners.filter((x) => x.type !== 'slider'));
+    const [data, setData] = useState(banners.filter((x) => x.type === 'slider'));
     const [isOpen, setIsOpen] = useState(false)
     const showModal = () => setIsOpen(true)
     const [bannerData, setBannerData] = useState();
@@ -383,13 +383,13 @@ export default function Banners({ banners }) {
                                     className="w-3/12"
                                     fullWidth
                                     size="small"
-                                    label="Select Banner Type"
+                                    label="Select Slider Type"
                                     select
                                     value={banner.type}
                                     onChange={(e) => setBanner({ ...banner, type: e.target.value })} >
-                                    {/* <MenuItem value='slider' key="slider">Slider</MenuItem> */}
-                                    <MenuItem value='category' key="category">Category Banner</MenuItem>
-                                    <MenuItem value='custom' key="custom">Custom Banner</MenuItem>
+                                    <MenuItem value='slider' key="slider">Slider</MenuItem>
+                                    {/* <MenuItem value='category' key="category">Category Banner</MenuItem>
+                                    <MenuItem value='custom' key="custom">Custom Banner</MenuItem> */}
                                 </TextField>
                                 {banner.type === 'category' && (
                                     <TextField
